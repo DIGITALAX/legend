@@ -2,11 +2,11 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import "@rainbow-me/rainbowkit/styles.css";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { configureChains, createClient, WagmiConfig } from "wagmi";
+import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { polygon } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 
-const { chains, provider } = configureChains(
+const { chains, publicClient, webSocketPublicClient } = configureChains(
   [polygon],
   [
     alchemyProvider({
@@ -16,22 +16,22 @@ const { chains, provider } = configureChains(
 );
 
 const { connectors } = getDefaultWallets({
-  appName: "Chromadin",
+  appName: "Legend",
   chains,
 });
 
-const wagmiClient = createClient({
+const config = createConfig({
   autoConnect: true,
+  publicClient,
+  webSocketPublicClient,
   connectors,
-  provider,
 });
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <WagmiConfig client={wagmiClient}>
+    <WagmiConfig config={config}>
       <RainbowKitProvider chains={chains}>
         <Component {...pageProps} />
-        <Modals />
       </RainbowKitProvider>
     </WagmiConfig>
   );
