@@ -13,6 +13,7 @@ module.exports = {
       },
       fontFamily: {
         vcr: "VCR",
+        earl: "Earls Revenge"
       },
     },
   },

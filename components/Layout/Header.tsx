@@ -4,7 +4,7 @@ import { FunctionComponent } from "react";
 
 const Header: FunctionComponent = (): JSX.Element => {
   return (
-    <div className="relative w-full h-fit flex flex-row text-white font-vcr p-3 gap-6 items-start">
+    <div className="relative w-full h-fit flex flex-row text-white font-earl p-3 gap-6 items-start">
       <div
         className="relative justify-start items-center text-3xl uppercase w-fit h-full flex"
         id="title"
@@ -12,18 +12,46 @@ const Header: FunctionComponent = (): JSX.Element => {
         legend
       </div>
       <div className="relative w-full h-fit justify-center items-center flex left-6">
-        <div className="relative flex flex-row w-fit h-fit rounded-full bg-beige/70 px-4 py-1.5 justify-center items-center gap-5 text-sm">
-          <div className="relative px-2 py-2 rounded-full flex justify-center items-center w-fit h-fit hover:bg-black hover:text-white text-black bg-beige active:bg-azul">
-            collaborate
+        <div className="relative flex flex-row w-fit h-fit px-6 py-3 justify-center items-center gap-5 text-sm">
+          <Image
+            src={`${INFURA_GATEWAY}/QmWDmzfvPhJvkCa8Z2sGBGGKXBSyKjDYbaJZB9L82CBm3k`}
+            layout="fill"
+          />
+          <div className="relative px-2 py-2 flex justify-center items-center w-fit h-fit hover:text-black/50 text-black active:scale-95 flex">
+            <Image
+              src={`${INFURA_GATEWAY}/QmdaGZociGw7XapzBELFDnbN3rLHhj18uCghXaMGhXPdqf`}
+              layout="fill"
+            />
+            <div className="relative w-fit h-fit justify-center items-center flex">
+              collaborate
+            </div>
           </div>
-          <div className="relative px-2 py-2 rounded-full flex justify-center items-center w-fit h-fit hover:bg-black hover:text-white text-black bg-beige active:bg-azul">
-            view grants
+          <div className="relative px-2 py-2 flex justify-center items-center w-fit h-fit hover:text-black/50 text-black active:scale-95 flex">
+            <Image
+              src={`${INFURA_GATEWAY}/QmdaGZociGw7XapzBELFDnbN3rLHhj18uCghXaMGhXPdqf`}
+              layout="fill"
+            />
+            <div className="relative w-fit h-fit justify-center items-center flex">
+              view grants
+            </div>
           </div>
-          <div className="relative px-2 py-2 rounded-full flex justify-center items-center w-fit h-fit hover:bg-black hover:text-white text-black bg-beige active:bg-azul">
-            launch a grant
+          <div className="relative px-2 py-2 flex justify-center items-center w-fit h-fit hover:text-black/50 text-black active:scale-95 flex">
+            <Image
+              src={`${INFURA_GATEWAY}/QmdaGZociGw7XapzBELFDnbN3rLHhj18uCghXaMGhXPdqf`}
+              layout="fill"
+            />
+            <div className="relative w-fit h-fit justify-center items-center flex">
+              launch grant
+            </div>
           </div>
-          <div className="relative px-2 py-2 rounded-full flex justify-center items-center w-fit h-fit hover:bg-black hover:text-white text-black bg-beige active:bg-azul">
-            web3 public goods
+          <div className="relative px-2 py-2 flex justify-center items-center w-fit h-fit hover:text-black/50 text-black active:scale-95 flex">
+            <Image
+              src={`${INFURA_GATEWAY}/QmdaGZociGw7XapzBELFDnbN3rLHhj18uCghXaMGhXPdqf`}
+              layout="fill"
+            />
+            <div className="relative w-fit h-fit justify-center items-center flex">
+              web3 public goods
+            </div>
           </div>
         </div>
       </div>

@@ -7,6 +7,12 @@
   src: url("/fonts/vcr.ttf");
 }
 
+@font-face {
+  font-family: "Earls Revenge";
+  font-weight: 400;
+  src: url("/fonts/EarlsRevenge.ttf");
+}
+
 body {
   background: #bed2f3;
   cursor: url("https://chromadin.infura-ipfs.io/ipfs/QmSvwVtnD6NRM64xRiPthdYRP8mW3jJHmCEohZMyr7zD4T"),

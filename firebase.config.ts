@@ -2,12 +2,12 @@ import { initializeApp, getApps, FirebaseApp } from "firebase/app";
 
 const config = {
   apiKey: process.env.FIREBASE_API_KEY,
-  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.FIREBASE_PROJECT_ID,
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.FIREBASE_APP_ID,
-  measurementId: process.env.FIREBASE_MEASUREMENT_ID,
+  authDomain: "legend-9f8bf.firebaseapp.com",
+  projectId: "legend-9f8bf",
+  storageBucket: "legend-9f8bf.appspot.com",
+  messagingSenderId: "1088916342094",
+  appId: "1:1088916342094:web:5f9b49360b4200871e0a1f",
+  measurementId: "G-6C9EM64GW6",
 };
 
 export function getFirebaseApp(): FirebaseApp | undefined {

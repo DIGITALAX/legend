@@ -39,6 +39,13 @@ export default function Document() {
           crossOrigin="anonymous"
           type="font/ttf"
         />
+        <link
+          rel="preload"
+          href="/fonts/EarlsRevenge.ttf"
+          as="font"
+          crossOrigin="anonymous"
+          type="font/ttf"
+        />
         <style
           dangerouslySetInnerHTML={{
             __html: `
@@ -47,6 +54,13 @@ export default function Document() {
                 font-weight: 400;
                 src: url("./fonts/vcr.ttf");
               }
+
+              @font-face {
+                font-family: "Earls Revenge";
+                font-weight: 400;
+                src: url("./fonts/EarlsRevenge.ttf");
+              }
+
             `,
           }}
         ></style>

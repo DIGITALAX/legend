@@ -1,8 +1,17 @@
+import { v4 as uuidv4 } from "uuid";
 import Footer from "@/components/Layout/Footer";
 import Header from "@/components/Layout/Header";
-import { useEffect, useRef } from "react";
-import { getDatabase, ref, set, onValue, off } from "firebase/database";
+import { useEffect, useRef, useState } from "react";
+import {
+  getDatabase,
+  ref,
+  set,
+  onValue,
+  off,
+  onDisconnect,
+} from "firebase/database";
 import { FirebaseApp } from "firebase/app";
+import { INFURA_GATEWAY } from "@/lib/constants";
 
 type CursorPosition = {
   x: number;
@@ -17,71 +26,72 @@ type HomeProps = {
 export default function Home({ firebaseApp }: HomeProps): JSX.Element {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const cursorImage = useRef<any>(null);
+
   useEffect(() => {
-    if (!firebaseApp || !canvasRef.current) {
+    cursorImage.current = new Image();
+    cursorImage.current.src = `${INFURA_GATEWAY}/QmSvwVtnD6NRM64xRiPthdYRP8mW3jJHmCEohZMyr7zD4T`;
+    cursorImage.current.onload = () => setImageLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    let userId = sessionStorage.getItem("userId");
+    if (!userId) {
+      userId = uuidv4();
+      sessionStorage.setItem("userId", userId);
+    }
+
+    if (!firebaseApp || !canvasRef.current || !cursorImage.current) {
       return;
     }
 
     const canvas = canvasRef.current;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
     const context = canvas.getContext("2d");
     if (!context) {
       return;
     }
 
+    const db = getDatabase(firebaseApp);
+    const cursorRef = ref(db, `cursors/${userId}`);
+    onDisconnect(cursorRef).remove();
+
     const handleMouseMove = (event: MouseEvent) => {
-      const db = getDatabase(firebaseApp);
-      set(ref(db, `cursors/${event.clientX}_${event.clientY}`), {
+      const cursorPosition = {
         x: event.clientX,
         y: event.clientY,
-      });
+        id: userId,
+      };
+      set(cursorRef, cursorPosition);
     };
 
     window.addEventListener("mousemove", handleMouseMove);
 
-    const db = getDatabase(firebaseApp);
     const cursorsRef = ref(db, "cursors");
     onValue(cursorsRef, (snapshot) => {
       const cursorPositions = snapshot.val();
-      const cursorsArray: CursorPosition[] = Object.keys(
-        cursorPositions || {}
-      ).map((id) => ({
-        id,
-        ...cursorPositions[id],
-      }));
-
-      // Clear the canvas
-      context.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Draw cursors on the canvas
-      cursorsArray.forEach((cursor) => {
-        context.beginPath();
-        context.arc(cursor.x, cursor.y, 5, 0, 2 * Math.PI);
-        context.fillStyle = "red";
-        context.fill();
-      });
+      if (cursorPositions && imageLoaded) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        Object.values(cursorPositions).forEach((position: any) => {
+          if (position.id !== userId) {
+            context.drawImage(
+              cursorImage.current,
+              position.x - cursorImage.current.width / 2,
+              position.y - cursorImage.current.height / 2
+            );
+          }
+        });
+      }
     });
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       off(cursorsRef);
     };
-  }, [firebaseApp, canvasRef.current]);
-
-  useEffect(() => {
-    const resizeHandler = () => {
-      if (canvasRef.current) {
-        canvasRef.current.width = window.innerWidth;
-        canvasRef.current.height = window.innerHeight;
-      }
-    };
-
-    window.addEventListener("resize", resizeHandler);
-    resizeHandler();
-
-    return () => {
-      window.removeEventListener("resize", resizeHandler);
-    };
-  }, []);
+  }, [firebaseApp, imageLoaded]);
 
   return (
     <div className="relative w-full h-full">
@@ -89,11 +99,13 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
         <Header />
         <Footer />
       </div>
-      <canvas
-        ref={canvasRef}
-        className="fixed top-0 left-0 pointer-events-none"
-        style={{ zIndex: 9999 }}
-      />
+      <div className="relative w-full h-full">
+        <canvas
+          ref={canvasRef}
+          className="fixed top-0 left-0 pointer-events-none"
+          style={{ zIndex: 9999 }}
+        />
+      </div>
     </div>
   );
 }
