@@ -2,22 +2,24 @@ import { INFURA_GATEWAY } from "@/lib/constants";
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import Draggable from "react-draggable";
-import { GrantBoxProps } from "../types/grant.types";
+import { CommentBoxProps } from "../types/grant.types";
 
-const GrantBox: FunctionComponent<GrantBoxProps> = (): JSX.Element => {
+const CommentBox: FunctionComponent<CommentBoxProps> = ({
+  commentRef,
+}): JSX.Element => {
   return (
     <Draggable
       enableUserSelectHack={false}
-      //   nodeRef={grantRef as any}
+      // nodeRef={commentRef as any}
     >
-      <div className="absolute w-98 h-60 flex p-1 -bottom-48 left-12 drop-shadow-2xl">
+      <div className="relative w-80 h-100 flex drop-shadow-2xl">
         <Image
           layout="fill"
-          src={`${INFURA_GATEWAY}/QmQKkeT32AXWzHmZ28wfjwAfegqhjG3Uc9pEj4VmMZZbXP`}
+          src={`${INFURA_GATEWAY}/QmbpFBk93UDXB5PKLhhXbn6tNKG1XDUJjS6SiSeG7S2GMB`}
           className="w-full h-full flex relative"
           draggable={false}
         />
-        <div className="flex absolute w-3/4 h-4 top-1 left-0 px-3">
+        <div className="flex absolute w-full h-4 top-1 left-0 px-3">
           <div className="relative flex justify-center items-center w-full h-full">
             <Image
               src={`${INFURA_GATEWAY}/QmYfpEREcRAMyretbQbT7YFtJHZLeR948iCezLTgvcUFYS`}
@@ -31,4 +33,4 @@ const GrantBox: FunctionComponent<GrantBoxProps> = (): JSX.Element => {
   );
 };
 
-export default GrantBox;
+export default CommentBox;

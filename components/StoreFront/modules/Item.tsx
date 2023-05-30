@@ -1,9 +1,9 @@
 import { FunctionComponent } from "react";
 
-const CommentBox: FunctionComponent = (): JSX.Element => {
+const Item: FunctionComponent = (): JSX.Element => {
     return (
         <div></div>
     )
 }
 
-export default CommentBox;
+export default Item;

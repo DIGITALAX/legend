@@ -10,10 +10,23 @@ module.exports = {
       colors: {
         azul: "#BED2F3",
         beige: "#F6F2E4",
+        gris: "#27272B",
+        purp: "#4F30E8",
+        rosa: "#E2AFD5",
       },
       fontFamily: {
         vcr: "VCR",
-        earl: "Earls Revenge"
+        earl: "Earls Revenge",
+      },
+      width: {
+        90: "22rem",
+        98: "28rem",
+        100: "32rem",
+        128: "42rem",
+      },
+      height: {
+        100: "32rem",
+        128: "42rem",
       },
     },
   },

@@ -1,58 +1,77 @@
 import { INFURA_GATEWAY } from "@/lib/constants";
 import Image from "next/legacy/image";
+import Link from "next/link";
 import { FunctionComponent } from "react";
 
 const Header: FunctionComponent = (): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex flex-row text-white font-earl p-3 gap-6 items-start">
-      <div
-        className="relative justify-start items-center text-3xl uppercase w-fit h-full flex"
+      <Link
+        href={`/`}
+        className="relative justify-start items-center text-3xl uppercase w-fit h-full flex cursor-pixel"
         id="title"
       >
         legend
-      </div>
+      </Link>
       <div className="relative w-full h-fit justify-center items-center flex left-6">
         <div className="relative flex flex-row w-fit h-fit px-6 py-3 justify-center items-center gap-5 text-sm">
           <Image
             src={`${INFURA_GATEWAY}/QmWDmzfvPhJvkCa8Z2sGBGGKXBSyKjDYbaJZB9L82CBm3k`}
             layout="fill"
+            draggable={false}
           />
-          <div className="relative px-2 py-2 flex justify-center items-center w-fit h-fit hover:text-black/50 text-black active:scale-95 flex">
+          <Link
+            href={"/storefront"}
+            className="relative px-2 py-2 flex justify-center items-center w-fit h-fit hover:text-black/50 text-black active:scale-95 flex cursor-pixel" 
+          >
             <Image
               src={`${INFURA_GATEWAY}/QmdaGZociGw7XapzBELFDnbN3rLHhj18uCghXaMGhXPdqf`}
               layout="fill"
+              draggable={false}
             />
             <div className="relative w-fit h-fit justify-center items-center flex">
-              collaborate
+              storefront
             </div>
-          </div>
-          <div className="relative px-2 py-2 flex justify-center items-center w-fit h-fit hover:text-black/50 text-black active:scale-95 flex">
+          </Link>
+          <Link
+            href={"/view"}
+            className="relative px-2 py-2 flex justify-center items-center w-fit h-fit hover:text-black/50 text-black active:scale-95 flex cursor-pixel"
+          >
             <Image
               src={`${INFURA_GATEWAY}/QmdaGZociGw7XapzBELFDnbN3rLHhj18uCghXaMGhXPdqf`}
               layout="fill"
+              draggable={false}
             />
             <div className="relative w-fit h-fit justify-center items-center flex">
               view grants
             </div>
-          </div>
-          <div className="relative px-2 py-2 flex justify-center items-center w-fit h-fit hover:text-black/50 text-black active:scale-95 flex">
+          </Link>
+          <Link
+            href={"/launch"}
+            className="relative px-2 py-2 flex justify-center items-center w-fit h-fit hover:text-black/50 text-black active:scale-95 flex cursor-pixel"
+          >
             <Image
               src={`${INFURA_GATEWAY}/QmdaGZociGw7XapzBELFDnbN3rLHhj18uCghXaMGhXPdqf`}
               layout="fill"
+              draggable={false}
             />
             <div className="relative w-fit h-fit justify-center items-center flex">
               launch grant
             </div>
-          </div>
-          <div className="relative px-2 py-2 flex justify-center items-center w-fit h-fit hover:text-black/50 text-black active:scale-95 flex">
+          </Link>
+          <Link
+            href={"/public"}
+            className="relative px-2 py-2 flex justify-center items-center w-fit h-fit hover:text-black/50 text-black active:scale-95 flex cursor-pixel"
+          >
             <Image
               src={`${INFURA_GATEWAY}/QmdaGZociGw7XapzBELFDnbN3rLHhj18uCghXaMGhXPdqf`}
               layout="fill"
+              draggable={false}
             />
             <div className="relative w-fit h-fit justify-center items-center flex">
               web3 public goods
             </div>
-          </div>
+          </Link>
         </div>
       </div>
       <div className="relative flex w-fit h-full items-center justify-end flex-row gap-1">

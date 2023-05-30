@@ -1,6 +1,4 @@
 import { v4 as uuidv4 } from "uuid";
-import Footer from "@/components/Layout/Footer";
-import Header from "@/components/Layout/Header";
 import { useEffect, useRef, useState } from "react";
 import {
   getDatabase,
@@ -12,12 +10,12 @@ import {
 } from "firebase/database";
 import { FirebaseApp } from "firebase/app";
 import { INFURA_GATEWAY } from "@/lib/constants";
-
-type CursorPosition = {
-  x: number;
-  y: number;
-  id: string;
-};
+import GrantBox from "@/components/Home/Grant/modules/GrantBox";
+import CommentBox from "@/components/Home/Grant/modules/CommentBox";
+import useGrant from "@/components/Home/Grant/hooks/useGrant";
+import DynamicNFT from "@/components/Home/Grant/modules/DynamicNFT";
+import MirrorBox from "@/components/Home/Grant/modules/MirrorBox";
+import CollectBox from "@/components/Home/Grant/modules/CollectBox";
 
 type HomeProps = {
   firebaseApp: FirebaseApp;
@@ -27,7 +25,7 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const [imageLoaded, setImageLoaded] = useState(false);
-  const cursorImage = useRef<any>(null);
+  const cursorImage = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
     cursorImage.current = new Image();
@@ -42,7 +40,7 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
       sessionStorage.setItem("userId", userId);
     }
 
-    if (!firebaseApp || !canvasRef.current || !cursorImage.current) {
+    if (!firebaseApp || !canvasRef.current) {
       return;
     }
 
@@ -73,10 +71,10 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
     const cursorsRef = ref(db, "cursors");
     onValue(cursorsRef, (snapshot) => {
       const cursorPositions = snapshot.val();
-      if (cursorPositions && imageLoaded) {
+      if (cursorPositions) {
         context.clearRect(0, 0, canvas.width, canvas.height);
         Object.values(cursorPositions).forEach((position: any) => {
-          if (position.id !== userId) {
+          if (position.id !== userId && imageLoaded && cursorImage.current) {
             context.drawImage(
               cursorImage.current,
               position.x - cursorImage.current.width / 2,
@@ -93,11 +91,22 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
     };
   }, [firebaseApp, imageLoaded]);
 
+  const { commentRef, grantRef } = useGrant();
+
   return (
-    <div className="relative w-full h-full">
-      <div className="relative w-full h-full overflow-x-hidden flex flex-col cursor-pixel h-screen selection:bg-white selection:text-azul">
-        <Header />
-        <Footer />
+    <div className="relative w-full h-full flex flex-col">
+      <div className="relative w-full h-full flex flex-row p-6 gap-10 justify-center z-10">
+        <div className="relative w-full h-full flex flex-col items-center">
+          <CollectBox />
+          <MirrorBox />
+        </div>
+        <div className="relative w-full items-center h-full flex flex-col">
+          <DynamicNFT />
+          <GrantBox grantRef={grantRef} />
+        </div>
+        <div className="w-full h-full flex justify-center">
+          <CommentBox commentRef={commentRef} />
+        </div>
       </div>
       <div className="relative w-full h-full">
         <canvas
