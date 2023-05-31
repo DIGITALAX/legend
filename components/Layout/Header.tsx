@@ -2,8 +2,17 @@ import { INFURA_GATEWAY } from "@/lib/constants";
 import Image from "next/legacy/image";
 import Link from "next/link";
 import { FunctionComponent } from "react";
+import Wallet from "./modules/Wallet";
+import useSignIn from "./hooks/useSignIn";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
-const Header: FunctionComponent = (): JSX.Element => {
+const Header: FunctionComponent = ({}): JSX.Element => {
+  const profile = useSelector(
+    (state: RootState) => state.app.profileReducer.profile?.handle
+  );
+  const { handleConnect, handleLensSignIn, connected, signInLoading } =
+    useSignIn();
   return (
     <div className="relative w-full h-fit flex flex-row text-white font-earl p-3 gap-6 items-start">
       <Link
@@ -22,7 +31,7 @@ const Header: FunctionComponent = (): JSX.Element => {
           />
           <Link
             href={"/storefront"}
-            className="relative px-2 py-2 flex justify-center items-center w-fit h-fit hover:text-black/50 text-black active:scale-95 flex cursor-pixel" 
+            className="relative px-2 py-2 flex justify-center items-center w-fit h-fit hover:text-black/50 text-black active:scale-95 flex cursor-pixel"
           >
             <Image
               src={`${INFURA_GATEWAY}/QmdaGZociGw7XapzBELFDnbN3rLHhj18uCghXaMGhXPdqf`}
@@ -76,7 +85,7 @@ const Header: FunctionComponent = (): JSX.Element => {
       </div>
       <div className="relative flex w-fit h-full items-center justify-end flex-row gap-1">
         {Array.from(
-          { length: 6 },
+          { length: 3 },
           () => "QmTFgipESste4Gw5Eq5LZ6naxRMbqu3yonwEHVkyYNMTTt"
         ).map((item: string, index: number) => {
           return (
@@ -93,7 +102,7 @@ const Header: FunctionComponent = (): JSX.Element => {
           );
         })}
         {Array.from(
-          { length: 3 },
+          { length: 2 },
           () => "QmQ12aEBcK1nMAXQ2fa9SoK2FeDoQ6WdTUq9d83tfxt9ZR"
         ).map((item: string, index: number) => {
           return (
@@ -109,6 +118,18 @@ const Header: FunctionComponent = (): JSX.Element => {
             </div>
           );
         })}
+        <Wallet
+          handleTransaction={connected ? handleLensSignIn : handleConnect}
+          buttonText={
+            profile
+              ? `@${profile?.split(".lens")[0]}`
+              : connected
+              ? "SOCIAL"
+              : "CONNECT"
+          }
+          isConnected={connected}
+          signInLoading={signInLoading}
+        />
       </div>
     </div>
   );

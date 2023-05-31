@@ -10,6 +10,8 @@ import { getFirebaseApp } from "../firebase.config";
 import { FirebaseApp } from "firebase/app";
 import Header from "@/components/Layout/Header";
 import Footer from "@/components/Layout/Footer";
+import { store } from "./../redux/store";
+import { Provider } from "react-redux";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [polygon],
@@ -42,16 +44,18 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <WagmiConfig config={config}>
-      <RainbowKitProvider chains={chains}>
-        <div className="relative w-full h-full">
-          <div className="relative w-full h-full overflow-x-hidden flex flex-col cursor-pixel h-screen selection:bg-white selection:text-azul">
-            <Header />
-            <Component {...pageProps} firebaseApp={firebaseApp} />
-            <Footer />
+    <Provider store={store}>
+      <WagmiConfig config={config}>
+        <RainbowKitProvider chains={chains}>
+          <div className="relative w-full h-full">
+            <div className="relative w-full h-full overflow-x-hidden flex flex-col cursor-pixel h-screen selection:bg-white selection:text-azul">
+              <Header />
+              <Component {...pageProps} firebaseApp={firebaseApp} />
+              <Footer />
+            </div>
           </div>
-        </div>
-      </RainbowKitProvider>
-    </WagmiConfig>
+        </RainbowKitProvider>
+      </WagmiConfig>
+    </Provider>
   );
 }

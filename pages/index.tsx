@@ -24,7 +24,8 @@ type HomeProps = {
 export default function Home({ firebaseApp }: HomeProps): JSX.Element {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState<boolean>(false);
+  const [dbError, setDbError] = useState<boolean>(false);
   const cursorImage = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
@@ -53,45 +54,59 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
       return;
     }
 
-    const db = getDatabase(firebaseApp);
-    const cursorRef = ref(db, `cursors/${userId}`);
-    onDisconnect(cursorRef).remove();
+    try {
+      const db = getDatabase(firebaseApp);
+      const cursorRef = ref(db, `cursors/${userId}`);
+      onDisconnect(cursorRef).remove();
 
-    const handleMouseMove = (event: MouseEvent) => {
-      const cursorPosition = {
-        x: event.clientX,
-        y: event.clientY,
-        id: userId,
+      const handleMouseMove = (event: MouseEvent) => {
+        const cursorPosition = {
+          x: event.clientX,
+          y: event.clientY,
+          id: userId,
+        };
+        set(cursorRef, cursorPosition);
       };
-      set(cursorRef, cursorPosition);
-    };
 
-    window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("mousemove", handleMouseMove);
 
-    const cursorsRef = ref(db, "cursors");
-    onValue(cursorsRef, (snapshot) => {
-      const cursorPositions = snapshot.val();
-      if (cursorPositions) {
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        Object.values(cursorPositions).forEach((position: any) => {
-          if (position.id !== userId && imageLoaded && cursorImage.current) {
-            context.drawImage(
-              cursorImage.current,
-              position.x - cursorImage.current.width / 2,
-              position.y - cursorImage.current.height / 2
-            );
-          }
-        });
-      }
-    });
+      const cursorsRef = ref(db, "cursors");
+      onValue(cursorsRef, (snapshot) => {
+        const cursorPositions = snapshot.val();
+        if (cursorPositions) {
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          Object.values(cursorPositions).forEach((position: any) => {
+            if (position.id !== userId && imageLoaded && cursorImage.current) {
+              context.drawImage(
+                cursorImage.current,
+                position.x - cursorImage.current.width / 2,
+                position.y - cursorImage.current.height / 2
+              );
+            }
+          });
+        }
+      });
 
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      off(cursorsRef);
-    };
+      const handleUnload = () => {
+        off(cursorRef);
+        set(cursorRef, null);
+      };
+
+      window.addEventListener("unload", handleUnload);
+
+      return () => {
+        window.removeEventListener("mousemove", handleMouseMove);
+        off(cursorsRef);
+        window.removeEventListener("unload", handleUnload);
+      };
+    } catch (err: any) {
+      setDbError(true);
+      return;
+    }
   }, [firebaseApp, imageLoaded]);
 
   const { commentRef, grantRef } = useGrant();
+
 
   return (
     <div className="relative w-full h-full flex flex-col">

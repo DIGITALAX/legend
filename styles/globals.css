@@ -35,3 +35,30 @@ body {
   -moz-text-stroke: 1px black;
   text-stroke: 1px black;
 }
+
+
+#highlighted-content {
+  font-family: "Earls Revenge";
+  font-size: 1rem;
+  line-height: 1.5rem;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+#highlighted-content::-webkit-scrollbar {
+  display: none;
+}
+
+#post {
+  color: transparent;
+  background: transparent;
+  caret-color: black;
+}
+
+#post #highlighting * {
+  font-family: "Earls Revenge";
+  font-size: 1rem; /* 16px */
+  line-height: 1.5rem;
+  overflow-y: auto;
+  white-space: pre-wrap;
+}
