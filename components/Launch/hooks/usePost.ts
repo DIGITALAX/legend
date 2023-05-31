@@ -39,6 +39,7 @@ import {
 } from "@/graphql/lens/mutate/post";
 import splitSignature from "@/lib/lens/helpers/splitSignature";
 import availableCurrencies from "@/lib/lens/helpers/availableCurrencies";
+import { setPostValues } from "@/redux/reducers/postValuesSlice";
 
 const usePost = () => {
   const [postLoading, setPostLoading] = useState<boolean>(false);
@@ -413,6 +414,15 @@ const usePost = () => {
       console.error(err);
     }
   }, []);
+
+  useEffect(() => {
+    dispatch(
+      setPostValues({
+        title,
+        editionAmount,
+      })
+    );
+  }, [title, editionAmount]);
 
   return {
     postDescription,

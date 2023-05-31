@@ -2,9 +2,8 @@ import { Erc20, Profile } from "@/components/home.types";
 import { FormEvent, KeyboardEvent, Ref, RefObject } from "react";
 
 export type SwitchLaunchProps = {
-  authStatus: boolean;
   profile: Profile | undefined;
-  address: `0x${string}` | undefined;
+  page: number;
 };
 
 export type PostDetailsProps = {
@@ -40,8 +39,19 @@ export type PreviewProps = {
   title: string | undefined;
   postDescription: string | undefined;
   referralFee: number;
-  recipients: string[][];
+  recipients: { recipient: string; split: number }[];
   editionAmount: number;
   valueAmount: number;
   currency: string | undefined;
+};
+
+export type NextButtonProps = {
+  page: number;
+  setPage: (e: number) => void;
+};
+
+export type ImageUploadDynamicProps = {
+  imageLoading: boolean;
+  uploadZip: (e: FormEvent) => Promise<void>;
+  fileUploadCount: number
 };

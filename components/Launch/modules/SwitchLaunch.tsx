@@ -7,16 +7,19 @@ import Store from "./Store";
 import Contracts from "./Contracts";
 import usePost from "../hooks/usePost";
 import Preview from "./Preview";
+import ImageUploadDynamic from "./ImageUploadDynamic";
+import useImageUpload from "../hooks/useImageUpload";
 
 const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
-  authStatus,
   profile,
-  address,
+  page,
 }): JSX.Element => {
   let action: string;
   const decideStringAction = () => {
-    if (authStatus && address && profile?.handle) {
-      action = "post";
+    if (!profile?.handle) {
+      action = "sign in";
+    } else {
+      action = String(page);
     }
     return action;
   };
@@ -44,23 +47,41 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
     setValueAmount,
     setReferralFee,
     referralFee,
-    enabledCurrencies
+    enabledCurrencies,
   } = usePost();
 
+  const { imageLoading, uploadZip, fileUploadCount } = useImageUpload();
+
   switch (decideStringAction()) {
-    case "live":
+    case "5":
       return <Live />;
 
-    case "keeper":
+    case "4":
       return <Keeper />;
 
-    case "store":
+    case "3":
       return <Store />;
 
-    case "contracts":
+    case "2":
       return <Contracts />;
 
-    case "post":
+    case "1":
+      return (
+        <ImageUploadDynamic
+          imageLoading={imageLoading}
+          uploadZip={uploadZip}
+          fileUploadCount={fileUploadCount}
+        />
+      );
+
+    case "sign in":
+      return (
+        <div className="font-earl text-black flex flex-col items-center justify-center text-center w-full h-full">
+          Connect to Launch a Grant
+        </div>
+      );
+
+    default:
       return (
         <div className="relative w-full h-full flex flex-row gap-3 items-center justify-center">
           <PostDetails
@@ -97,13 +118,6 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
             valueAmount={valueAmount}
             currency={currency}
           />
-        </div>
-      );
-
-    default:
-      return (
-        <div className="font-earl text-black flex flex-col items-center justify-center text-center w-full h-full">
-          Connect to Launch a Grant
         </div>
       );
   }

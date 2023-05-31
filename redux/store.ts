@@ -8,6 +8,8 @@ import IPFSReducer from "./reducers/IPFSSlice";
 import publicationImageReducer from "./reducers/publicationImageSlice";
 import commentImagesReducer from "./reducers/commentImagesSlice";
 import dispatcherReducer from "./reducers/dispatcherSlice";
+import postValuesReducer from "./reducers/postValuesSlice";
+import NFTImageArrayReducer from "./reducers/NFTImageArraySlice";
 
 const reducer = combineReducers({
   noHandleReducer,
@@ -18,6 +20,8 @@ const reducer = combineReducers({
   publicationImageReducer,
   commentImagesReducer,
   dispatcherReducer,
+  postValuesReducer,
+  NFTImageArrayReducer,
 });
 
 export const store = configureStore({
