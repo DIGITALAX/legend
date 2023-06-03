@@ -13,6 +13,12 @@
   src: url("/fonts/EarlsRevenge.ttf");
 }
 
+@font-face {
+  font-family: "Megamax Jones";
+  font-weight: 400;
+  src: url("/fonts/MegamaxJones.ttf");
+}
+
 body {
   background: #bed2f3;
   cursor: url("https://chromadin.infura-ipfs.io/ipfs/QmSvwVtnD6NRM64xRiPthdYRP8mW3jJHmCEohZMyr7zD4T"),
@@ -52,7 +58,7 @@ body {
 #post {
   color: transparent;
   background: transparent;
-  caret-color: black;
+  caret-color: white;
 }
 
 #post #highlighting * {

@@ -104,32 +104,36 @@ const useSignIn = (): UseSignInResults => {
   };
 
   useEffect(() => {
-    setConnected(isConnected);
-    const newAddress = getAddress();
+    const handleAuthentication = async () => {
+      setConnected(isConnected);
+      const newAddress = getAddress();
 
-    if (
-      (newAddress && newAddress?.replace(/^"|"$/g, "") === address) ||
-      (!newAddress && address)
-    ) {
-      const token = getAuthenticationToken();
-      setAddress(address as string);
-      if (isConnected && !token) {
+      if (
+        (newAddress && newAddress?.replace(/^"|"$/g, "") === address) ||
+        (!newAddress && address)
+      ) {
+        const token = getAuthenticationToken();
+        setAddress(address as string);
+        if (isConnected && !token) {
+          dispatch(setProfile(undefined));
+          removeAuthenticationToken();
+        } else if (isConnected && token) {
+          if (isAuthExpired(token?.exp)) {
+            const refreshedAccessToken = await refreshAuth(); // await the refreshAuth promise
+            if (!refreshedAccessToken) {
+              dispatch(setProfile(undefined));
+              removeAuthenticationToken();
+            }
+          }
+          await handleRefreshProfile(); // await the handleRefreshProfile promise
+        }
+      } else if (isConnected && address !== newAddress) {
         dispatch(setProfile(undefined));
         removeAuthenticationToken();
-      } else if (isConnected && token) {
-        if (isAuthExpired(token?.exp)) {
-          const refreshedAccessToken = refreshAuth();
-          if (!refreshedAccessToken) {
-            dispatch(setProfile(undefined));
-            removeAuthenticationToken();
-          }
-        }
-        handleRefreshProfile();
       }
-    } else if (isConnected && address !== newAddress) {
-      dispatch(setProfile(undefined));
-      removeAuthenticationToken();
-    }
+    };
+
+    handleAuthentication(); // Call the inner async function
   }, [isConnected]);
 
   useEffect(() => {

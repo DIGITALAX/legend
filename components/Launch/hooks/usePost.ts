@@ -403,7 +403,7 @@ const usePost = () => {
   useEffect(() => {
     if (document.querySelector("#highlighted-content")) {
       document.querySelector("#highlighted-content")!.innerHTML =
-        postHTML.length === 0 ? "Have something to say?" : postHTML;
+        postHTML.length === 0 ? "" : postHTML;
     }
   }, [postHTML, gifOpen]);
 

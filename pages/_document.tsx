@@ -46,6 +46,13 @@ export default function Document() {
           crossOrigin="anonymous"
           type="font/ttf"
         />
+        <link
+          rel="preload"
+          href="/fonts/MegamaxJones.ttf"
+          as="font"
+          crossOrigin="anonymous"
+          type="font/ttf"
+        />
         <style
           dangerouslySetInnerHTML={{
             __html: `
@@ -61,6 +68,11 @@ export default function Document() {
                 src: url("./fonts/EarlsRevenge.ttf");
               }
 
+              @font-face {
+                font-family: "Megamax Jones";
+                font-weight: 400;
+                src: url("./fonts/MegamaxJones.ttf");
+              }
             `,
           }}
         ></style>

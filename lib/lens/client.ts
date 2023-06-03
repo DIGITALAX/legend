@@ -3,6 +3,7 @@ import {
   InMemoryCache,
   HttpLink,
   ApolloLink,
+  Observable,
 } from "@apollo/client";
 import { BASE_URL } from "./../constants";
 import { getAuthenticationToken, isAuthExpired, refreshAuth } from "./utils";
@@ -25,32 +26,42 @@ export const authClient = new ApolloClient({
 
 // main client
 const authLink = new ApolloLink((operation, forward) => {
-  const res = getAuthenticationToken() as {
-    accessToken: string;
-    refreshToken: string;
-    exp: number;
-  };
-  if (!res?.accessToken) {
-    return null;
-  }
-
-  let authToken: string = res?.accessToken;
-
-  if (isAuthExpired(res?.exp)) {
-    const refreshedAccessToken = refreshAuth();
-    if (!refreshedAccessToken) {
-      return null;
+  return new Observable((observer) => {
+    const res = getAuthenticationToken();
+    if (!res?.accessToken) {
+      observer.complete();
+      return;
     }
-    authToken = refreshedAccessToken as any;
-  }
 
-  operation.setContext({
-    headers: {
-      "x-access-token": authToken ? `Bearer ${authToken}` : "",
-    },
+    let authToken: string = res.accessToken;
+
+    if (isAuthExpired(res.exp)) {
+      refreshAuth()
+        .then((refreshedAccessToken) => {
+          if (!refreshedAccessToken) {
+            observer.complete();
+            return;
+          }
+          authToken = refreshedAccessToken;
+          operation.setContext({
+            headers: {
+              "x-access-token": `Bearer ${authToken}`,
+            },
+          });
+          forward(operation).subscribe(observer);
+        })
+        .catch((error) => {
+          observer.error(error);
+        });
+    } else {
+      operation.setContext({
+        headers: {
+          "x-access-token": `Bearer ${authToken}`,
+        },
+      });
+      forward(operation).subscribe(observer);
+    }
   });
-
-  return forward(operation);
 });
 
 link = ApolloLink.from([retryLink, authLink.concat(httpLink)]);
