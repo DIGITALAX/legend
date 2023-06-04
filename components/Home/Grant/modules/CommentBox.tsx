@@ -2,11 +2,8 @@ import { INFURA_GATEWAY } from "@/lib/constants";
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import Draggable from "react-draggable";
-import { CommentBoxProps } from "../types/grant.types";
 
-const CommentBox: FunctionComponent<CommentBoxProps> = ({
-  commentRef,
-}): JSX.Element => {
+const CommentBox: FunctionComponent = (): JSX.Element => {
   return (
     <Draggable
       enableUserSelectHack={false}

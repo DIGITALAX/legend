@@ -48,6 +48,11 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
     setReferralFee,
     referralFee,
     enabledCurrencies,
+    sustained,
+    setSustained,
+    involved,
+    setInvolved,
+    filledInAmount
   } = usePost();
 
   const { imageLoading, uploadZip, fileUploadCount } = useImageUpload();
@@ -108,6 +113,11 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
             setReferralFee={setReferralFee}
             referralFee={referralFee}
             enabledCurrencies={enabledCurrencies}
+            sustained={sustained}
+            involved={involved}
+            setSustained={setSustained}
+            setInvolved={setInvolved}
+            filledInAmount={filledInAmount}
           />
           <Preview
             title={title}
@@ -117,6 +127,8 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
             editionAmount={editionAmount}
             valueAmount={valueAmount}
             currency={currency}
+            sustained={sustained}
+            involved={involved}
           />
         </div>
       );

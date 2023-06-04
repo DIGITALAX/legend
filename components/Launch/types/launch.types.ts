@@ -33,6 +33,11 @@ export type PostDetailsProps = {
   handleMentionClick: (user: Profile) => void;
   handleKeyDownDelete: (e: KeyboardEvent<Element>) => void;
   enabledCurrencies: Erc20[];
+  involved: string | undefined;
+  setInvolved: (e: string) => void;
+  sustained: string | undefined;
+  setSustained: (e: string) => void;
+  filledInAmount: number;
 };
 
 export type PreviewProps = {
@@ -43,15 +48,18 @@ export type PreviewProps = {
   editionAmount: number;
   valueAmount: number;
   currency: string | undefined;
+  involved: string | undefined;
+  sustained: string | undefined;
 };
 
 export type NextButtonProps = {
   page: number;
   setPage: (e: number) => void;
+  text: string;
 };
 
 export type ImageUploadDynamicProps = {
   imageLoading: boolean;
   uploadZip: (e: FormEvent) => Promise<void>;
-  fileUploadCount: number
+  fileUploadCount: number;
 };

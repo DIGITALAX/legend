@@ -8,6 +8,7 @@ import Draggable from "react-draggable";
 import { INFURA_GATEWAY } from "@/lib/constants";
 import SmallBox from "@/components/Common/modules/SmallBox";
 import TopBarOne from "@/components/Common/modules/TopBarOne";
+import TopBarTwo from "@/components/Common/modules/TopBarTwo";
 
 const PostDetails: FunctionComponent<PostDetailsProps> = ({
   title,
@@ -33,11 +34,16 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
   setReferralFee,
   referralFee,
   enabledCurrencies,
+  setInvolved,
+  setSustained,
+  sustained,
+  involved,
+  filledInAmount,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-full flex flex-col items-center">
+    <div className="relative w-full h-full flex items-center z-1">
       <Draggable enableUserSelectHack={false}>
-        <div className="relative w-72 h-fit flex gap-3 bg-mal rounded-md border-2 border-mora p-6">
+        <div className="relative w-72 h-fit flex gap-3 bg-mal rounded-md border-2 border-mora left-10 p-6 z-1">
           <div className="relative w-full h-full bg-otra items-center flex flex-col">
             <TopBarOne />
             <div className="p-2 flex w-full h-full flex-col gap-3">
@@ -75,7 +81,7 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
         </div>
       </Draggable>
       <Draggable enableUserSelectHack={false}>
-        <div className="relative w-96 h-fit flex gap-3 bg-darker rounded-md border-2 border-mora p-6">
+        <div className="relative w-96 h-fit flex gap-3 bg-darker rounded-md border-2 border-mora p-6 -top-10 -left-24">
           <div className="relative w-full h-full bg-otra items-center flex flex-col">
             <TopBarOne />
             <div className="p-2 flex w-full h-full flex-col gap-3">
@@ -166,89 +172,219 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
           </div>
         </div>
       </Draggable>
-      <SmallBox
-        title={"How many editions?"}
-        onChangeFunction={(e: FormEvent) =>
-          setEditionAmount((e.target as HTMLFormElement).value)
-        }
-        value={editionAmount}
-      />
-      <SmallBox
-        title={"How much?"}
-        onChangeFunction={(e: FormEvent) =>
-          setValueAmount((e.target as HTMLFormElement).value)
-        }
-        value={valueAmount}
-      />
-      <SmallBox
-        title={"Referral Fee?"}
-        onChangeFunction={(e: FormEvent) =>
-          setReferralFee((e.target as HTMLFormElement).value)
-        }
-        value={referralFee}
-      />
-      <div className="relative w-fit h-fit flex flex-col gap-3">
-        <div className="relative w-fit h-fit flex">Choose Currency</div>
-        <div className="relative w-fit h-fit flex flex-row gap-2">
-          {enabledCurrencies?.map((currency: Erc20, index: number) => {
-            return (
-              <div onClick={() => setCurrency(currency.address)} key={index}>
-                {currency.symbol}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-      <div className="relative w-fit h-fit flex flex-col gap-3">
-        <div className="relative w-fit h-fit flex">Set Recipients</div>
-        <div className="relative w-fit h-fit flex flex-col gap-2">
-          {recipients?.map(
-            (
-              recipient: {
-                recipient: string;
-                split: number;
-              },
-              index: number
-            ) => {
-              return (
-                <div className="relative flex flex-row gap-2" key={index}>
-                  <div className="relative flex flex-col gap-1">
-                    <div className="w-fit h-fit"> recipient address</div>
-                    <input
-                      className="relative w-full h-fit"
-                      value={recipient.recipient}
-                      onChange={(e) => {
-                        const updatedRecipients = recipients.map((r, i) =>
-                          i === index
-                            ? { ...r, recipient: e.target.value.trim() }
-                            : r
-                        );
-                        setRecipients(updatedRecipients);
-                      }}
+      <Draggable enableUserSelectHack={false}>
+        <div className="absolute w-80 h-fit flex gap-3 bg-lez border-2 border-mazul bottom-48 right-20">
+          <div className="relative w-full h-full bg-lez items-center flex flex-col">
+            <TopBarOne />
+            <div className="p-2 flex w-full h-full flex-row gap-1">
+              <div className="relative w-full h-full flex flex-col gap-3 p-2">
+                <div className="relative w-full h-full flex items-center justify-center rounded-md">
+                  <div className="absolute w-full h-full flex">
+                    <Image
+                      layout="fill"
+                      src={`${INFURA_GATEWAY}/Qme3dKpZyyv9oMEu9AbaS3Q3xXGcbXj5V2JXhhJW8bRfQV`}
+                      draggable={false}
                     />
                   </div>
-                  <div className="relative flex flex-col gap-1">
-                    <div className="w-fit h-fit"> recipient split %</div>
-                    <input
-                      className="relative w-20 h-fit"
-                      type="number"
-                      value={recipient.split}
-                      onChange={(e) => {
-                        const updatedRecipients = recipients.map((r, i) =>
-                          i === index
-                            ? { ...r, split: parseInt(e.target.value) }
-                            : r
-                        );
-                        setRecipients(updatedRecipients);
-                      }}
-                    />
-                  </div>
+                  <textarea
+                    className="relative w-full h-60 flex cursor-white bg-blez border border-glez text-black font-mega text-sm p-1 rounded-md"
+                    style={{ resize: "none" }}
+                    onChange={(e: FormEvent) =>
+                      setSustained((e.target as HTMLFormElement).value)
+                    }
+                    value={sustained}
+                  ></textarea>
                 </div>
-              );
-            }
-          )}
+                <div className="relative w-fit h-fit flex font-mega text-mazul text-xl uppercase">
+                  How will the grant be sustained?
+                </div>
+              </div>
+              <div className="relative w-4 h-full flex-col flex">
+                <div className="relative w-4 h-28 justify-center items-center flex">
+                  <Image
+                    src={`${INFURA_GATEWAY}/QmeAQhTDsfdCfGykQpgfVBJXBK3f3fuM228KjregyLQ3M1`}
+                    layout="fill"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </Draggable>
+      <div className="absolute bottom-10 left-24 flex w-fit h-fit z-1">
+        <SmallBox
+          title={"How many editions?"}
+          onChangeFunction={(e: FormEvent) =>
+            setEditionAmount((e.target as HTMLFormElement).value)
+          }
+          value={editionAmount}
+        />
       </div>
+      <div className="absolute -bottom-10 left-40 flex w-fit h-fit z-1">
+        <SmallBox
+          title={"How much?"}
+          onChangeFunction={(e: FormEvent) =>
+            setValueAmount((e.target as HTMLFormElement).value)
+          }
+          value={valueAmount}
+        />
+      </div>
+      <div className="absolute -bottom-10 left-52 flex w-fit h-fit z-1">
+        <SmallBox
+          title={"Referral Fee?"}
+          onChangeFunction={(e: FormEvent) =>
+            setReferralFee((e.target as HTMLFormElement).value)
+          }
+          value={referralFee}
+        />
+      </div>
+      <Draggable enableUserSelectHack={false}>
+        <div className="absolute w-60 h-fit flex gap-3 bg-white border-2 border-mazul right-2">
+          <div className="relative w-full h-full items-center flex flex-col">
+            <TopBarTwo />
+            <div className="p-2 flex w-full h-full flex-col gap-3">
+              <div className="w-full h-60 border border-black bg-mist items-center justify-center flex">
+                <div className="relative w-20 h-20">
+                  <Image
+                    layout="fill"
+                    src={`${INFURA_GATEWAY}/QmeWeZdKj7rssxWSgFBafXubYc7k9DgnGN4pWzHcV6fvKY`}
+                    draggable={false}
+                  />
+                </div>
+              </div>
+              <div className="relative w-fit h-fit flex font-mega text-mazul text-xl text-center">
+                WHO ARE YOU? Be descriptive.
+              </div>
+              <div className="relative w-fit h-fit flex font-mega text-mazul text-sm text-center">
+                Help collectors understand the people behind the grant,
+                including your experience, and intent:
+              </div>
+              <div className="relative w-full h-full flex items-center justify-center rounded-md">
+                <div className="absolute w-full h-full flex opacity-70">
+                  <Image
+                    layout="fill"
+                    src={`${INFURA_GATEWAY}/Qme3dKpZyyv9oMEu9AbaS3Q3xXGcbXj5V2JXhhJW8bRfQV`}
+                    draggable={false}
+                  />
+                </div>
+                <textarea
+                  className="relative w-full h-full flex p-2 text-black font-earl text-sm bg-transparent rounded-md"
+                  style={{ resize: "none" }}
+                  onChange={(e: FormEvent) =>
+                    setInvolved((e.target as HTMLFormElement).value)
+                  }
+                  value={involved}
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Draggable>
+      <Draggable enableUserSelectHack={false}>
+        <div className="absolute z-1 w-72 h-fit flex flex-col rounded-md bg-offWhite border-2 border-mazul left-10">
+          <TopBarTwo />
+          <div className="p-2 w-full h-full flex flex-col gap-2">
+            <div className="relative w-full h-fit flex font-mega text-lg uppercase text-mazul p-2 items-center justify-center text-center">
+              SELECT CURRENCY
+            </div>
+            <div className="relative w-full h-full flex">
+              <div className="relative w-fit h-fit flex flex-row gap-2 flex-wrap items-center justify-center">
+                {enabledCurrencies?.map(
+                  (currencyValue: Erc20, index: number) => {
+                    return (
+                      <div
+                        className={`border border-black flex items-center justify-center font-mega text-mazul px-3 py-2 ${
+                          currency === currencyValue.symbol && "bg-mist"
+                        }`}
+                        onClick={() => setCurrency(currencyValue.address)}
+                        key={index}
+                      >
+                        {currencyValue.symbol}
+                      </div>
+                    );
+                  }
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </Draggable>
+      <Draggable enableUserSelectHack={false}>
+        <div className="absolute right-10 -bottom-10 w-72 h-fit flex flex-col rounded-md bg-offWhite border-2 border-mazul">
+          <TopBarTwo />
+          <div className="p-2 w-full h-full flex flex-col gap-2">
+            <div className="relative w-full h-fit flex font-mega uppercase text-mazul p-2 items-center justify-center text-center">
+              SET GRANT RECIPIENTS
+            </div>
+            <div className="relative w-fit h-fit flex flex-col gap-2">
+              {recipients?.map(
+                (
+                  recipient: {
+                    recipient: string;
+                    split: number;
+                  },
+                  index: number
+                ) => {
+                  return (
+                    <div
+                      className="relative flex flex-row gap-2 font-mega text-sm"
+                      key={index}
+                    >
+                      <div className="relative flex flex-col gap-1">
+                        <div className="w-fit h-fit">ADDRESS</div>
+                        <input
+                          className="relative w-full h-fit font-earl bg-oscura border border-azul rounded-md p-1"
+                          value={recipient.recipient}
+                          onChange={(e) => {
+                            const updatedRecipients = recipients.map((r, i) =>
+                              i === index
+                                ? { ...r, recipient: e.target.value.trim() }
+                                : r
+                            );
+                            setRecipients(updatedRecipients);
+                          }}
+                        />
+                      </div>
+                      <div className="relative flex flex-col gap-1">
+                        <div className="w-fit h-fit"> SPLIT %</div>
+                        <input
+                          className="relative w-20 h-fit font-earl bg-oscura border border-azul rounded-md p-1"
+                          type="number"
+                          value={recipient.split}
+                          onChange={(e) => {
+                            const updatedRecipients = recipients.map((r, i) =>
+                              i === index
+                                ? { ...r, split: parseInt(e.target.value) }
+                                : r
+                            );
+                            setRecipients(updatedRecipients);
+                          }}
+                        />
+                      </div>
+                    </div>
+                  );
+                }
+              )}
+            </div>
+          </div>
+        </div>
+      </Draggable>
+      <Draggable enableUserSelectHack={false}>
+        <div className="absolute bottom-40 right-10 w-72 h-fit flex flex-col rounded-md bg-white border-2 border-mazul z-2">
+          <TopBarTwo />
+          <div className="p-2 w-full h-full flex flex-row gap-2 p-2 items-center justify-center">
+            <div className="relative w-full h-4 border border-black rounded-full">
+              <div
+                className="bg-azul rounded-full h-full"
+                style={{
+                  width: `${(filledInAmount / 6) * 100}%`,
+                }}
+              ></div>
+            </div>
+            <div className="relative w-fit h-fit text-mazul font-mega">%</div>
+          </div>
+        </div>
+      </Draggable>
     </div>
   );
 };

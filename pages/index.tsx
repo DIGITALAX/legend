@@ -12,7 +12,6 @@ import { FirebaseApp } from "firebase/app";
 import { INFURA_GATEWAY } from "@/lib/constants";
 import GrantBox from "@/components/Home/Grant/modules/GrantBox";
 import CommentBox from "@/components/Home/Grant/modules/CommentBox";
-import useGrant from "@/components/Home/Grant/hooks/useGrant";
 import DynamicNFT from "@/components/Home/Grant/modules/DynamicNFT";
 import MirrorBox from "@/components/Home/Grant/modules/MirrorBox";
 import CollectBox from "@/components/Home/Grant/modules/CollectBox";
@@ -105,8 +104,6 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
     }
   }, [firebaseApp, imageLoaded]);
 
-  const { commentRef, grantRef } = useGrant();
-
 
   return (
     <div className="relative w-full h-full flex flex-col">
@@ -117,10 +114,10 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
         </div>
         <div className="relative w-full items-center h-full flex flex-col">
           <DynamicNFT />
-          <GrantBox grantRef={grantRef} />
+          <GrantBox  />
         </div>
         <div className="w-full h-full flex justify-center">
-          <CommentBox commentRef={commentRef} />
+          <CommentBox />
         </div>
       </div>
       <div className="relative w-full h-full">

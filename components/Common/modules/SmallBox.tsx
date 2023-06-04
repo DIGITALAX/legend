@@ -1,5 +1,4 @@
 import { FunctionComponent } from "react";
-import TopBarOne from "./TopBarOne";
 import Draggable from "react-draggable";
 import { SmallBoxProps } from "../types/common.types";
 import TopBarTwo from "./TopBarTwo";
@@ -13,7 +12,7 @@ const SmallBox: FunctionComponent<SmallBoxProps> = ({
 }): JSX.Element => {
   return (
     <Draggable enableUserSelectHack={false}>
-      <div className="relative w-40 h-fit flex flex-col rounded-md bg-offWhite border border-black">
+      <div className="relative w-40 h-fit flex flex-col rounded-md bg-offWhite border-2 border-mazul">
         <TopBarTwo />
         <div className="p-2 w-full h-full flex flex-col gap-2">
           <div className="relative w-fit h-fit flex font-mega text-lg uppercase text-mazul p-2">

@@ -12,12 +12,12 @@ const Launch: NextPage = (): JSX.Element => {
   );
 
   return (
-    <div className="relative w-full h-full flex flex-col z-1">
-      <SwitchLaunch
-        profile={profile}
-        page={page}
-      />
-      <NextButton page={page} setPage={setPage} />
+    <div className="relative w-full h-screen flex flex-col z-1">
+      <SwitchLaunch profile={profile} page={page} />
+      <div className="flex flex-row gap-3 justify-end items-center h-fit w-full p-3">
+        {page > 0 && <NextButton text={"BACK"} page={page} setPage={setPage} />}
+        <NextButton text={"NEXT"} page={page} setPage={setPage} />
+      </div>
     </div>
   );
 };

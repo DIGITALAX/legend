@@ -4,7 +4,7 @@ import { FunctionComponent } from "react";
 
 const TopBarTwo: FunctionComponent = (): JSX.Element => {
   return (
-    <div className="relative w-full h-fit flex flex-col rounded-t-md border border-2 border-mazul">
+    <div className="relative w-full h-fit flex flex-col border-b border-b-2 border-mazul">
       <div className="absolute w-full h-full opacity-30">
         <Image
           layout="fill"

@@ -6,11 +6,13 @@ import { v4 as uuidv4 } from "uuid";
 
 const uploadPostContent = async (
   postImages: UploadedMedia[] | undefined,
-  title: string,
   postDescription: string,
   setContentURI: (e: string | undefined) => void,
   contentURI: string | undefined,
-  dispatch: Dispatch<AnyAction>
+  dispatch: Dispatch<AnyAction>,
+  title?: string,
+  sustained?: string,
+  involved?: string
 ): Promise<string | undefined> => {
   let newImages: PostImage[] = [];
   postImages?.forEach((image) => {
@@ -36,12 +38,16 @@ const uploadPostContent = async (
   const data = {
     version: "2.0.0",
     metadata_id: uuidv4(),
-    description: `${title}<br/><br/>${postDescription}`,
-    content: `${title}<br/><br/>${postDescription}`,
+    description: title
+      ? `${title}<br/><br/>What's being built?<br/>${postDescription}<br/><br/>Who's involved?<br/>${involved}<br/><br/>How will the grant be sustained?<br/>${sustained}`
+      : postDescription,
+    content: title
+      ? `${title}<br/><br/>What's being built?<br/>${postDescription}<br/><br/>Who's involved?<br/>${involved}<br/><br/>How will the grant be sustained?<br/>${sustained}`
+      : postDescription,
     external_url: "https://www.legend.irrevocable.xyz/",
     image: coverImage.length > 0 ? (coverImage[0] as any).item : null,
     imageMimeType: "image/png",
-    name: title,
+    name: title ? title : postDescription.slice(0, 10),
     mainContentFocus:
       videos?.length > 0
         ? "VIDEO"

@@ -55,6 +55,9 @@ const usePost = () => {
   const preElement = useRef<HTMLPreElement>(null);
   const [mentionProfiles, setMentionProfiles] = useState<Profile[]>([]);
   const [title, setTitle] = useState<string>();
+  const [sustained, setSustained] = useState<string>();
+  const [involved, setInvolved] = useState<string>();
+  const [filledInAmount, setFilledInAmount] = useState<number>(0);
   const [recipients, setRecipients] = useState<
     { recipient: string; split: number }[]
   >([
@@ -234,11 +237,13 @@ const usePost = () => {
     try {
       const contentURIValue = await uploadPostContent(
         postImages,
-        title as string,
         postDescription,
         setContentURI,
         contentURI,
-        dispatch
+        dispatch,
+        title as string,
+        sustained as string,
+        involved as string
       );
 
       if (dispatcher) {
@@ -424,6 +429,28 @@ const usePost = () => {
     );
   }, [title, editionAmount]);
 
+  const isFilled = (str: string | undefined) =>
+    typeof str === "string" && str?.trim() !== "";
+
+  useEffect(() => {
+    let filledCounter: number = 0;
+
+    if (isFilled(title)) filledCounter++;
+    if (isFilled(sustained)) filledCounter++;
+    if (isFilled(involved)) filledCounter++;
+    if (isFilled(postDescription)) filledCounter++;
+    if (
+      recipients &&
+      recipients.length > 0 &&
+      recipients[0].recipient?.trim() !== "" &&
+      recipients[0].split !== 0 &&
+      typeof recipients[0].split !== undefined
+    )
+      filledCounter++;
+
+    setFilledInAmount(filledCounter);
+  }, [title, sustained, involved, postDescription, recipients]);
+
   return {
     postDescription,
     textElement,
@@ -457,6 +484,11 @@ const usePost = () => {
     setReferralFee,
     referralFee,
     enabledCurrencies,
+    sustained,
+    setSustained,
+    involved,
+    setInvolved,
+    filledInAmount,
   };
 };
 

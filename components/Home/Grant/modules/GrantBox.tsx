@@ -2,9 +2,8 @@ import { INFURA_GATEWAY } from "@/lib/constants";
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import Draggable from "react-draggable";
-import { GrantBoxProps } from "../types/grant.types";
 
-const GrantBox: FunctionComponent<GrantBoxProps> = (): JSX.Element => {
+const GrantBox: FunctionComponent= (): JSX.Element => {
   return (
     <Draggable
       enableUserSelectHack={false}

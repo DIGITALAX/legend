@@ -23,6 +23,10 @@ module.exports = {
         darker: "#0100F4",
         offWhite: "#FEFEFE",
         oscura: "#F3F3F7",
+        lez: "#FEF6E2",
+        blez: "#CEE2E3",
+        glez: "#06B4BD",
+        mist: "#4B4BF0",
       },
       fontFamily: {
         vcr: "VCR",
