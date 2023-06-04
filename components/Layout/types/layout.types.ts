@@ -1,6 +1,6 @@
 export type WalletProps = {
   handleTransaction: () => void;
-  isConnected: boolean;
+  profile: string;
   buttonText: string;
   signInLoading: boolean;
 };

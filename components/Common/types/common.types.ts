@@ -5,3 +5,7 @@ export type SmallBoxProps = {
   value: any;
   onChangeFunction: (e: FormEvent) => void;
 };
+
+export type TopBarThreeProps = {
+  text: string;
+};

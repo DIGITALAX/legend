@@ -1,8 +1,11 @@
 import { INFURA_GATEWAY } from "@/lib/constants";
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
+import { TopBarThreeProps } from "../types/common.types";
 
-const TopBarOne: FunctionComponent = (): JSX.Element => {
+const TopBarThree: FunctionComponent<TopBarThreeProps> = ({
+  text,
+}): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex flex-row border-b border-mazul border-b-2">
       <div className="absolute w-full h-full opacity-30">
@@ -15,7 +18,7 @@ const TopBarOne: FunctionComponent = (): JSX.Element => {
       </div>
       <div className="flex flex-row relative w-full h-full items-center px-2">
         <div className="justify-start flex flex-row relative font-mega text-sm text-gris w-full h-fit ">
-          GRANT PREVIEW
+          {text}
         </div>
         <div className="relative flex flex-row gap-2 justify-end p-1.5 w-full">
           <div className="border border-black bg-medio h-4 w-4 items-center justify-center flex font-mega text-xs p-1">
@@ -37,4 +40,4 @@ const TopBarOne: FunctionComponent = (): JSX.Element => {
   );
 };
 
-export default TopBarOne;
+export default TopBarThree;

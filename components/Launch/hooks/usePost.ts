@@ -1,4 +1,4 @@
-import { LENS_HUB_PROXY_ADDRESS_MATIC } from "@/lib/constants";
+import { LENS_HUB_PROXY_ADDRESS_MATIC, LENS_HUB_PROXY_ADDRESS_MUMBAI } from "@/lib/constants";
 import {
   ClipboardEvent,
   FormEvent,
@@ -98,7 +98,7 @@ const usePost = () => {
   );
 
   const { config, isSuccess } = usePrepareContractWrite({
-    address: LENS_HUB_PROXY_ADDRESS_MATIC,
+    address: LENS_HUB_PROXY_ADDRESS_MUMBAI,
     abi: LensHubProxy,
     functionName: "postWithSig",
     enabled: Boolean(postArgs),

@@ -10,7 +10,7 @@ export interface PostValuesState {
 const initialPostValuesState: PostValuesState = {
   value: {
     title: undefined,
-    editionAmount: 0,
+    editionAmount: 100,
   },
 };
 

@@ -5,11 +5,11 @@ import {
   ApolloLink,
   Observable,
 } from "@apollo/client";
-import { BASE_URL } from "./../constants";
+import { BASE_URL, BASE_URL_MUMBAI } from "./../constants";
 import { getAuthenticationToken, isAuthExpired, refreshAuth } from "./utils";
 import { RetryLink } from "@apollo/client/link/retry";
 
-const httpLink = new HttpLink({ uri: BASE_URL });
+const httpLink = new HttpLink({ uri: BASE_URL_MUMBAI });
 
 const retryLink = new RetryLink();
 

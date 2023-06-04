@@ -9,6 +9,9 @@ import usePost from "../hooks/usePost";
 import Preview from "./Preview";
 import ImageUploadDynamic from "./ImageUploadDynamic";
 import useImageUpload from "../hooks/useImageUpload";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import useContracts from "../hooks/useContracts";
 
 const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
   profile,
@@ -52,10 +55,24 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
     setSustained,
     involved,
     setInvolved,
-    filledInAmount
+    filledInAmount,
   } = usePost();
 
-  const { imageLoading, uploadZip, fileUploadCount } = useImageUpload();
+  const {
+    uploadZip,
+    fileUploadCount,
+    fileUploadAmount,
+    imagePreviews,
+    zipLoading,
+    currentImageIndex,
+    setCurrentImageIndex,
+  } = useImageUpload();
+
+  const { createContracts, addresses, createContractsLoading } = useContracts();
+
+  const editionDispatch = useSelector(
+    (state: RootState) => state.app.postValuesReducer.value.editionAmount
+  );
 
   switch (decideStringAction()) {
     case "5":
@@ -68,20 +85,31 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
       return <Store />;
 
     case "2":
-      return <Contracts />;
+      return (
+        <Contracts
+          createContracts={createContracts}
+          createContractsLoading={createContractsLoading}
+          addresses={addresses}
+        />
+      );
 
     case "1":
       return (
         <ImageUploadDynamic
-          imageLoading={imageLoading}
+          zipLoading={zipLoading}
           uploadZip={uploadZip}
           fileUploadCount={fileUploadCount}
+          editionAmount={editionDispatch}
+          fileUploadAmount={fileUploadAmount}
+          imagePreviews={imagePreviews}
+          currentImageIndex={currentImageIndex}
+          setCurrentImageIndex={setCurrentImageIndex}
         />
       );
 
     case "sign in":
       return (
-        <div className="font-earl text-black flex flex-col items-center justify-center text-center w-full h-full">
+        <div className="font-earl text-white flex flex-col items-center justify-center text-center w-full h-full">
           Connect to Launch a Grant
         </div>
       );

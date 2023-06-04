@@ -3,7 +3,7 @@ import type { AppProps } from "next/app";
 import "@rainbow-me/rainbowkit/styles.css";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { polygon } from "wagmi/chains";
+import { polygon , polygonMumbai} from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { useEffect, useState } from "react";
 import { getFirebaseApp } from "../firebase.config";
@@ -14,7 +14,7 @@ import { store } from "./../redux/store";
 import { Provider } from "react-redux";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [polygon],
+  [polygonMumbai],
   [
     alchemyProvider({
       apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY as string,
@@ -48,7 +48,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <WagmiConfig config={config}>
         <RainbowKitProvider chains={chains}>
           <div className="relative w-full h-full">
-            <div className="relative w-full h-full overflow-x-hidden flex flex-col cursor-pixel h-screen selection:bg-white selection:text-azul">
+            <div className="relative w-full h-full overflow-x-hidden flex flex-col h-screen selection:bg-white selection:text-azul">
               <Header />
               <Component {...pageProps} firebaseApp={firebaseApp} />
               <Footer />

@@ -1,4 +1,4 @@
-const nextHex = (hex: string) => {
+const nextHex = (hex: string): string => {
   const decimal = parseInt(hex, 16) + 1;
   let nextHex = decimal.toString(16);
 

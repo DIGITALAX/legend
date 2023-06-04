@@ -9,8 +9,9 @@ import { RootState } from "@/redux/store";
 
 const Header: FunctionComponent = ({}): JSX.Element => {
   const profile = useSelector(
-    (state: RootState) => state.app.profileReducer.profile?.handle
+    (state: RootState) => state.app.profileReducer.profile
   );
+
   const { handleConnect, handleLensSignIn, connected, signInLoading } =
     useSignIn();
   return (
@@ -122,12 +123,12 @@ const Header: FunctionComponent = ({}): JSX.Element => {
           handleTransaction={connected ? handleLensSignIn : handleConnect}
           buttonText={
             profile
-              ? `@${profile?.split(".lens")[0]}`
+              ? `@${profile?.handle?.split(".lens")[0]}`
               : connected
               ? "SOCIAL"
               : "CONNECT"
           }
-          isConnected={connected}
+          profile={profile?.id}
           signInLoading={signInLoading}
         />
       </div>

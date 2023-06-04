@@ -6,14 +6,14 @@ import { AiOutlineLoading } from "react-icons/ai";
 
 const Wallet: FunctionComponent<WalletProps> = ({
   handleTransaction,
-  isConnected,
+  profile,
   buttonText,
   signInLoading,
 }): JSX.Element => {
   return (
     <div
-      className={`relative w-fit h-12 font-geom text-white flex flex-row items-center px-2 text-center justify-center`}
-      onClick={() => !isConnected && handleTransaction()}
+      className={`relative w-fit h-12 font-geom text-white flex flex-row items-center px-2 text-center justify-center cursor-pointer`}
+      onClick={() => !profile && handleTransaction()}
     >
       {signInLoading ? (
         <div className="relative w-20 h-fit flex items-center justify-center animate-spin">

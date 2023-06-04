@@ -1,4 +1,5 @@
 import { Erc20, Profile } from "@/components/home.types";
+import JSZip from "jszip";
 import { FormEvent, KeyboardEvent, Ref, RefObject } from "react";
 
 export type SwitchLaunchProps = {
@@ -59,7 +60,18 @@ export type NextButtonProps = {
 };
 
 export type ImageUploadDynamicProps = {
-  imageLoading: boolean;
+  zipLoading: boolean;
   uploadZip: (e: FormEvent) => Promise<void>;
   fileUploadCount: number;
+  editionAmount: number;
+  fileUploadAmount: number;
+  imagePreviews: any[];
+  currentImageIndex: number;
+  setCurrentImageIndex: (e: number) => void;
+};
+
+export type ContractsProps = {
+  createContracts: () => Promise<void>;
+  createContractsLoading: boolean;
+  addresses: string[];
 };

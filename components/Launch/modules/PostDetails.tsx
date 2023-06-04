@@ -43,7 +43,7 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
   return (
     <div className="relative w-full h-full flex items-center z-1">
       <Draggable enableUserSelectHack={false}>
-        <div className="relative w-72 h-fit flex gap-3 bg-mal rounded-md border-2 border-mora left-10 p-6 z-1">
+        <div className="relative w-72 h-fit flex gap-3 bg-mal rounded-md border-2 border-mora left-10 p-6 z-1 cursor-grab active:cursor-grabbing">
           <div className="relative w-full h-full bg-otra items-center flex flex-col">
             <TopBarOne />
             <div className="p-2 flex w-full h-full flex-col gap-3">
@@ -81,7 +81,7 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
         </div>
       </Draggable>
       <Draggable enableUserSelectHack={false}>
-        <div className="relative w-96 h-fit flex gap-3 bg-darker rounded-md border-2 border-mora p-6 -top-10 -left-24">
+        <div className="relative w-96 h-fit flex gap-3 bg-darker rounded-md border-2 border-mora p-6 -top-10 -left-24  cursor-grab active:cursor-grabbing">
           <div className="relative w-full h-full bg-otra items-center flex flex-col">
             <TopBarOne />
             <div className="p-2 flex w-full h-full flex-col gap-3">
@@ -173,7 +173,7 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
         </div>
       </Draggable>
       <Draggable enableUserSelectHack={false}>
-        <div className="absolute w-80 h-fit flex gap-3 bg-lez border-2 border-mazul bottom-48 right-20">
+        <div className="absolute w-80 h-fit flex gap-3 bg-lez border-2 border-mazul bottom-48 right-20  cursor-grab active:cursor-grabbing">
           <div className="relative w-full h-full bg-lez items-center flex flex-col">
             <TopBarOne />
             <div className="p-2 flex w-full h-full flex-row gap-1">
@@ -211,35 +211,41 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
           </div>
         </div>
       </Draggable>
-      <div className="absolute bottom-10 left-24 flex w-fit h-fit z-1">
-        <SmallBox
-          title={"How many editions?"}
-          onChangeFunction={(e: FormEvent) =>
-            setEditionAmount((e.target as HTMLFormElement).value)
-          }
-          value={editionAmount}
-        />
-      </div>
-      <div className="absolute -bottom-10 left-40 flex w-fit h-fit z-1">
-        <SmallBox
-          title={"How much?"}
-          onChangeFunction={(e: FormEvent) =>
-            setValueAmount((e.target as HTMLFormElement).value)
-          }
-          value={valueAmount}
-        />
-      </div>
-      <div className="absolute -bottom-10 left-52 flex w-fit h-fit z-1">
-        <SmallBox
-          title={"Referral Fee?"}
-          onChangeFunction={(e: FormEvent) =>
-            setReferralFee((e.target as HTMLFormElement).value)
-          }
-          value={referralFee}
-        />
-      </div>
       <Draggable enableUserSelectHack={false}>
-        <div className="absolute w-60 h-fit flex gap-3 bg-white border-2 border-mazul right-2">
+        <div className="absolute bottom-10 left-24 flex w-fit h-fit z-1  cursor-grab active:cursor-grabbing">
+          <SmallBox
+            title={"How many editions?"}
+            onChangeFunction={(e: FormEvent) =>
+              setEditionAmount((e.target as HTMLFormElement).value)
+            }
+            value={editionAmount}
+          />
+        </div>
+      </Draggable>
+      <Draggable enableUserSelectHack={false}>
+        <div className="absolute -bottom-10 left-40 flex w-fit h-fit z-1  cursor-grab active:cursor-grabbing">
+          <SmallBox
+            title={"How much?"}
+            onChangeFunction={(e: FormEvent) =>
+              setValueAmount((e.target as HTMLFormElement).value)
+            }
+            value={valueAmount}
+          />
+        </div>
+      </Draggable>
+      <Draggable enableUserSelectHack={false}>
+        <div className="absolute -bottom-10 left-52 flex w-fit h-fit z-1  cursor-grab active:cursor-grabbing">
+          <SmallBox
+            title={"Referral Fee?"}
+            onChangeFunction={(e: FormEvent) =>
+              setReferralFee((e.target as HTMLFormElement).value)
+            }
+            value={referralFee}
+          />
+        </div>
+      </Draggable>
+      <Draggable enableUserSelectHack={false}>
+        <div className="absolute w-60 h-fit flex gap-3 bg-white border-2 border-mazul right-2  cursor-grab active:cursor-grabbing">
           <div className="relative w-full h-full items-center flex flex-col">
             <TopBarTwo />
             <div className="p-2 flex w-full h-full flex-col gap-3">
@@ -281,7 +287,7 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
         </div>
       </Draggable>
       <Draggable enableUserSelectHack={false}>
-        <div className="absolute z-1 w-72 h-fit flex flex-col rounded-md bg-offWhite border-2 border-mazul left-10">
+        <div className="absolute z-1 w-72 h-fit flex flex-col rounded-md bg-offWhite border-2 border-mazul left-10  cursor-grab active:cursor-grabbing">
           <TopBarTwo />
           <div className="p-2 w-full h-full flex flex-col gap-2">
             <div className="relative w-full h-fit flex font-mega text-lg uppercase text-mazul p-2 items-center justify-center text-center">
@@ -293,8 +299,10 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
                   (currencyValue: Erc20, index: number) => {
                     return (
                       <div
-                        className={`border border-black flex items-center justify-center font-mega text-mazul px-3 py-2 ${
-                          currency === currencyValue.symbol && "bg-mist"
+                        className={`border border-black flex items-center justify-center font-mega text-mazul px-3 py-2 cursor-pointer ${
+                          (currency === currencyValue.symbol ||
+                            currency === currencyValue.address) &&
+                          "bg-mist"
                         }`}
                         onClick={() => setCurrency(currencyValue.address)}
                         key={index}
@@ -310,7 +318,7 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
         </div>
       </Draggable>
       <Draggable enableUserSelectHack={false}>
-        <div className="absolute right-10 -bottom-10 w-72 h-fit flex flex-col rounded-md bg-offWhite border-2 border-mazul">
+        <div className="absolute right-10 -bottom-10 w-72 h-fit flex flex-col rounded-md bg-offWhite border-2 border-mazul  cursor-grab active:cursor-grabbing">
           <TopBarTwo />
           <div className="p-2 w-full h-full flex flex-col gap-2">
             <div className="relative w-full h-fit flex font-mega uppercase text-mazul p-2 items-center justify-center text-center">
@@ -370,14 +378,14 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
         </div>
       </Draggable>
       <Draggable enableUserSelectHack={false}>
-        <div className="absolute bottom-40 right-10 w-72 h-fit flex flex-col rounded-md bg-white border-2 border-mazul z-2">
+        <div className="absolute bottom-40 right-10 w-72 h-fit flex flex-col rounded-md bg-white border-2 border-mazul z-2  cursor-grab active:cursor-grabbing">
           <TopBarTwo />
           <div className="p-2 w-full h-full flex flex-row gap-2 p-2 items-center justify-center">
             <div className="relative w-full h-4 border border-black rounded-full">
               <div
                 className="bg-azul rounded-full h-full"
                 style={{
-                  width: `${(filledInAmount / 6) * 100}%`,
+                  width: `${(filledInAmount / 5) * 100}%`,
                 }}
               ></div>
             </div>

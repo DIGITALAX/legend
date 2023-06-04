@@ -15,6 +15,7 @@ import CommentBox from "@/components/Home/Grant/modules/CommentBox";
 import DynamicNFT from "@/components/Home/Grant/modules/DynamicNFT";
 import MirrorBox from "@/components/Home/Grant/modules/MirrorBox";
 import CollectBox from "@/components/Home/Grant/modules/CollectBox";
+import StoreFrontBox from "@/components/Home/Grant/modules/StoreFrontBox";
 
 type HomeProps = {
   firebaseApp: FirebaseApp;
@@ -104,9 +105,11 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
     }
   }, [firebaseApp, imageLoaded]);
 
-
   return (
-    <div className="relative w-full h-full flex flex-col">
+    <div
+      className="relative w-full h-full flex flex-col cursor-pixel"
+      id="indexBody"
+    >
       <div className="relative w-full h-full flex flex-row p-6 gap-10 justify-center z-10">
         <div className="relative w-full h-full flex flex-col items-center">
           <CollectBox />
@@ -114,10 +117,11 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
         </div>
         <div className="relative w-full items-center h-full flex flex-col">
           <DynamicNFT />
-          <GrantBox  />
+          <GrantBox />
         </div>
         <div className="w-full h-full flex justify-center">
           <CommentBox />
+          <StoreFrontBox />
         </div>
       </div>
       <div className="relative w-full h-full">
