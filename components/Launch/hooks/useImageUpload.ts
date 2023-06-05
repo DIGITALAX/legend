@@ -33,7 +33,6 @@ const useImageUpload = () => {
   const [zipLoading, setZipLoading] = useState<boolean>(false);
   const [videoLoading, setVideoLoading] = useState<boolean>(false);
   const [fileUploadCount, setFileUploadCount] = useState<number>(0);
-  const [imagePreviews, setImagePreviews] = useState<any[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const [fileUploadAmount, setFileUploadAmount] = useState<number>(
     postValues.editionAmount
@@ -277,8 +276,6 @@ const useImageUpload = () => {
         })
       );
 
-      setImagePreviews(newImagePreviews);
-
       setFileUploadAmount(newImagePreviews.length);
 
       let cidArray: string[] = [];
@@ -334,28 +331,31 @@ const useImageUpload = () => {
   };
 
   const handleDropImage = (sourceIndex: number, targetIndex: number) => {
-    if (imagePreviews.length < 1 && NFT.length < 1) return;
+    if (NFT.length === 0) return; 
+     
+    const draggedImage = NFT[sourceIndex];
+    const updatedNFTs = NFT.filter((image) => image !== draggedImage);
 
-    if (imagePreviews.length > 0) {
-      const draggedImage = imagePreviews[sourceIndex];
+    let adjustedTargetIndex = targetIndex;
 
-      const updatedImagePreviews = [...imagePreviews];
-      updatedImagePreviews.splice(sourceIndex, 1); // Remove the dragged image
-
-      updatedImagePreviews.splice(targetIndex, 0, draggedImage); // Insert the dragged image at the target index
-
-      setImagePreviews(updatedImagePreviews);
+    if (targetIndex > sourceIndex) {
+      for (let i = sourceIndex; i < targetIndex; i++) {
+        if (updatedNFTs[i] === draggedImage) {
+          adjustedTargetIndex--;
+        }
+      }
+    } else if (targetIndex < sourceIndex) {
+      for (let i = sourceIndex; i > targetIndex; i--) {
+        if (updatedNFTs[i] === draggedImage) {
+          adjustedTargetIndex++;
+        }
+      }
     }
 
-    const draggedImage = NFT[sourceIndex];
-
-    const updatedNFTs = [...NFT];
-    updatedNFTs.splice(sourceIndex, 1); // Remove the dragged image
-
-    updatedNFTs.splice(targetIndex, 0, draggedImage); // Insert the dragged image at the target index
-
-    dispatch(setNFTImageArray(updatedNFTs));
+    const array = updatedNFTs.splice(adjustedTargetIndex, 0, draggedImage);
+    dispatch(setNFTImageArray(array));
   };
+
   useEffect(() => {
     if (router.asPath.includes("launch")) {
       if (mappedFeaturedFiles.length > 3) {
@@ -384,7 +384,6 @@ const useImageUpload = () => {
     uploadZip,
     fileUploadCount,
     fileUploadAmount,
-    imagePreviews,
     zipLoading,
     currentImageIndex,
     setCurrentImageIndex,

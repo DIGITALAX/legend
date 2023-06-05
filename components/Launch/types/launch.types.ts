@@ -66,7 +66,6 @@ export type ImageUploadDynamicProps = {
   fileUploadCount: number;
   editionAmount: number;
   fileUploadAmount: number;
-  imagePreviews: any[];
   currentImageIndex: number;
   setCurrentImageIndex: (e: number) => void;
   NFTURIValues: string[];

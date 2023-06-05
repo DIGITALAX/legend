@@ -303,10 +303,10 @@ const usePost = () => {
         const typedData: any = result.data.createPostTypedData.typedData;
 
         const signature = await signTypedDataAsync({
-          domain: omit(typedData?.domain, ["__typename"]) as any,
-          types: omit(typedData?.types, ["__typename"]) as any,
-          value: omit(typedData?.value, ["__typename"]) as any,
-        });
+          domain: omit(typedData?.domain, ["__typename"]),
+          types: omit(typedData?.types, ["__typename"]),
+          value: omit(typedData?.value, ["__typename"]),
+        } as any);
 
         const broadcastResult: any = await broadcast({
           id: result?.data?.createPostTypedData?.id,

@@ -224,7 +224,7 @@ const Live: FunctionComponent<LiveProps> = ({
       </Draggable>
       <Draggable enableUserSelectHack={false}>
         <div
-          className={`absolute top-6 right-24 w-80 h-fit flex gap-3 bg-white border-2 border-mazul cursor-grab active:cursor-grabbing`}
+          className={`absolute top-6 right-36 w-80 h-fit flex gap-3 bg-white border-2 border-mazul cursor-grab active:cursor-grabbing`}
         >
           <div className="relative w-full h-full items-center flex flex-col">
             <TopBarTwo />
@@ -241,9 +241,6 @@ const Live: FunctionComponent<LiveProps> = ({
                 </div>
               </div>
               <div className="relative w-full h-full flex flex-col justify-center items-start gap-2">
-                <div className="relative w-fit justify-start h-fit flex font-mega text-mazul text-xl">
-                  Name of Collection
-                </div>
                 <div className="relative w-full h-8 flex items-center justify-center rounded-md border border-black">
                   <div className="absolute w-full h-full flex opacity-70">
                     <Image
@@ -252,12 +249,10 @@ const Live: FunctionComponent<LiveProps> = ({
                       draggable={false}
                     />
                   </div>
+                  {storefrontValues[nextStore]?.uri?.name}
                 </div>
               </div>
               <div className="relative w-full h-full flex flex-col justify-center items-start gap-2">
-                <div className="relative w-fit h-fit flex font-mega text-mazul text-sm">
-                  Description
-                </div>
                 <div className="relative w-full h-14 flex items-center justify-center rounded-md border border-black">
                   <div className="absolute w-full h-full flex opacity-70">
                     <Image
@@ -266,6 +261,7 @@ const Live: FunctionComponent<LiveProps> = ({
                       draggable={false}
                     />
                   </div>
+                  {storefrontValues[nextStore]?.uri?.description}
                 </div>
               </div>
               <div className="relative grid grid-cols-4 gap-2 w-full h-fit font-earl">
@@ -354,19 +350,18 @@ const Live: FunctionComponent<LiveProps> = ({
                   })}
               </div>
               <div className="relative w-full h-full flex flex-row gap-4 items-end justify-end">
-                <div className="relative w-fit h-full flex flex-col justify-center items-start gap-2">
-                  <div className="relative w-fit h-fit flex font-earl text-mazul text-xs">
-                    Grant Collectors Only
-                  </div>
+                <div className="relative w-full h-full flex flex-col justify-center items-start gap-2">
                   <div
-                    className={`rounded-md relative border border-black flex w-full text-center text-sm justify-center items-center h-fit py-1.5 font-earl text-white uppercase px-3 cursor-pointer active:scale-95 bg-darker`}
+                    className={`rounded-md relative border border-black flex w-full text-center text-xs justify-center items-center h-fit py-1.5 font-earl text-white uppercase px-3 bg-darker`}
                   >
-                    storefrontValues[nextStore].grantOnly
+                    {storefrontValues[nextStore]?.grantOnly
+                      ? " Grant Collectors Only"
+                      : "All Collectors"}
                   </div>
                 </div>
-                <div className="relative w-fit h-full flex flex-col justify-center items-start gap-2">
+                <div className="relative w-full h-full flex flex-col justify-center items-start gap-2">
                   <div className="relative w-fit h-fit flex font-earl text-mazul text-xs">
-                    Grant Collectors Discount %
+                    Discount
                   </div>
                   <div className="relative w-full h-8 flex items-center justify-center rounded-md border border-black">
                     <div className="absolute w-full h-full flex opacity-70">
@@ -376,12 +371,7 @@ const Live: FunctionComponent<LiveProps> = ({
                         draggable={false}
                       />
                     </div>
-                    <input
-                      className="relative w-full h-full flex p-2 text-black font-earl text-sm bg-transparent rounded-md"
-                      style={{ resize: "none" }}
-                      type="number"
-                      defaultValue={0}
-                    />
+                    {storefrontValues[nextStore]?.discount}
                   </div>
                 </div>
               </div>
@@ -398,7 +388,79 @@ const Live: FunctionComponent<LiveProps> = ({
                         draggable={false}
                       />
                     </div>
+                    {storefrontValues[nextStore]?.amount}
                   </div>
+                </div>
+                <div className="relative w-fit h-full flex items-end justify-end">
+                  <div
+                    className={`relative border border-black flex w-16 text-center text-sm justify-center items-center h-8 py-1.5 font-earl text-white uppercase px-3 cursor-pointer active:scale-95 bg-darker`}
+                    onClick={() =>
+                      setNextStore(
+                        nextStore < storefrontValues.length ? nextStore + 1 : 0
+                      )
+                    }
+                  >
+                    {"-->"}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Draggable>
+      <Draggable enableUserSelectHack={false}>
+        <div
+          className={`absolute top-12 right-14 w-80 h-fit flex gap-3 bg-white border-2 border-mazul cursor-grab active:cursor-grabbing`}
+        >
+          <div className="relative w-full h-full items-center flex flex-col">
+            <TopBarTwo />
+            <div className="p-2 flex w-full h-full flex-col gap-3 items-center">
+              <div className="relative font-mega text-mazul w-full h-fit items-center justify-center flex">
+                Factory Deployed Contracts
+              </div>
+              <div className="relative w-full h-full flex flex-col justify-center items-start gap-2">
+                <div className="relative w-full h-fit justify-start items-start font-mega text-mazul text-xs">
+                  Legend Access Controls
+                </div>
+                <div className="relative w-full h-8 flex items-center justify-center rounded-md border border-black">
+                  <div className="absolute w-full h-full flex opacity-70">
+                    <Image
+                      layout="fill"
+                      src={`${INFURA_GATEWAY}/Qme3dKpZyyv9oMEu9AbaS3Q3xXGcbXj5V2JXhhJW8bRfQV`}
+                      draggable={false}
+                    />
+                  </div>
+                  {contractValues[1]}
+                </div>
+              </div>
+              <div className="relative w-full h-full flex flex-col justify-center items-start gap-2">
+                <div className="relative w-full h-fit justify-start items-start font-mega text-mazul text-xs">
+                  Legend Keeper
+                </div>
+                <div className="relative w-full h-8 flex items-center justify-center rounded-md border border-black">
+                  <div className="absolute w-full h-full flex opacity-70">
+                    <Image
+                      layout="fill"
+                      src={`${INFURA_GATEWAY}/Qme3dKpZyyv9oMEu9AbaS3Q3xXGcbXj5V2JXhhJW8bRfQV`}
+                      draggable={false}
+                    />
+                  </div>
+                  {contractValues[0]}
+                </div>
+              </div>
+              <div className="relative w-full h-full flex flex-col justify-center items-start gap-2">
+                <div className="relative w-full h-fit justify-start items-start font-mega text-mazul text-xs">
+                  Legend Dynamic NFT
+                </div>
+                <div className="relative w-full h-8 flex items-center justify-center rounded-md border border-black">
+                  <div className="absolute w-full h-full flex opacity-70">
+                    <Image
+                      layout="fill"
+                      src={`${INFURA_GATEWAY}/Qme3dKpZyyv9oMEu9AbaS3Q3xXGcbXj5V2JXhhJW8bRfQV`}
+                      draggable={false}
+                    />
+                  </div>
+                  {contractValues[2]}
                 </div>
               </div>
             </div>

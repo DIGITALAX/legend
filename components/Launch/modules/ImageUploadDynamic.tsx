@@ -16,12 +16,12 @@ const ImageUploadDynamic: FunctionComponent<ImageUploadDynamicProps> = ({
   fileUploadCount,
   editionAmount,
   fileUploadAmount,
-  imagePreviews,
   currentImageIndex,
   setCurrentImageIndex,
   NFTURIValues,
-  handleDropImage
+  handleDropImage,
 }): JSX.Element => {
+  console.log({ NFTURIValues });
   return (
     <div className="relative w-full h-full items-center justify-center flex py-5 flex flex-row gap-36">
       <Draggable enableUserSelectHack={false}>
@@ -90,14 +90,7 @@ const ImageUploadDynamic: FunctionComponent<ImageUploadDynamicProps> = ({
           <div className="relative w-full h-full bg-white items-center flex flex-col gap-6">
             <TopBarTwo />
             <div className="relative w-60 h-60 rounded-lg border border-mazul items-center justify-center flex">
-              {imagePreviews.length > 1 && imagePreviews[currentImageIndex] ? (
-                <Image
-                  src={imagePreviews[currentImageIndex].src}
-                  layout="fill"
-                  objectFit="cover"
-                  draggable={false}
-                />
-              ) : NFTURIValues.length > 1 && NFTURIValues[currentImageIndex] ? (
+              {NFTURIValues.length > 1 && NFTURIValues[currentImageIndex] ? (
                 <Image
                   src={`${INFURA_GATEWAY}/${NFTURIValues[currentImageIndex]}`}
                   layout="fill"
@@ -138,28 +131,21 @@ const ImageUploadDynamic: FunctionComponent<ImageUploadDynamicProps> = ({
                 <div className="relative w-full h-full flex  overflow-x-scroll pt-5">
                   <div className="relative w-fit h-full flex flex-row gap-2">
                     <DndProvider backend={HTML5Backend}>
-                      {(imagePreviews.length > 0
-                        ? imagePreviews
-                        : NFTURIValues.length > 0
+                      {(NFTURIValues.length > 0
                         ? NFTURIValues
                         : Array.from({ length: fileUploadAmount })
                       ).map((_, index: number) => {
                         return (
-                          <DraggableImage key={index} index={index} onDropImage={handleDropImage}>
+                          <DraggableImage
+                            key={index}
+                            index={index}
+                            onDropImage={handleDropImage}
+                          >
                             <div
                               className="relative w-20 h-20 rounded-md border border-dashed border-black/50 flex items-center justify-center cursor-pointer"
                               onClick={() => setCurrentImageIndex(index)}
                             >
-                              {imagePreviews[index] &&
-                              fileUploadCount > index ? (
-                                <Image
-                                  src={imagePreviews[index].src}
-                                  className="w-full h-full object-cover rounded-md"
-                                  layout="fill"
-                                  objectFit="cover"
-                                  draggable={false}
-                                />
-                              ) : NFTURIValues[index] ? (
+                              {NFTURIValues[index] ? (
                                 <Image
                                   src={`${INFURA_GATEWAY}/${NFTURIValues[index]}`}
                                   className="w-full h-full object-cover rounded-md"

@@ -18,7 +18,7 @@ const Store: FunctionComponent<StoreProps> = ({
   collectionLoading,
   handleDiscount,
   handleGrantOnly,
-  handlePrintType
+  handlePrintType,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex flex-col items-center justify-center gap-10">
@@ -59,8 +59,8 @@ const Store: FunctionComponent<StoreProps> = ({
               minted={minted}
               collectionLoading={collectionLoading}
               handleDiscount={handleDiscount}
-  handleGrantOnly={handleGrantOnly}
-  handlePrintType={handlePrintType}
+              handleGrantOnly={handleGrantOnly}
+              handlePrintType={handlePrintType}
             />
           );
         })}

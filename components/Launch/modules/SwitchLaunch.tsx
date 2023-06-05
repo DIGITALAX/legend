@@ -69,7 +69,6 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
     uploadZip,
     fileUploadCount,
     fileUploadAmount,
-    imagePreviews,
     zipLoading,
     currentImageIndex,
     setCurrentImageIndex,
@@ -194,7 +193,6 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
           fileUploadCount={fileUploadCount}
           editionAmount={postValues.editionAmount}
           fileUploadAmount={fileUploadAmount}
-          imagePreviews={imagePreviews}
           currentImageIndex={currentImageIndex}
           setCurrentImageIndex={setCurrentImageIndex}
           NFTURIValues={NFTArray}
