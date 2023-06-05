@@ -1,4 +1,7 @@
-import { LENS_HUB_PROXY_ADDRESS_MATIC, LENS_HUB_PROXY_ADDRESS_MUMBAI } from "@/lib/constants";
+import {
+  LENS_HUB_PROXY_ADDRESS_MATIC,
+  LENS_HUB_PROXY_ADDRESS_MUMBAI,
+} from "@/lib/constants";
 import {
   ClipboardEvent,
   FormEvent,
@@ -223,7 +226,7 @@ const usePost = () => {
     );
   };
 
-  const handlePost = async (): Promise<void> => {
+  const postGrant = async (): Promise<void> => {
     if (
       (!postDescription ||
         postDescription === "" ||
@@ -425,9 +428,25 @@ const usePost = () => {
       setPostValues({
         title,
         editionAmount,
+        description: postDescription,
+        sustained,
+        involved,
+        price: valueAmount,
+        referralFee,
+        currency,
+        recipients,
       })
     );
-  }, [title, editionAmount]);
+  }, [
+    title,
+    editionAmount,
+    postDescription,
+    sustained,
+    involved,
+    referralFee,
+    currency,
+    recipients,
+  ]);
 
   const isFilled = (str: string | undefined) =>
     typeof str === "string" && str?.trim() !== "";
@@ -468,7 +487,7 @@ const usePost = () => {
     handleKeyDownDelete,
     gifOpen,
     setGifOpen,
-    handlePost,
+    postGrant,
     preElement,
     handleImagePaste,
     setTitle,

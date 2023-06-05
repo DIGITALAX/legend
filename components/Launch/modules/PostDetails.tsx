@@ -18,7 +18,6 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
   textElement,
   preElement,
   handlePostDescription,
-  postLoading,
   postDescription,
   mentionProfiles,
   profilesOpen,
@@ -109,7 +108,6 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
                       className="relative w-full h-full bg-mazul font-earl text-white p-2 z-1 rounded-lg overflow-y-scroll"
                       ref={textElement}
                       value={postDescription}
-                      disabled={postLoading ? true : false}
                     ></textarea>
                     <pre
                       id="highlighting"

@@ -22,7 +22,7 @@ const Store: FunctionComponent<StoreProps> = ({
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex flex-col items-center justify-center gap-10">
-      <div className="relative w-fit h-fit flex">
+      <div className="absolute z-2 w-fit h-fit flex bottom-0 right-3">
         <div
           className={`relative bg-darker border border-black flex w-fit text-center text-sm justify-center items-center h-fit p-1 font-earl text-white uppercase cursor-pointer active:scale-95`}
           onClick={() => {

@@ -4,13 +4,17 @@ import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import { AVAILABLE_TOKENS, LEGEND_COLLECTION_MUMBAI } from "@/lib/constants";
 import { waitForTransaction } from "@wagmi/core";
 import LegendCollectionAbi from "./../../../abi/LegendCollection.json";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import uploadPostContent from "@/lib/lens/helpers/uploadPostContent";
+import { setStorefrontValues } from "@/redux/reducers/storefrontValuesSlice";
 
 const useStorefront = () => {
+  const dispatch = useDispatch();
   const postValues = useSelector(
     (state: RootState) => state.app.postValuesReducer.value
+  );
+  const storefrontValues = useSelector(
+    (state: RootState) => state.app.storefrontValuesReducer.value
   );
   const [productInformation, setProductInformation] = useState<Collection[]>(
     Array.from({ length: 3 }, () => ({
@@ -252,6 +256,10 @@ const useStorefront = () => {
         hash: tx?.hash!,
       });
       setArgs(undefined);
+      setMinted([...minted].map((value, i) => (i === index ? true : value)));
+      dispatch(
+        setStorefrontValues([...storefrontValues, productInformation[index]])
+      );
     } catch (err: any) {
       setCollectionLoading(
         [...imageLoading].map((value, i) => (i === index ? false : value))

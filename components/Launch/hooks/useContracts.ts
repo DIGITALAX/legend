@@ -11,7 +11,7 @@ import { RootState } from "@/redux/store";
 import { profilePublications } from "@/graphql/lens/query/getPublications";
 import nextHex from "@/lib/lens/helpers/nextHex";
 import { useRouter } from "next/router";
-import { setKeeperAddress } from "@/redux/reducers/keeperAddressSlice";
+import { setContractValues } from "@/redux/reducers/contractValuesSlice";
 
 const useContracts = () => {
   const router = useRouter();
@@ -29,7 +29,6 @@ const useContracts = () => {
   const [URIValues, setURIValues] = useState<string[]>([]);
   const [createContractsLoading, setCreateContractsLoading] =
     useState<boolean>(false);
-  const [addresses, setAddresses] = useState<string[]>([]);
 
   const { config } = usePrepareContractWrite({
     address: FACTORY_CONTRACT_MUMBAI,
@@ -103,8 +102,7 @@ const useContracts = () => {
         hash: tx?.hash!,
       });
       if (res.status === "success") {
-        setAddresses(res.logs.map((log) => log.address));
-        dispatch(setKeeperAddress(res.logs.map((log) => log.address)[1]));
+        dispatch(setContractValues(res.logs.map((log) => log.address)));
         // for (let i = 0; i < addresses.length; i++) {
         //   await fetch("/api/etherscan", {
         //     method: "POST",
@@ -132,7 +130,6 @@ const useContracts = () => {
   return {
     createContractsLoading,
     createContracts,
-    addresses,
   };
 };
 

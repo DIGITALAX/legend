@@ -14,7 +14,7 @@ import { useBalance } from "wagmi";
 
 const useKeeper = () => {
   const legendKeeperAddress = useSelector(
-    (state: RootState) => state.app.keeperAddressReducer.value
+    (state: RootState) => state.app.contractValuesReducer.value[0]
   );
   const postValues = useSelector(
     (state: RootState) => state.app.postValuesReducer.value
@@ -42,9 +42,8 @@ const useKeeper = () => {
         checkData: "0x",
         offchainConfig: "0x",
         amount: "2000000000000000000",
-        sender: "0xb927AEf40a884656e95D03acD4087b100De76eca"
+        sender: "0xb927AEf40a884656e95D03acD4087b100De76eca",
       },
-      
     ],
     functionName: "registerAndPredictID",
     // enabled: Boolean(legendKeeperAddress),
@@ -55,7 +54,10 @@ const useKeeper = () => {
   const { config: sendConfig } = usePrepareContractWrite({
     address: MUMBAI_LINK_TOKEN,
     abi: LinkAbi,
-    args: ["0xb927AEf40a884656e95D03acD4087b100De76eca", Number("2000000000000000000")],
+    args: [
+      "0xb927AEf40a884656e95D03acD4087b100De76eca",
+      Number("2000000000000000000"),
+    ],
     functionName: "transfer",
     // enabled: Boolean(legendKeeperAddress),
   });

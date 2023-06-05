@@ -58,6 +58,7 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
     involved,
     setInvolved,
     filledInAmount,
+    postGrant,
   } = usePost();
 
   const {
@@ -70,7 +71,7 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
     setCurrentImageIndex,
   } = useImageUpload();
 
-  const { createContracts, addresses, createContractsLoading } = useContracts();
+  const { createContracts, createContractsLoading } = useContracts();
 
   const {
     keeperRegisterLoading,
@@ -98,13 +99,35 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
     handlePrintType,
   } = useStorefront();
 
-  const editionDispatch = useSelector(
-    (state: RootState) => state.app.postValuesReducer.value.editionAmount
+  const postValues = useSelector(
+    (state: RootState) => state.app.postValuesReducer.value
+  );
+  const storefrontValues = useSelector(
+    (state: RootState) => state.app.storefrontValuesReducer.value
+  );
+  const contractValues = useSelector(
+    (state: RootState) => state.app.contractValuesReducer.value
+  );
+  const NFTArray = useSelector(
+    (state: RootState) => state.app.NFTImageArrayReducer.value
+  );
+  const addresses = useSelector(
+    (state: RootState) => state.app.contractValuesReducer.value
   );
 
   switch (decideStringAction()) {
     case "5":
-      return <Live />;
+      return (
+        <Live
+          profile={profile}
+          postValues={postValues}
+          storefrontValues={storefrontValues}
+          NFTURIArray={NFTArray}
+          contractValues={contractValues}
+          postGrant={postGrant}
+          postLoading={postLoading}
+        />
+      );
 
     case "4":
       return (
@@ -112,7 +135,7 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
           productInformation={productInformation}
           newPosition={newPosition}
           setNewPosition={setNewPosition}
-          editionAmount={editionDispatch}
+          editionAmount={postValues.editionAmount}
           handleCollectionPrices={handleCollectionPrices}
           handleDescription={handleDescription}
           handleTitle={handleTitle}
@@ -154,7 +177,7 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
           zipLoading={zipLoading}
           uploadZip={uploadZip}
           fileUploadCount={fileUploadCount}
-          editionAmount={editionDispatch}
+          editionAmount={postValues.editionAmount}
           fileUploadAmount={fileUploadAmount}
           imagePreviews={imagePreviews}
           currentImageIndex={currentImageIndex}
@@ -176,7 +199,6 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
             textElement={textElement}
             preElement={preElement}
             handlePostDescription={handlePostDescription}
-            postLoading={postLoading}
             postDescription={postDescription}
             mentionProfiles={mentionProfiles}
             profilesOpen={profilesOpen}

@@ -28,7 +28,7 @@ const Launch: NextPage = (): JSX.Element => {
         )}
         <NextButton
           text={"NEXT"}
-          setPage={() => dispatch(setLaunchPageCount(page < 5 ? page + 1 : 0))}
+          setPage={() => dispatch(setLaunchPageCount(page < 5 ? page + 1 : 5))}
         />
       </div>
     </div>

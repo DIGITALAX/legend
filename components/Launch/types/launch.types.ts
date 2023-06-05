@@ -23,7 +23,6 @@ export type PostDetailsProps = {
   textElement: RefObject<HTMLTextAreaElement>;
   preElement: RefObject<HTMLPreElement>;
   handlePostDescription: (e: FormEvent) => Promise<void>;
-  postLoading: boolean;
   postDescription: string;
   mentionProfiles: Profile[];
   profilesOpen: boolean;
@@ -110,8 +109,8 @@ export type StoreProps = {
   minted: boolean[];
   collectionLoading: boolean[];
   handleDiscount: (e: FormEvent, index: number) => void;
-  handlePrintType:(e: FormEvent, index: number) => void;
-  handleGrantOnly:(e: FormEvent, index: number) => void;
+  handlePrintType: (e: FormEvent, index: number) => void;
+  handleGrantOnly: (e: FormEvent, index: number) => void;
 };
 
 export interface Collection {
@@ -129,3 +128,26 @@ export interface Collection {
   };
   amount: number;
 }
+
+export type LiveProps = {
+  profile: Profile | undefined;
+  postValues: {
+    title: string | undefined;
+    editionAmount: number;
+    description: string | undefined;
+    sustained: string | undefined;
+    involved: string | undefined;
+    price: number;
+    referralFee: number;
+    currency: string | undefined;
+    recipients: {
+      recipient: string;
+      split: number;
+    }[];
+  };
+  storefrontValues: Collection[];
+  NFTURIArray: string[];
+  contractValues: string[];
+  postGrant: () => Promise<void>;
+  postLoading: boolean;
+};
