@@ -12,10 +12,14 @@ import { profilePublications } from "@/graphql/lens/query/getPublications";
 import nextHex from "@/lib/lens/helpers/nextHex";
 import { useRouter } from "next/router";
 import { setContractValues } from "@/redux/reducers/contractValuesSlice";
+import { setPubId } from "@/redux/reducers/pubIdSlice";
 
 const useContracts = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const pubId = useSelector(
+    (state: RootState) => state.app.pubIdReducer?.pubId
+  );
   const profileId = useSelector(
     (state: RootState) => state.app.profileReducer.profile?.id
   );
@@ -25,7 +29,6 @@ const useContracts = () => {
   const NFTValues = useSelector(
     (state: RootState) => state.app.NFTImageArrayReducer.value
   );
-  const [pubId, setPubId] = useState<number>();
   const [createContractsLoading, setCreateContractsLoading] =
     useState<boolean>(false);
 
@@ -57,10 +60,10 @@ const useContracts = () => {
         limit: 1,
       });
       if (!data || !data || data?.publications?.items?.length < 1) {
-        setPubId(1);
+        dispatch(setPubId(1));
       } else {
         const next = nextHex(data?.publications?.items[0]?.id.split("-")[1]);
-        setPubId(parseInt(next, 16));
+        dispatch(setPubId(parseInt(next, 16)));
       }
     } catch (err: any) {
       console.error(err.message);

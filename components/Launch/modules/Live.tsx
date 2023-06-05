@@ -48,7 +48,6 @@ const Live: FunctionComponent<LiveProps> = ({
                       className="text-center flex w-full h-full justify-center"
                       id="borderPreview"
                     >
-                      grant title here
                       {postValues.title}
                     </div>
                   </div>
@@ -57,7 +56,6 @@ const Live: FunctionComponent<LiveProps> = ({
                     id="borderPreview"
                   >
                     <div className="text-center flex w-full h-full justify-center">
-                      grant description here
                       {postValues.description}
                     </div>
                   </div>

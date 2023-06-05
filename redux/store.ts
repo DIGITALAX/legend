@@ -15,6 +15,7 @@ import storefrontValuesReducer from "./reducers/storefrontValuesSlice";
 import contractValuesReducer from "./reducers/contractValuesSlice";
 import collapseItemLaunchReducer from "./reducers/collapseItemLaunchSlice";
 import collapseItemReducer from "./reducers/collapseItemSlice";
+import pubIdReducer from "./reducers/pubIdSlice";
 
 const reducer = combineReducers({
   noHandleReducer,
@@ -32,6 +33,7 @@ const reducer = combineReducers({
   contractValuesReducer,
   collapseItemLaunchReducer,
   collapseItemReducer,
+  pubIdReducer,
 });
 
 export const store = configureStore({

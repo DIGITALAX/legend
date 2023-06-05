@@ -43,8 +43,13 @@ import {
 import splitSignature from "@/lib/lens/helpers/splitSignature";
 import availableCurrencies from "@/lib/lens/helpers/availableCurrencies";
 import { setPostValues } from "@/redux/reducers/postValuesSlice";
+import { useRouter } from "next/router";
+import { setPubId } from "@/redux/reducers/pubIdSlice";
+import { setNFTImageArray } from "@/redux/reducers/NFTImageArraySlice";
+import { setContractValues } from "@/redux/reducers/contractValuesSlice";
 
 const usePost = () => {
+  const router = useRouter();
   const [postLoading, setPostLoading] = useState<boolean>(false);
   const [postArgs, setPostArgs] = useState<any>();
   const [postDescription, setPostDescription] = useState<string>("");
@@ -95,6 +100,7 @@ const usePost = () => {
   const profileId = useSelector(
     (state: RootState) => state.app.profileReducer.profile
   );
+  const pubId = useSelector((state: RootState) => state.app.pubIdReducer.pubId);
   const dispatcher = useSelector(
     (state: RootState) => state.app.dispatcherReducer.value
   );
@@ -360,6 +366,25 @@ const usePost = () => {
         hash: tx?.hash!,
       });
       await handleIndexCheck(res?.transactionHash, dispatch, true);
+      if (res.status === "success") {
+        router.push(`/grant/${pubId}`);
+        dispatch(setPubId(undefined));
+        dispatch(
+          setPostValues({
+            title: undefined,
+            editionAmount: 100,
+            description: undefined,
+            sustained: undefined,
+            involved: undefined,
+            price: 1,
+            referralFee: 0,
+            currency: "",
+            recipients: [],
+          })
+        );
+        dispatch(setNFTImageArray([]));
+        dispatch(setContractValues([]));
+      }
     } catch (err) {
       console.error(err);
       setPostLoading(false);
