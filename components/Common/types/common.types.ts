@@ -1,19 +1,29 @@
-import { FormEvent } from "react";
+import { Dispatch, FormEvent } from "react";
 import TopBarTwo from "../modules/TopBarTwo";
 import { Collection } from "@/components/Launch/types/launch.types";
+import { AnyAction } from "redux";
 
 export type SmallBoxProps = {
   title: string;
   value: any;
   onChangeFunction: (e: FormEvent) => void;
+  collapseNumber: boolean[];
+  index: number;
+  dispatch: Dispatch<AnyAction>;
 };
 
 export type TopBarThreeProps = {
   text: string;
+  collapseNumber?: boolean[];
+  dispatch?: Dispatch<AnyAction>;
+  index?: number;
 };
 
 export type TopBarTwoProps = {
   deleteFunction?: () => void;
+  collapseNumber?: boolean[];
+  dispatch?: Dispatch<AnyAction>;
+  index?: number;
 };
 
 export type CollectionAddProps = {
@@ -41,4 +51,10 @@ export type CollectionAddProps = {
   handleDiscount: (e: FormEvent, index: number) => void;
   handlePrintType: (e: FormEvent, index: number) => void;
   handleGrantOnly: (e: FormEvent, index: number) => void;
+};
+
+export type TopBarOneProps = {
+  collapseNumber?: boolean[];
+  dispatch?: Dispatch<AnyAction>;
+  index?: number;
 };

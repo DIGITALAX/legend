@@ -10,7 +10,7 @@ import fileLimitAlert from "@/lib/lens/helpers/fileLimitAlert";
 import videoLimitAlert from "@/lib/lens/helpers/videoLimitAlert";
 import { setPublicationImages } from "@/redux/reducers/publicationImageSlice";
 import { setCommentImages } from "@/redux/reducers/commentImagesSlice";
-import JSZip from "jszip";
+import JSZip, { JSZipObject } from "jszip";
 import { setNFTImageArray } from "@/redux/reducers/NFTImageArraySlice";
 
 const useImageUpload = () => {
@@ -234,8 +234,7 @@ const useImageUpload = () => {
       const zip = await JSZip.loadAsync(zipFileData);
 
       // Filter and extract PNG files
-      const filteredFiles: { [name: string]: Promise<Blob> } = {};
-      const promises: Promise<Blob>[] = [];
+      const fileEntries: { name: string; file: JSZipObject }[] = [];
       zip.forEach((relativePath, file) => {
         if (
           file.dir ||
@@ -245,20 +244,25 @@ const useImageUpload = () => {
         )
           return;
         if (relativePath.toLowerCase().endsWith(".png")) {
-          const promise = file.async("blob");
-          filteredFiles[relativePath] = promise;
-          promises.push(promise);
+          fileEntries.push({ name: relativePath, file });
         }
       });
 
-      if (promises.length < 1) {
+      if (fileEntries.length < 1) {
         setZipLoading(false);
         return;
       }
 
+      const promises: Promise<{ name: string; blob: any }>[] = fileEntries.map(
+        async ({ name, file }) => {
+          const blob = await file.async("blob");
+          return { name, blob };
+        }
+      );
+
       const blobs = await Promise.all(promises);
       const fileBuffers = await Promise.all(
-        blobs.map((blob) => blob.arrayBuffer())
+        blobs.map(({ blob }) => blob.arrayBuffer())
       );
 
       const newImagePreviews = await Promise.all(
@@ -275,32 +279,53 @@ const useImageUpload = () => {
 
       setImagePreviews(newImagePreviews);
 
-      setFileUploadAmount(promises.length);
+      setFileUploadAmount(newImagePreviews.length);
 
       let cidArray: string[] = [];
       let count = 1;
-      await Promise.all(
-        Object.keys(filteredFiles).map(async (name, index) => {
-          const fileBuffer = fileBuffers[index];
-          const blob = new Blob([fileBuffer], { type: "image/png" });
-          const file = new File([blob], name);
-          const response = await fetch("/api/ipfs", {
-            method: "POST",
-            body: file,
-          });
-          if (response.status !== 200) {
-            setImageLoading(false);
-            return;
-          } else {
-            const cid = await response.json();
-            cidArray.push(cid?.cid);
-          }
-          count++;
-          setFileUploadCount(count);
-        })
-      );
+      for (let i = 0; i < fileEntries.length; i++) {
+        const { name, blob } = blobs[i];
+        const file = new File([blob], name);
 
-      dispatch(setNFTImageArray(cidArray));
+        const response = await fetch("/api/ipfs", {
+          method: "POST",
+          body: file,
+        });
+        if (response.status !== 200) {
+          setImageLoading(false);
+          return;
+        } else {
+          const cid = await response.json();
+          cidArray.push(cid?.cid);
+        }
+        count++;
+        setFileUploadCount(count);
+      }
+
+      let adjustedArray: string[] = [];
+      const inputLength = cidArray.length;
+
+      if (inputLength === postValues.editionAmount) {
+        adjustedArray = cidArray;
+      } else if (inputLength > postValues.editionAmount) {
+        adjustedArray = cidArray.slice(0, postValues.editionAmount);
+      } else {
+        let multiple = Math.floor(postValues.editionAmount / inputLength);
+        let remainder = postValues.editionAmount % inputLength;
+
+        for (let i = 0; i < inputLength; i++) {
+          let tempArray = new Array(multiple).fill(cidArray[i]);
+
+          if (remainder > 0) {
+            tempArray.push(cidArray[i]);
+            remainder--;
+          }
+
+          adjustedArray = [...adjustedArray, ...tempArray];
+        }
+      }
+
+      dispatch(setNFTImageArray(adjustedArray));
     } catch (err: any) {
       console.error(err.message);
     } finally {
@@ -308,6 +333,29 @@ const useImageUpload = () => {
     }
   };
 
+  const handleDropImage = (sourceIndex: number, targetIndex: number) => {
+    if (imagePreviews.length < 1 && NFT.length < 1) return;
+
+    if (imagePreviews.length > 0) {
+      const draggedImage = imagePreviews[sourceIndex];
+
+      const updatedImagePreviews = [...imagePreviews];
+      updatedImagePreviews.splice(sourceIndex, 1); // Remove the dragged image
+
+      updatedImagePreviews.splice(targetIndex, 0, draggedImage); // Insert the dragged image at the target index
+
+      setImagePreviews(updatedImagePreviews);
+    }
+
+    const draggedImage = NFT[sourceIndex];
+
+    const updatedNFTs = [...NFT];
+    updatedNFTs.splice(sourceIndex, 1); // Remove the dragged image
+
+    updatedNFTs.splice(targetIndex, 0, draggedImage); // Insert the dragged image at the target index
+
+    dispatch(setNFTImageArray(updatedNFTs));
+  };
   useEffect(() => {
     if (router.asPath.includes("launch")) {
       if (mappedFeaturedFiles.length > 3) {
@@ -340,6 +388,7 @@ const useImageUpload = () => {
     zipLoading,
     currentImageIndex,
     setCurrentImageIndex,
+    handleDropImage,
   };
 };
 

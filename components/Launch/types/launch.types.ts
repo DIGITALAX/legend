@@ -1,6 +1,7 @@
 import { Erc20, Profile } from "@/components/home.types";
 import JSZip from "jszip";
 import { FormEvent, KeyboardEvent, Ref, RefObject } from "react";
+import { AnyAction, Dispatch } from "redux";
 
 export type SwitchLaunchProps = {
   profile: Profile | undefined;
@@ -38,6 +39,8 @@ export type PostDetailsProps = {
   sustained: string | undefined;
   setSustained: (e: string) => void;
   filledInAmount: number;
+  collapseNumber: boolean[];
+  dispatch: Dispatch<AnyAction>;
 };
 
 export type PreviewProps = {
@@ -66,6 +69,8 @@ export type ImageUploadDynamicProps = {
   imagePreviews: any[];
   currentImageIndex: number;
   setCurrentImageIndex: (e: number) => void;
+  NFTURIValues: string[];
+  handleDropImage: (sourceIndex: number, targetIndex: number) => void;
 };
 
 export type ContractsProps = {
@@ -150,4 +155,9 @@ export type LiveProps = {
   contractValues: string[];
   postGrant: () => Promise<void>;
   postLoading: boolean;
+  nextStore: number;
+  setNextStore: (e: number) => void;
+  nextURI: number;
+  setNextURI: (e: number) => void;
+  enabledCurrencies: Erc20[];
 };

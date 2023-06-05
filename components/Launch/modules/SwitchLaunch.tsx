@@ -9,7 +9,7 @@ import usePost from "../hooks/usePost";
 import Preview from "./Preview";
 import ImageUploadDynamic from "./ImageUploadDynamic";
 import useImageUpload from "../hooks/useImageUpload";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import useContracts from "../hooks/useContracts";
 import useKeeper from "../hooks/useKeeper";
@@ -59,6 +59,10 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
     setInvolved,
     filledInAmount,
     postGrant,
+    nextStore,
+    setNextStore,
+    nextURI,
+    setNextURI,
   } = usePost();
 
   const {
@@ -69,6 +73,7 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
     zipLoading,
     currentImageIndex,
     setCurrentImageIndex,
+    handleDropImage
   } = useImageUpload();
 
   const { createContracts, createContractsLoading } = useContracts();
@@ -114,6 +119,11 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
   const addresses = useSelector(
     (state: RootState) => state.app.contractValuesReducer.value
   );
+  const collapseNumber = useSelector(
+    (state: RootState) => state.app.collapseItemLaunchReducer.value
+  );
+
+  const dispatch = useDispatch();
 
   switch (decideStringAction()) {
     case "5":
@@ -126,6 +136,11 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
           contractValues={contractValues}
           postGrant={postGrant}
           postLoading={postLoading}
+          nextStore={nextStore}
+          setNextStore={setNextStore}
+          nextURI={nextURI}
+          setNextURI={setNextURI}
+          enabledCurrencies={enabledCurrencies}
         />
       );
 
@@ -182,6 +197,8 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
           imagePreviews={imagePreviews}
           currentImageIndex={currentImageIndex}
           setCurrentImageIndex={setCurrentImageIndex}
+          NFTURIValues={NFTArray}
+          handleDropImage={handleDropImage}
         />
       );
 
@@ -223,6 +240,8 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
             setSustained={setSustained}
             setInvolved={setInvolved}
             filledInAmount={filledInAmount}
+            collapseNumber={collapseNumber}
+            dispatch={dispatch}
           />
           <Preview
             title={title}

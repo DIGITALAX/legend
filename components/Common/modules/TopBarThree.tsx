@@ -2,9 +2,13 @@ import { INFURA_GATEWAY } from "@/lib/constants";
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import { TopBarThreeProps } from "../types/common.types";
+import { setCollapseItemLaunch } from "@/redux/reducers/collapseItemLaunchSlice";
 
 const TopBarThree: FunctionComponent<TopBarThreeProps> = ({
   text,
+  collapseNumber,
+  dispatch,
+  index,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex flex-row border-b border-mazul border-b-2">
@@ -26,12 +30,38 @@ const TopBarThree: FunctionComponent<TopBarThreeProps> = ({
               x
             </div>
           </div>
-          <div className="border border-black bg-medio h-4 w-4 items-center justify-center flex font-mega text-xs p-1">
+          <div
+            className="border border-black bg-medio h-4 w-4 items-center justify-center flex font-mega text-xs p-1 cursor-pointer"
+            onClick={() =>
+              dispatch &&
+              collapseNumber &&
+              dispatch(
+                setCollapseItemLaunch(
+                  [...collapseNumber].map((item, i) =>
+                    i === index ? true : item
+                  )
+                )
+              )
+            }
+          >
             <div className="relative w-fit h-fit items-center justify-center flex">
               -
             </div>
           </div>
-          <div className="border border-black bg-medio h-4 w-4 items-center justify-center flex font-mega p-1">
+          <div
+            className="border border-black bg-medio h-4 w-4 items-center justify-center flex font-mega p-1 cursor-pointer"
+            onClick={() =>
+              dispatch &&
+              collapseNumber &&
+              dispatch(
+                setCollapseItemLaunch(
+                  [...collapseNumber].map((item, i) =>
+                    i === index ? false : item
+                  )
+                )
+              )
+            }
+          >
             <div className="flex w-full h-full items-center justify-center border border-black"></div>
           </div>
         </div>

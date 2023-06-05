@@ -16,12 +16,18 @@ import DynamicNFT from "@/components/Home/Grant/modules/DynamicNFT";
 import MirrorBox from "@/components/Home/Grant/modules/MirrorBox";
 import CollectBox from "@/components/Home/Grant/modules/CollectBox";
 import StoreFrontBox from "@/components/Home/Grant/modules/StoreFrontBox";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 type HomeProps = {
   firebaseApp: FirebaseApp;
 };
 
 export default function Home({ firebaseApp }: HomeProps): JSX.Element {
+  const collapseNumber = useSelector(
+    (state: RootState) => state.app.collapseItemReducer.value
+  );
+  const dispatch = useDispatch();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const [imageLoaded, setImageLoaded] = useState<boolean>(false);
@@ -112,16 +118,36 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
     >
       <div className="relative w-full h-full flex flex-row p-6 gap-10 justify-center z-10">
         <div className="relative w-full h-full flex flex-col items-center">
-          <CollectBox />
-          <MirrorBox />
+          <CollectBox
+            collapseNumber={collapseNumber}
+            dispatch={dispatch}
+            index={0}
+          />
+          <MirrorBox
+            collapseNumber={collapseNumber}
+            dispatch={dispatch}
+            index={1}
+          />
         </div>
         <div className="relative w-full items-center h-full flex flex-col">
           <DynamicNFT />
-          <GrantBox />
+          <GrantBox
+            collapseNumber={collapseNumber}
+            dispatch={dispatch}
+            index={2}
+          />
         </div>
         <div className="w-full h-full flex justify-center">
-          <CommentBox />
-          <StoreFrontBox />
+          <CommentBox
+            collapseNumber={collapseNumber}
+            dispatch={dispatch}
+            index={3}
+          />
+          <StoreFrontBox
+            collapseNumber={collapseNumber}
+            dispatch={dispatch}
+            index={4}
+          />
         </div>
       </div>
       <div className="relative w-full h-full">

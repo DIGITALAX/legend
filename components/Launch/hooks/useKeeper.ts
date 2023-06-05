@@ -33,17 +33,14 @@ const useKeeper = () => {
     address: "0xb927AEf40a884656e95D03acD4087b100De76eca",
     abi: UpkeepAbi,
     args: [
-      {
-        name: "test",
-        encryptedEmail: "0x",
-        upkeepContract: "0xf740550ca94b1cbdbbc25949c42511b5ed94caaf",
-        gasLimit: 500000,
-        adminAddress: address,
-        checkData: "0x",
-        offchainConfig: "0x",
-        amount: "2000000000000000000",
-        sender: "0xb927AEf40a884656e95D03acD4087b100De76eca",
-      },
+      "test",
+      "0x",
+      "0xf740550ca94b1cbdbbc25949c42511b5ed94caaf",
+      500000,
+      address,
+      "0x",
+      "2000000000000000000",
+      "0xb927AEf40a884656e95D03acD4087b100De76eca",
     ],
     functionName: "registerAndPredictID",
     // enabled: Boolean(legendKeeperAddress),
@@ -64,7 +61,7 @@ const useKeeper = () => {
 
   const { writeAsync: sendWriteAsync } = useContractWrite(sendConfig);
 
-  console.log({ error, isSuccess });
+  // console.log({ error, isSuccess });
 
   const registerUpkeep = async () => {
     setKeeperRegisterLoading(true);
@@ -73,7 +70,6 @@ const useKeeper = () => {
       const res = await waitForTransaction({
         hash: tx?.hash!,
       });
-      console.log({ res });
       setText("view register");
     } catch (err: any) {
       console.error(err.message);
@@ -95,7 +91,6 @@ const useKeeper = () => {
         hash: tx?.hash!,
       });
       setText("register keeper");
-      console.log({ res });
     } catch (err: any) {
       console.error(err.message);
     }

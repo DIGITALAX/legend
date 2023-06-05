@@ -13,6 +13,8 @@ import NFTImageArrayReducer from "./reducers/NFTImageArraySlice";
 import launchPageCountReducer from "./reducers/launchPageCountSlice";
 import storefrontValuesReducer from "./reducers/storefrontValuesSlice";
 import contractValuesReducer from "./reducers/contractValuesSlice";
+import collapseItemLaunchReducer from "./reducers/collapseItemLaunchSlice";
+import collapseItemReducer from "./reducers/collapseItemSlice";
 
 const reducer = combineReducers({
   noHandleReducer,
@@ -28,6 +30,8 @@ const reducer = combineReducers({
   launchPageCountReducer,
   storefrontValuesReducer,
   contractValuesReducer,
+  collapseItemLaunchReducer,
+  collapseItemReducer,
 });
 
 export const store = configureStore({

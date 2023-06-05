@@ -61,6 +61,8 @@ const usePost = () => {
   const [sustained, setSustained] = useState<string>();
   const [involved, setInvolved] = useState<string>();
   const [filledInAmount, setFilledInAmount] = useState<number>(0);
+  const [nextStore, setNextStore] = useState<number>(0);
+  const [nextURI, setNextURI] = useState<number>(0);
   const [recipients, setRecipients] = useState<
     { recipient: string; split: number }[]
   >([
@@ -508,6 +510,10 @@ const usePost = () => {
     involved,
     setInvolved,
     filledInAmount,
+    nextStore,
+    setNextStore,
+    nextURI,
+    setNextURI,
   };
 };
 

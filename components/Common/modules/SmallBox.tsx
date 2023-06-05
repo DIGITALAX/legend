@@ -8,11 +8,20 @@ const SmallBox: FunctionComponent<SmallBoxProps> = ({
   title,
   onChangeFunction,
   value,
+  collapseNumber,
+  dispatch,
+  index,
 }): JSX.Element => {
   return (
     <div className="relative w-40 h-fit flex flex-col rounded-md bg-offWhite border-2 border-mazul">
-      <TopBarTwo />
-      <div className="p-2 w-full h-full flex flex-col gap-2">
+      <TopBarTwo
+        collapseNumber={collapseNumber}
+        dispatch={dispatch}
+        index={index}
+      />
+      <div className={`p-2 w-full h-full flex-col gap-2 ${
+            collapseNumber[index] ? "hidden" : "flex"
+          }`}>
         <div className="relative w-fit h-fit flex font-mega text-lg uppercase text-mazul p-2">
           {title}
         </div>

@@ -26,7 +26,6 @@ const useContracts = () => {
     (state: RootState) => state.app.NFTImageArrayReducer.value
   );
   const [pubId, setPubId] = useState<number>();
-  const [URIValues, setURIValues] = useState<string[]>([]);
   const [createContractsLoading, setCreateContractsLoading] =
     useState<boolean>(false);
 
@@ -39,13 +38,13 @@ const useContracts = () => {
       {
         lensHubProxyAddress: LENS_HUB_PROXY_ADDRESS_MUMBAI,
         legendFactoryAddress: FACTORY_CONTRACT_MUMBAI,
-        URIArrayValue: URIValues,
+        URIArrayValue: NFTValues,
         grantNameValue: postValues.title,
         editionAmountValue: postValues.editionAmount,
       },
     ],
     functionName: "createContracts",
-    enabled: Boolean(URIValues.length > 0),
+    enabled: Boolean(pubId),
   });
 
   const { writeAsync } = useContractWrite(config);
@@ -66,32 +65,6 @@ const useContracts = () => {
     } catch (err: any) {
       console.error(err.message);
     }
-  };
-
-  const updateNFTArray = () => {
-    let adjustedArray: string[] = [];
-    const inputLength = NFTValues.length;
-
-    if (inputLength === postValues.editionAmount) {
-      return NFTValues;
-    } else if (inputLength > postValues.editionAmount) {
-      return NFTValues.slice(0, postValues.editionAmount);
-    } else {
-      let multiple = Math.floor(postValues.editionAmount / inputLength);
-      let remainder = postValues.editionAmount % inputLength;
-
-      for (let i = 0; i < inputLength; i++) {
-        let tempArray = new Array(multiple).fill(NFTValues[i]);
-
-        if (remainder > 0) {
-          tempArray.push(NFTValues[i]);
-          remainder--;
-        }
-
-        adjustedArray = [...adjustedArray, ...tempArray];
-      }
-    }
-    setURIValues(adjustedArray);
   };
 
   const createContracts = async () => {
@@ -123,7 +96,6 @@ const useContracts = () => {
   useEffect(() => {
     if (router.asPath.includes("launch") && profileId) {
       getLastPost();
-      updateNFTArray();
     }
   }, [profileId, router.asPath]);
 

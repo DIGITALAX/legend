@@ -30,7 +30,7 @@ const CollectionAdd: FunctionComponent<CollectionAddProps> = ({
       <div
         className={`${
           position ? "absolute" : "relative"
-        } w-80 h-fit flex gap-3 bg-white border-2 border-mazul cursor-grab active:cursor-grabbing`}
+        } w-80 h-fit flex gap-3 bg-white border-2 border-mazul cursor-grab active:cursor-grabbing `}
         style={{
           top: `${position && position.y}px`,
           right: `${position && position.x}px`,

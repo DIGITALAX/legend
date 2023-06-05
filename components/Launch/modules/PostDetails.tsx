@@ -38,14 +38,26 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
   sustained,
   involved,
   filledInAmount,
+  collapseNumber,
+  dispatch,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex items-center z-1">
       <Draggable enableUserSelectHack={false}>
-        <div className="relative w-72 h-fit flex gap-3 bg-mal rounded-md border-2 border-mora left-10 p-6 z-1 cursor-grab active:cursor-grabbing">
+        <div
+          className={`relative w-72  flex gap-3 bg-mal rounded-md border-2 border-mora left-10 p-6 z-1 cursor-grab active:cursor-grabbing`}
+        >
           <div className="relative w-full h-full bg-otra items-center flex flex-col">
-            <TopBarOne />
-            <div className="p-2 flex w-full h-full flex-col gap-3">
+            <TopBarOne
+              collapseNumber={collapseNumber}
+              dispatch={dispatch}
+              index={0}
+            />
+            <div
+              className={`p-2 w-full h-full flex-col gap-3 ${
+                collapseNumber[0] ? "hidden" : "flex"
+              }`}
+            >
               <div className="relative w-fit h-fit flex font-mega text-mazul text-xl uppercase">
                 What's the name of your grant?
               </div>
@@ -80,10 +92,20 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
         </div>
       </Draggable>
       <Draggable enableUserSelectHack={false}>
-        <div className="relative w-96 h-fit flex gap-3 bg-darker rounded-md border-2 border-mora p-6 -top-10 -left-24  cursor-grab active:cursor-grabbing">
+        <div
+          className={`relative w-96  flex gap-3 bg-darker rounded-md border-2 border-mora p-6 -top-10 -left-24  cursor-grab active:cursor-grabbing`}
+        >
           <div className="relative w-full h-full bg-otra items-center flex flex-col">
-            <TopBarOne />
-            <div className="p-2 flex w-full h-full flex-col gap-3">
+            <TopBarOne
+              collapseNumber={collapseNumber}
+              dispatch={dispatch}
+              index={1}
+            />
+            <div
+              className={`p-2 flex w-full h-full flex-col gap-3 ${
+                collapseNumber[1] ? "hidden" : "flex"
+              }`}
+            >
               <div className="relative w-fit h-fit flex font-mega text-mazul text-xl uppercase">
                 What's being built?
               </div>
@@ -171,10 +193,22 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
         </div>
       </Draggable>
       <Draggable enableUserSelectHack={false}>
-        <div className="absolute w-80 h-fit flex gap-3 bg-lez border-2 border-mazul bottom-48 right-20  cursor-grab active:cursor-grabbing">
+        <div
+          className={`absolute w-80 flex gap-3 bg-lez border-2 border-mazul bottom-48 right-20  cursor-grab active:cursor-grabbing ${
+            collapseNumber[2] ? "h-6" : "h-fit"
+          }`}
+        >
           <div className="relative w-full h-full bg-lez items-center flex flex-col">
-            <TopBarOne />
-            <div className="p-2 flex w-full h-full flex-row gap-1">
+            <TopBarOne
+              collapseNumber={collapseNumber}
+              dispatch={dispatch}
+              index={2}
+            />
+            <div
+              className={`p-2 w-full h-full flex-row gap-1 ${
+                collapseNumber[2] ? "hidden" : "flex"
+              }`}
+            >
               <div className="relative w-full h-full flex flex-col gap-3 p-2">
                 <div className="relative w-full h-full flex items-center justify-center rounded-md">
                   <div className="absolute w-full h-full flex">
@@ -210,43 +244,68 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
         </div>
       </Draggable>
       <Draggable enableUserSelectHack={false}>
-        <div className="absolute bottom-10 left-24 flex w-fit h-fit z-1  cursor-grab active:cursor-grabbing">
+        <div
+          className={`absolute bottom-10 left-24 flex w-fit z-1  cursor-grab active:cursor-grabbing`}
+        >
           <SmallBox
             title={"How many editions?"}
             onChangeFunction={(e: FormEvent) =>
               setEditionAmount((e.target as HTMLFormElement).value)
             }
             value={editionAmount}
+            collapseNumber={collapseNumber}
+            dispatch={dispatch}
+            index={3}
           />
         </div>
       </Draggable>
       <Draggable enableUserSelectHack={false}>
-        <div className="absolute -bottom-10 left-40 flex w-fit h-fit z-1  cursor-grab active:cursor-grabbing">
+        <div
+          className={`absolute -bottom-10 left-40 flex w-fit z-1  cursor-grab active:cursor-grabbing`}
+        >
           <SmallBox
             title={"How much?"}
             onChangeFunction={(e: FormEvent) =>
               setValueAmount((e.target as HTMLFormElement).value)
             }
             value={valueAmount}
+            collapseNumber={collapseNumber}
+            dispatch={dispatch}
+            index={4}
           />
         </div>
       </Draggable>
       <Draggable enableUserSelectHack={false}>
-        <div className="absolute -bottom-10 left-52 flex w-fit h-fit z-1  cursor-grab active:cursor-grabbing">
+        <div
+          className={`absolute -bottom-10 left-52 flex w-fit z-1 cursor-grab active:cursor-grabbing`}
+        >
           <SmallBox
             title={"Referral Fee?"}
             onChangeFunction={(e: FormEvent) =>
               setReferralFee((e.target as HTMLFormElement).value)
             }
             value={referralFee}
+            collapseNumber={collapseNumber}
+            dispatch={dispatch}
+            index={5}
           />
         </div>
       </Draggable>
       <Draggable enableUserSelectHack={false}>
-        <div className="absolute w-60 h-fit flex gap-3 bg-white border-2 border-mazul right-2  cursor-grab active:cursor-grabbing">
+        <div
+          className={`absolute w-60 flex gap-3 bg-white border-2 border-mazul right-2  cursor-grab active:cursor-grabbing `}
+        >
           <div className="relative w-full h-full items-center flex flex-col">
-            <TopBarTwo />
-            <div className="p-2 flex w-full h-full flex-col gap-3">
+            <TopBarTwo
+              collapseNumber={collapseNumber}
+              dispatch={dispatch}
+              index={6}
+            />
+            <div
+              className={`p-2 flex w-full h-full flex-col gap-3 ${
+                collapseNumber[6] ? "hidden" : "flex"
+              }`}
+            >
               <div className="w-full h-60 border border-black bg-mist items-center justify-center flex">
                 <div className="relative w-20 h-20">
                   <Image
@@ -285,9 +344,19 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
         </div>
       </Draggable>
       <Draggable enableUserSelectHack={false}>
-        <div className="absolute z-1 w-72 h-fit flex flex-col rounded-md bg-offWhite border-2 border-mazul left-10  cursor-grab active:cursor-grabbing">
-          <TopBarTwo />
-          <div className="p-2 w-full h-full flex flex-col gap-2">
+        <div
+          className={`absolute z-1 w-72 flex flex-col rounded-md bg-offWhite border-2 border-mazul left-10  cursor-grab active:cursor-grabbing`}
+        >
+          <TopBarTwo
+            collapseNumber={collapseNumber}
+            dispatch={dispatch}
+            index={7}
+          />
+          <div
+            className={`p-2 w-full h-full flex flex-col gap-2 ${
+              collapseNumber[7] ? "hidden" : "flex"
+            }`}
+          >
             <div className="relative w-full h-fit flex font-mega text-lg uppercase text-mazul p-2 items-center justify-center text-center">
               SELECT CURRENCY
             </div>
@@ -316,9 +385,19 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
         </div>
       </Draggable>
       <Draggable enableUserSelectHack={false}>
-        <div className="absolute right-10 -bottom-10 w-72 h-fit flex flex-col rounded-md bg-offWhite border-2 border-mazul  cursor-grab active:cursor-grabbing">
-          <TopBarTwo />
-          <div className="p-2 w-full h-full flex flex-col gap-2">
+        <div
+          className={`absolute right-10 -bottom-10 w-72 flex flex-col rounded-md bg-offWhite border-2 border-mazul  cursor-grab active:cursor-grabbing`}
+        >
+          <TopBarTwo
+            collapseNumber={collapseNumber}
+            dispatch={dispatch}
+            index={8}
+          />
+          <div
+            className={`p-2 w-full h-full flex flex-col gap-2 ${
+              collapseNumber[8] ? "hidden" : "flex"
+            }`}
+          >
             <div className="relative w-full h-fit flex font-mega uppercase text-mazul p-2 items-center justify-center text-center">
               SET GRANT RECIPIENTS
             </div>
@@ -356,11 +435,11 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
                         <input
                           className="relative w-20 h-fit font-earl bg-oscura border border-azul rounded-md p-1"
                           type="number"
-                          value={recipient.split}
+                          value={recipient.split.toFixed(0)}
                           onChange={(e) => {
                             const updatedRecipients = recipients.map((r, i) =>
                               i === index
-                                ? { ...r, split: parseInt(e.target.value) }
+                                ? { ...r, split: Number(parseInt(e.target.value).toFixed(0)) }
                                 : r
                             );
                             setRecipients(updatedRecipients);
@@ -376,7 +455,9 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
         </div>
       </Draggable>
       <Draggable enableUserSelectHack={false}>
-        <div className="absolute bottom-40 right-10 w-72 h-fit flex flex-col rounded-md bg-white border-2 border-mazul z-2  cursor-grab active:cursor-grabbing">
+        <div
+          className={`absolute bottom-40 right-10 w-72 flex flex-col rounded-md bg-white border-2 border-mazul z-2  cursor-grab active:cursor-grabbing`}
+        >
           <TopBarTwo />
           <div className="p-2 w-full h-full flex flex-row gap-2 p-2 items-center justify-center">
             <div className="relative w-full h-4 border border-black rounded-full">

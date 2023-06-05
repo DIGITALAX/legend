@@ -93,7 +93,7 @@ const Preview: FunctionComponent<PreviewProps> = ({
               </div>
             </div>
             <div className="flex flex-col relative w-fit h-fit gap-2">
-              <div className="relative text-mazul w-fit h-fit">Referrals</div>
+              <div className="relative text-mazul w-fit h-fit">Referral</div>
               <div
                 className=" text-sm text-center relative w-full h-10 py-1.5 px-2 border border-dashed border-opacity-30 border-2 border-mazul justify-start"
                 id="borderPreview"

@@ -5,6 +5,10 @@ import { ImageUploadDynamicProps } from "../types/launch.types";
 import TopBarOne from "@/components/Common/modules/TopBarOne";
 import Draggable from "react-draggable";
 import TopBarTwo from "@/components/Common/modules/TopBarTwo";
+import { INFURA_GATEWAY } from "@/lib/constants";
+import { DndProvider, useDrag, useDrop } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import DraggableImage from "@/components/Common/modules/DraggableImage";
 
 const ImageUploadDynamic: FunctionComponent<ImageUploadDynamicProps> = ({
   zipLoading,
@@ -15,6 +19,8 @@ const ImageUploadDynamic: FunctionComponent<ImageUploadDynamicProps> = ({
   imagePreviews,
   currentImageIndex,
   setCurrentImageIndex,
+  NFTURIValues,
+  handleDropImage
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full items-center justify-center flex py-5 flex flex-row gap-36">
@@ -79,22 +85,29 @@ const ImageUploadDynamic: FunctionComponent<ImageUploadDynamicProps> = ({
           </div>
         </div>
       </Draggable>
-      <Draggable enableUserSelectHack={false}>
+      <Draggable enableUserSelectHack={false} cancel=".stopDrag">
         <div className="relative w-100 h-3/4 flex gap-3 bg-white border-2 border-mazul cursor-grab active:cursor-grabbing">
           <div className="relative w-full h-full bg-white items-center flex flex-col gap-6">
             <TopBarTwo />
             <div className="relative w-60 h-60 rounded-lg border border-mazul items-center justify-center flex">
-              {imagePreviews.length < 1 || !imagePreviews[currentImageIndex] ? (
-                <div className="relative w-fit h-fit flex items-center justify-center animate-spin opacity-70">
-                  <AiOutlineLoading color="black" size={15} />
-                </div>
-              ) : (
+              {imagePreviews.length > 1 && imagePreviews[currentImageIndex] ? (
                 <Image
                   src={imagePreviews[currentImageIndex].src}
                   layout="fill"
                   objectFit="cover"
                   draggable={false}
                 />
+              ) : NFTURIValues.length > 1 && NFTURIValues[currentImageIndex] ? (
+                <Image
+                  src={`${INFURA_GATEWAY}/${NFTURIValues[currentImageIndex]}`}
+                  layout="fill"
+                  objectFit="cover"
+                  draggable={false}
+                />
+              ) : (
+                <div className="relative w-fit h-fit flex items-center justify-center animate-spin opacity-70">
+                  <AiOutlineLoading color="black" size={15} />
+                </div>
               )}
             </div>
             <div className="relative flex flex-row w-full h-fit gap-1 items-center justify-center">
@@ -120,37 +133,52 @@ const ImageUploadDynamic: FunctionComponent<ImageUploadDynamicProps> = ({
                 {`-->`}
               </div>
             </div>
-            <div className="p-2 flex w-full h-fit flex-row gap-1">
+            <div className="stopDrag p-2 flex w-full h-fit flex-row gap-1">
               <div className="relative w-full h-fit flex items-center justify-center rounded-md">
                 <div className="relative w-full h-full flex  overflow-x-scroll pt-5">
                   <div className="relative w-fit h-full flex flex-row gap-2">
-                    {(imagePreviews.length > 0
-                      ? imagePreviews
-                      : Array.from({ length: fileUploadAmount })
-                    ).map((_, index: number) => {
-                      return (
-                        <div
-                          key={index}
-                          className="relative w-20 h-20 rounded-md border border-dashed border-black/50 flex items-center justify-center cursor-pointer"
-                          onClick={() => setCurrentImageIndex(index)}
-                        >
-                          {imagePreviews[index] && fileUploadCount > index ? (
-                            <Image
-                              src={imagePreviews[index].src}
-                              className="w-full h-full object-cover rounded-md"
-                              layout="fill"
-                              objectFit="cover"
-                            />
-                          ) : (
-                            zipLoading && (
-                              <div className="relative w-fit h-fit animate-spin items-center justify-center opacity-80 flex">
-                                <AiOutlineLoading color="black" size={15} />
-                              </div>
-                            )
-                          )}
-                        </div>
-                      );
-                    })}
+                    <DndProvider backend={HTML5Backend}>
+                      {(imagePreviews.length > 0
+                        ? imagePreviews
+                        : NFTURIValues.length > 0
+                        ? NFTURIValues
+                        : Array.from({ length: fileUploadAmount })
+                      ).map((_, index: number) => {
+                        return (
+                          <DraggableImage key={index} index={index} onDropImage={handleDropImage}>
+                            <div
+                              className="relative w-20 h-20 rounded-md border border-dashed border-black/50 flex items-center justify-center cursor-pointer"
+                              onClick={() => setCurrentImageIndex(index)}
+                            >
+                              {imagePreviews[index] &&
+                              fileUploadCount > index ? (
+                                <Image
+                                  src={imagePreviews[index].src}
+                                  className="w-full h-full object-cover rounded-md"
+                                  layout="fill"
+                                  objectFit="cover"
+                                  draggable={false}
+                                />
+                              ) : NFTURIValues[index] ? (
+                                <Image
+                                  src={`${INFURA_GATEWAY}/${NFTURIValues[index]}`}
+                                  className="w-full h-full object-cover rounded-md"
+                                  layout="fill"
+                                  objectFit="cover"
+                                  draggable={false}
+                                />
+                              ) : (
+                                zipLoading && (
+                                  <div className="relative w-fit h-fit animate-spin items-center justify-center opacity-80 flex">
+                                    <AiOutlineLoading color="black" size={15} />
+                                  </div>
+                                )
+                              )}
+                            </div>
+                          </DraggableImage>
+                        );
+                      })}
+                    </DndProvider>
                   </div>
                 </div>
               </div>
