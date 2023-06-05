@@ -54,8 +54,7 @@ export type PreviewProps = {
 };
 
 export type NextButtonProps = {
-  page: number;
-  setPage: (e: number) => void;
+  setPage: () => void;
   text: string;
 };
 
@@ -75,3 +74,58 @@ export type ContractsProps = {
   createContractsLoading: boolean;
   addresses: string[];
 };
+
+export type KeeperProps = {
+  keeperRegisterLoading: boolean;
+  registerUpkeep: () => Promise<void>;
+  sendLink: () => Promise<void>;
+  balanceAmount: number | undefined;
+  text: string;
+};
+
+export type StoreProps = {
+  productInformation: Collection[];
+  newPosition: {
+    x: string;
+    y: string;
+  }[];
+  setNewPosition: (
+    e: {
+      x: string;
+      y: string;
+    }[]
+  ) => void;
+  editionAmount: number;
+  handleTitle: (e: FormEvent, index: number) => void;
+  handleDescription: (e: FormEvent, index: number) => void;
+  handleEditionAmount: (e: FormEvent, index: number) => void;
+  handleCollectionPrices: (
+    e: FormEvent,
+    address: string,
+    index: number
+  ) => void;
+  imageLoading: boolean[];
+  handleImageUpload: (e: FormEvent, index: number) => Promise<void>;
+  mintCollection: (e: number) => Promise<void>;
+  minted: boolean[];
+  collectionLoading: boolean[];
+  handleDiscount: (e: FormEvent, index: number) => void;
+  handlePrintType:(e: FormEvent, index: number) => void;
+  handleGrantOnly:(e: FormEvent, index: number) => void;
+};
+
+export interface Collection {
+  acceptedTokens: string[];
+  basePrices: number[];
+  printType: string;
+  discount: number;
+  grantOnly: boolean;
+  uri: {
+    description: string;
+    external_url: string;
+    image: string;
+    name: string;
+    type: string;
+  };
+  amount: number;
+}

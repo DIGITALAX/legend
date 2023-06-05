@@ -11,6 +11,7 @@ import { RootState } from "@/redux/store";
 import { profilePublications } from "@/graphql/lens/query/getPublications";
 import nextHex from "@/lib/lens/helpers/nextHex";
 import { useRouter } from "next/router";
+import { setKeeperAddress } from "@/redux/reducers/keeperAddressSlice";
 
 const useContracts = () => {
   const router = useRouter();
@@ -57,8 +58,6 @@ const useContracts = () => {
         publicationTypes: ["POST"],
         limit: 1,
       });
-
-      console.log({ data });
       if (!data || !data || data?.publications?.items?.length < 1) {
         setPubId(1);
       } else {
@@ -96,22 +95,6 @@ const useContracts = () => {
     setURIValues(adjustedArray);
   };
 
-  console.log(
-    {
-      lensHubProxyAddress: LENS_HUB_PROXY_ADDRESS_MUMBAI,
-      legendFactoryAddress: FACTORY_CONTRACT_MUMBAI,
-      URIArrayValue: URIValues,
-      grantNameValue: postValues.title,
-      editionAmountValue: postValues.editionAmount,
-    },
-    {
-      profileId: parseInt(profileId, 16),
-      pubId,
-    }
-  );
-
-  console.log({ URIValues });
-
   const createContracts = async () => {
     setCreateContractsLoading(true);
     try {
@@ -121,6 +104,7 @@ const useContracts = () => {
       });
       if (res.status === "success") {
         setAddresses(res.logs.map((log) => log.address));
+        dispatch(setKeeperAddress(res.logs.map((log) => log.address)[1]));
         // for (let i = 0; i < addresses.length; i++) {
         //   await fetch("/api/etherscan", {
         //     method: "POST",

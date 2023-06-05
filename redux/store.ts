@@ -10,6 +10,8 @@ import commentImagesReducer from "./reducers/commentImagesSlice";
 import dispatcherReducer from "./reducers/dispatcherSlice";
 import postValuesReducer from "./reducers/postValuesSlice";
 import NFTImageArrayReducer from "./reducers/NFTImageArraySlice";
+import keeperAddressReducer from "./reducers/keeperAddressSlice";
+import launchPageCountReducer from "./reducers/launchPageCountSlice";
 
 const reducer = combineReducers({
   noHandleReducer,
@@ -22,6 +24,8 @@ const reducer = combineReducers({
   dispatcherReducer,
   postValuesReducer,
   NFTImageArrayReducer,
+  launchPageCountReducer,
+  keeperAddressReducer,
 });
 
 export const store = configureStore({

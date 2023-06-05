@@ -12,6 +12,8 @@ import useImageUpload from "../hooks/useImageUpload";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import useContracts from "../hooks/useContracts";
+import useKeeper from "../hooks/useKeeper";
+import useStorefront from "../hooks/useStorefront";
 
 const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
   profile,
@@ -70,6 +72,32 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
 
   const { createContracts, addresses, createContractsLoading } = useContracts();
 
+  const {
+    keeperRegisterLoading,
+    registerUpkeep,
+    sendLink,
+    balanceAmount,
+    text,
+  } = useKeeper();
+
+  const {
+    productInformation,
+    newPosition,
+    setNewPosition,
+    handleCollectionPrices,
+    handleDescription,
+    handleTitle,
+    handleEditionAmount,
+    imageLoading,
+    handleImageUpload,
+    mintCollection,
+    minted,
+    collectionLoading,
+    handleDiscount,
+    handleGrantOnly,
+    handlePrintType,
+  } = useStorefront();
+
   const editionDispatch = useSelector(
     (state: RootState) => state.app.postValuesReducer.value.editionAmount
   );
@@ -79,10 +107,37 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
       return <Live />;
 
     case "4":
-      return <Keeper />;
+      return (
+        <Store
+          productInformation={productInformation}
+          newPosition={newPosition}
+          setNewPosition={setNewPosition}
+          editionAmount={editionDispatch}
+          handleCollectionPrices={handleCollectionPrices}
+          handleDescription={handleDescription}
+          handleTitle={handleTitle}
+          handleEditionAmount={handleEditionAmount}
+          handleImageUpload={handleImageUpload}
+          imageLoading={imageLoading}
+          mintCollection={mintCollection}
+          minted={minted}
+          collectionLoading={collectionLoading}
+          handleDiscount={handleDiscount}
+          handleGrantOnly={handleGrantOnly}
+          handlePrintType={handlePrintType}
+        />
+      );
 
     case "3":
-      return <Store />;
+      return (
+        <Keeper
+          keeperRegisterLoading={keeperRegisterLoading}
+          registerUpkeep={registerUpkeep}
+          sendLink={sendLink}
+          balanceAmount={balanceAmount}
+          text={text}
+        />
+      );
 
     case "2":
       return (
