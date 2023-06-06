@@ -6,8 +6,8 @@ import TopBarOne from "@/components/Common/modules/TopBarOne";
 import Draggable from "react-draggable";
 import TopBarTwo from "@/components/Common/modules/TopBarTwo";
 import { INFURA_GATEWAY } from "@/lib/constants";
-import { DndProvider, useDrag, useDrop } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import DraggableImage from "@/components/Common/modules/DraggableImage";
 
 const ImageUploadDynamic: FunctionComponent<ImageUploadDynamicProps> = ({
@@ -21,7 +21,6 @@ const ImageUploadDynamic: FunctionComponent<ImageUploadDynamicProps> = ({
   NFTURIValues,
   handleDropImage,
 }): JSX.Element => {
-  console.log({ NFTURIValues });
   return (
     <div className="relative w-full h-full items-center justify-center flex py-5 flex flex-row gap-36">
       <Draggable enableUserSelectHack={false}>

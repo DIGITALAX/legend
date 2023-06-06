@@ -331,29 +331,19 @@ const useImageUpload = () => {
   };
 
   const handleDropImage = (sourceIndex: number, targetIndex: number) => {
-    if (NFT.length === 0) return; 
-     
+    if (NFT.length < 1) return;
     const draggedImage = NFT[sourceIndex];
-    const updatedNFTs = NFT.filter((image) => image !== draggedImage);
-
-    let adjustedTargetIndex = targetIndex;
-
     if (targetIndex > sourceIndex) {
-      for (let i = sourceIndex; i < targetIndex; i++) {
-        if (updatedNFTs[i] === draggedImage) {
-          adjustedTargetIndex--;
-        }
-      }
+      const updatedImages = [...NFT];
+      updatedImages.splice(targetIndex + 1, 0, draggedImage);
+      updatedImages.splice(sourceIndex, 1);
+      dispatch(setNFTImageArray(updatedImages));
     } else if (targetIndex < sourceIndex) {
-      for (let i = sourceIndex; i > targetIndex; i--) {
-        if (updatedNFTs[i] === draggedImage) {
-          adjustedTargetIndex++;
-        }
-      }
+      const updatedImages = [...NFT];
+      updatedImages.splice(sourceIndex, 1);
+      updatedImages.splice(targetIndex, 0, draggedImage);
+      dispatch(setNFTImageArray(updatedImages));
     }
-
-    const array = updatedNFTs.splice(adjustedTargetIndex, 0, draggedImage);
-    dispatch(setNFTImageArray(array));
   };
 
   useEffect(() => {
