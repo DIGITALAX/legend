@@ -18,6 +18,7 @@ import CollectBox from "@/components/Home/Grant/modules/CollectBox";
 import StoreFrontBox from "@/components/Home/Grant/modules/StoreFrontBox";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import ClaimedNFTBox from "@/components/Home/Grant/modules/ClaimedNFTBox";
 
 type HomeProps = {
   firebaseApp: FirebaseApp;
@@ -128,25 +129,30 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
             dispatch={dispatch}
             index={1}
           />
+          <ClaimedNFTBox
+            collapseNumber={collapseNumber}
+            dispatch={dispatch}
+            index={2}
+          />
         </div>
         <div className="relative w-full items-center h-full flex flex-col">
           <DynamicNFT />
           <GrantBox
             collapseNumber={collapseNumber}
             dispatch={dispatch}
-            index={2}
+            index={3}
           />
         </div>
         <div className="w-full h-full flex justify-center">
           <CommentBox
             collapseNumber={collapseNumber}
             dispatch={dispatch}
-            index={3}
+            index={4}
           />
           <StoreFrontBox
             collapseNumber={collapseNumber}
             dispatch={dispatch}
-            index={4}
+            index={5}
           />
         </div>
       </div>

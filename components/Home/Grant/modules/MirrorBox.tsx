@@ -17,8 +17,8 @@ const MirrorBox: FunctionComponent<MirrorBoxProps> = ({
       cancel=".stopDrag"
     >
       <div
-        className={`absolute -bottom-40 right-10 w-80 flex p-1 drop-shadow-2xl ${
-          collapseNumber[index] ? "h-4" : "h-100"
+        className={`absolute right-10 -bottom-40 w-80 flex p-1 drop-shadow-2xl ${
+          collapseNumber[index] ? "h-4" : "h-100 "
         }`}
       >
         <Image

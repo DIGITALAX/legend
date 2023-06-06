@@ -17,7 +17,7 @@ const CommentBox: FunctionComponent<CommentBoxProps> = ({
       cancel=".stopDrag"
     >
       <div
-        className={`relative w-80 flex drop-shadow-2xl ${
+        className={`absolute w-80 flex drop-shadow-2xl ${
           collapseNumber[index] ? "h-4" : "h-100"
         }`}
       >

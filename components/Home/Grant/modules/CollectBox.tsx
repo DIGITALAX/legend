@@ -17,7 +17,7 @@ const CollectBox: FunctionComponent<CollectBoxProps> = ({
       cancel=".stopDrag"
     >
       <div
-        className={`relative w-80 h-100 flex p-1 drop-shadow-2xl ${
+        className={`relative w-80 flex p-1 drop-shadow-2xl ${
           collapseNumber[index] ? "h-4" : "h-100"
         }`}
       >

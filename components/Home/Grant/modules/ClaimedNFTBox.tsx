@@ -3,9 +3,9 @@ import { setCollapseItem } from "@/redux/reducers/collapseItemSlice";
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import Draggable from "react-draggable";
-import { GrantBoxProps } from "../types/grant.types";
+import { CollectBoxProps } from "../types/grant.types";
 
-const GrantBox: FunctionComponent<GrantBoxProps> = ({
+const ClaimedNFTBox: FunctionComponent<CollectBoxProps> = ({
   collapseNumber,
   dispatch,
   index,
@@ -17,18 +17,18 @@ const GrantBox: FunctionComponent<GrantBoxProps> = ({
       cancel=".stopDrag"
     >
       <div
-        className={`absolute w-98 flex p-1 -bottom-48 left-12 drop-shadow-2xl ${
-          collapseNumber[index] ? "h-7" : "h-60"
+        className={`absolute w-96 h-60 left-20 -bottom-48 flex p-1 drop-shadow-2xl ${
+          collapseNumber[index] ? "h-4" : "h-100"
         }`}
       >
         <Image
           layout="fill"
-          src={`${INFURA_GATEWAY}/QmQKkeT32AXWzHmZ28wfjwAfegqhjG3Uc9pEj4VmMZZbXP`}
+          src={`${INFURA_GATEWAY}/QmUX8xCW3ErrfdQgv5LKwqgjgmbGn98PJ9cPNyPmtqF2hy`}
           className="w-full h-full flex relative"
           draggable={false}
         />
         <div
-          className="stopDrag flex absolute w-3/4 h-4 top-1 left-0 px-3 cursor-pointer"
+          className="stopDrag flex absolute w-full h-4 top-1 left-0 px-3 curosr-pointer"
           onClick={() =>
             dispatch(
               setCollapseItem(
@@ -52,4 +52,4 @@ const GrantBox: FunctionComponent<GrantBoxProps> = ({
   );
 };
 
-export default GrantBox;
+export default ClaimedNFTBox;

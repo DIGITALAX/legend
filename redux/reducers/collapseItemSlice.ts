@@ -5,7 +5,7 @@ export interface CollapseItemState {
 }
 
 const initialCollapseItemState: CollapseItemState = {
-  value: Array.from({ length: 5 }, () => false),
+  value: Array.from({ length: 6 }, () => false),
 };
 
 export const collapseItemSlice = createSlice({
