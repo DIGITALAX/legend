@@ -113,7 +113,7 @@ export type StoreProps = {
   minted: boolean[];
   collectionLoading: boolean[];
   handleDiscount: (e: FormEvent, index: number) => void;
-  handlePrintType: (e: FormEvent, index: number) => void;
+  handlePrintType: (e: string, index: number) => void;
   handleGrantOnly: (e: FormEvent, index: number) => void;
 };
 

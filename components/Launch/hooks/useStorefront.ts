@@ -122,12 +122,12 @@ const useStorefront = () => {
     setProductInformation(updatedProductInformation);
   };
 
-  const handlePrintType = (e: FormEvent, index: number) => {
+  const handlePrintType = (e: string, index: number) => {
     const updatedProductInformation = [...productInformation];
 
     updatedProductInformation[index] = {
       ...updatedProductInformation[index],
-      printType: (e.target as HTMLFormElement).value,
+      printType: e,
     };
 
     setProductInformation(updatedProductInformation);

@@ -77,23 +77,46 @@ const CollectionAdd: FunctionComponent<CollectionAddProps> = ({
                 disabled={imageLoading[index] ? true : false}
               />
             </label>
-            <div className="relative w-full h-full flex flex-col justify-center items-start gap-2">
-              <div className="relative w-fit justify-start h-fit flex font-mega text-mazul text-xl">
-                Name of Collection
+            <div className="relative w-full h-full flex flex-row gap-2 items-end">
+              <div className="relative w-full h-full flex flex-col justify-center items-start gap-2">
+                <div className="relative w-fit justify-start h-fit flex font-mega text-mazul text-lg whitespace-nowrap break-words">
+                  Name of Collection
+                </div>
+                <div className="relative w-full h-8 flex items-center justify-center rounded-md border border-black">
+                  <div className="absolute w-full h-full flex opacity-70">
+                    <Image
+                      layout="fill"
+                      src={`${INFURA_GATEWAY}/Qme3dKpZyyv9oMEu9AbaS3Q3xXGcbXj5V2JXhhJW8bRfQV`}
+                      draggable={false}
+                    />
+                  </div>
+                  <textarea
+                    className="relative w-full h-full flex p-2 text-black font-earl text-sm bg-transparent rounded-md"
+                    style={{ resize: "none" }}
+                    onChange={(e: FormEvent) => handleTitle(e, index)}
+                  ></textarea>
+                </div>
               </div>
-              <div className="relative w-full h-8 flex items-center justify-center rounded-md border border-black">
-                <div className="absolute w-full h-full flex opacity-70">
-                  <Image
-                    layout="fill"
-                    src={`${INFURA_GATEWAY}/Qme3dKpZyyv9oMEu9AbaS3Q3xXGcbXj5V2JXhhJW8bRfQV`}
-                    draggable={false}
+              <div className="relative w-fit h-full flex flex-col justify-end items-end gap-2">
+                <div className="relative w-fit h-fit flex font-mega text-mazul text-xs">
+                  Amount
+                </div>
+                <div className="relative w-full h-8 flex items-center justify-center rounded-md border border-black">
+                  <div className="absolute w-full h-full flex opacity-70">
+                    <Image
+                      layout="fill"
+                      src={`${INFURA_GATEWAY}/Qme3dKpZyyv9oMEu9AbaS3Q3xXGcbXj5V2JXhhJW8bRfQV`}
+                      draggable={false}
+                    />
+                  </div>
+                  <input
+                    className="relative w-full h-full flex p-2 text-black font-earl text-sm bg-transparent rounded-md"
+                    style={{ resize: "none" }}
+                    type="number"
+                    defaultValue={editionAmount}
+                    onChange={(e: FormEvent) => handleEditionAmount(e, index)}
                   />
                 </div>
-                <textarea
-                  className="relative w-full h-full flex p-2 text-black font-earl text-sm bg-transparent rounded-md"
-                  style={{ resize: "none" }}
-                  onChange={(e: FormEvent) => handleTitle(e, index)}
-                ></textarea>
               </div>
             </div>
             <div className="relative w-full h-full flex flex-col justify-center items-start gap-2">
@@ -205,6 +228,57 @@ const CollectionAdd: FunctionComponent<CollectionAddProps> = ({
                   );
                 })}
             </div>
+            <div className="relative w-full h-full flex flex-row gap-4 justify-start">
+              <div className="relative w-fit h-full flex flex-col justify-center items-start gap-2">
+                <div className="relative w-fit h-fit flex font-earl text-mazul text-xs">
+                  Print Type
+                </div>
+                <div className="relative w-full h-fit flex flex-row gap-1">
+                  {Array.from([
+                    [
+                      "QmaZtrnJTEFFjDHn32ABFhzafakP8o9D3yMFfX2GZuvWLe",
+                      "poster",
+                    ],
+                    [
+                      "QmdBGb4C82EMpi7NxSpuCgTmaVYKsWBdao41GJoQoawX6G",
+                      "sticker",
+                    ],
+                    ["QmYdNGhxLN5hHhi8r3QLKd232fEzW97dia58RZog8yqFSw", "shirt"],
+                    [
+                      "QmdiRJUu3xxEhGZbbRusMUJ8ffStRZeackYRAt8avpd5dn",
+                      "jacket",
+                    ],
+                    [
+                      "QmXVFuiHYe5k1J5qvgkMqNbgTKe5ZaP7PoByDKZ98cTFcQ",
+                      "longsleeve",
+                    ],
+                    [
+                      "QmcTwmM6LihAEFb8JjPBK2nrVaP3fjf8jwDMsXbwMyNTtn",
+                      "hoodie",
+                    ],
+                  ]).map((image: string[], indexTwo: number) => {
+                    return (
+                      <div
+                        className={`rounded-md relative border border-black flex w-full text-center text-sm justify-center items-center h-fit py-1.5 font-earl text-white uppercase px-2 cursor-pointer active:scale-95 ${
+                          productInformation.printType === image[1]
+                            ? "bg-blez"
+                            : "bg-mist"
+                        }`}
+                        key={indexTwo}
+                        onClick={() => handlePrintType(image[1], index)}
+                      >
+                        <div className="relative w-6 h-6 flex items-center justify-center">
+                          <Image
+                            src={`${INFURA_GATEWAY}/${image[0]}`}
+                            layout="fill"
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
             <div className="relative w-full h-full flex flex-row gap-4 items-end justify-end">
               <div className="relative w-fit h-full flex flex-col justify-center items-start gap-2">
                 <div className="relative w-fit h-fit flex font-earl text-mazul text-xs">
@@ -244,27 +318,6 @@ const CollectionAdd: FunctionComponent<CollectionAddProps> = ({
               </div>
             </div>
             <div className="relative w-full h-full flex flex-row gap-4 items-end justify-end">
-              <div className="relative w-full h-full flex flex-col justify-center items-start gap-2">
-                <div className="relative w-fit h-fit flex font-mega text-mazul text-sm">
-                  Amount
-                </div>
-                <div className="relative w-1/4 h-8 flex items-center justify-center rounded-md border border-black">
-                  <div className="absolute w-full h-full flex opacity-70">
-                    <Image
-                      layout="fill"
-                      src={`${INFURA_GATEWAY}/Qme3dKpZyyv9oMEu9AbaS3Q3xXGcbXj5V2JXhhJW8bRfQV`}
-                      draggable={false}
-                    />
-                  </div>
-                  <input
-                    className="relative w-full h-full flex p-2 text-black font-earl text-sm bg-transparent rounded-md"
-                    style={{ resize: "none" }}
-                    type="number"
-                    defaultValue={editionAmount}
-                    onChange={(e: FormEvent) => handleEditionAmount(e, index)}
-                  />
-                </div>
-              </div>
               <div className="relative w-fit h-full flex items-end justify-end">
                 <div
                   className={`relative border border-black flex w-16 text-center text-sm justify-center items-center h-8 py-1.5 font-earl text-white uppercase px-3 ${
