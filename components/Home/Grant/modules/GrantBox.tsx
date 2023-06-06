@@ -17,7 +17,7 @@ const GrantBox: FunctionComponent<GrantBoxProps> = ({
       cancel=".stopDrag"
     >
       <div
-        className={`absolute w-98 flex p-1 -bottom-48 left-12 drop-shadow-2xl ${
+        className={`absolute z-1 w-98 flex p-1 -bottom-48 left-12 drop-shadow-2xl ${
           collapseNumber[index] ? "h-7" : "h-60"
         }`}
       >
@@ -33,7 +33,7 @@ const GrantBox: FunctionComponent<GrantBoxProps> = ({
             dispatch(
               setCollapseItem(
                 [...collapseNumber].map((item, i) =>
-                  i === index ? (item === true ? false : true) : item
+                  i === index ? !item : item
                 )
               )
             )

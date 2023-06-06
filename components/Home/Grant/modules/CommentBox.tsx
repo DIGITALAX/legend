@@ -17,7 +17,7 @@ const CommentBox: FunctionComponent<CommentBoxProps> = ({
       cancel=".stopDrag"
     >
       <div
-        className={`absolute w-80 flex drop-shadow-2xl ${
+        className={`absolute z-1 w-80 flex drop-shadow-2xl ${
           collapseNumber[index] ? "h-4" : "h-100"
         }`}
       >
@@ -33,7 +33,7 @@ const CommentBox: FunctionComponent<CommentBoxProps> = ({
             dispatch(
               setCollapseItem(
                 [...collapseNumber].map((item, i) =>
-                  i === index ? (item === true ? false : true) : item
+                  i === index ? !item : item
                 )
               )
             )

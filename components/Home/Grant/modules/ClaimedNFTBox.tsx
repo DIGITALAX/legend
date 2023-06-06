@@ -3,9 +3,9 @@ import { setCollapseItem } from "@/redux/reducers/collapseItemSlice";
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import Draggable from "react-draggable";
-import { CollectBoxProps } from "../types/grant.types";
+import { ClaimedNFTBox } from "../types/grant.types";
 
-const ClaimedNFTBox: FunctionComponent<CollectBoxProps> = ({
+const ClaimedNFTBox: FunctionComponent<ClaimedNFTBox> = ({
   collapseNumber,
   dispatch,
   index,
@@ -17,8 +17,8 @@ const ClaimedNFTBox: FunctionComponent<CollectBoxProps> = ({
       cancel=".stopDrag"
     >
       <div
-        className={`absolute w-96 h-60 left-20 -bottom-48 flex p-1 drop-shadow-2xl ${
-          collapseNumber[index] ? "h-4" : "h-100"
+        className={`absolute w-96 left-20 -bottom-48 flex p-1 drop-shadow-2xl z-1 ${
+          collapseNumber[index] ? "h-4" : "h-60"
         }`}
       >
         <Image
@@ -28,12 +28,12 @@ const ClaimedNFTBox: FunctionComponent<CollectBoxProps> = ({
           draggable={false}
         />
         <div
-          className="stopDrag flex absolute w-full h-4 top-1 left-0 px-3 curosr-pointer"
+          className="stopDrag flex absolute w-full h-4 top-1 left-0 px-3 cursor-pointer"
           onClick={() =>
             dispatch(
               setCollapseItem(
                 [...collapseNumber].map((item, i) =>
-                  i === index ? (item === true ? false : true) : item
+                  i === index ? !item : item
                 )
               )
             )

@@ -17,7 +17,7 @@ const CollectBox: FunctionComponent<CollectBoxProps> = ({
       cancel=".stopDrag"
     >
       <div
-        className={`relative w-80 flex p-1 drop-shadow-2xl ${
+        className={`relative w-80 z-1 flex p-1 drop-shadow-2xl ${
           collapseNumber[index] ? "h-4" : "h-100"
         }`}
       >
@@ -28,12 +28,12 @@ const CollectBox: FunctionComponent<CollectBoxProps> = ({
           draggable={false}
         />
         <div
-          className="stopDrag flex absolute w-full h-4 top-1 left-0 px-3 curosr-pointer"
+          className="stopDrag flex absolute w-full h-4 top-1 left-0 px-3 cursor-pointer"
           onClick={() =>
             dispatch(
               setCollapseItem(
                 [...collapseNumber].map((item, i) =>
-                  i === index ? (item === true ? false : true) : item
+                  i === index ? !item : item
                 )
               )
             )

@@ -17,7 +17,7 @@ const MirrorBox: FunctionComponent<MirrorBoxProps> = ({
       cancel=".stopDrag"
     >
       <div
-        className={`absolute right-10 -bottom-40 w-80 flex p-1 drop-shadow-2xl ${
+        className={`absolute z-1 right-10 -bottom-40 w-80 flex p-1 drop-shadow-2xl ${
           collapseNumber[index] ? "h-4" : "h-100 "
         }`}
       >
@@ -33,7 +33,7 @@ const MirrorBox: FunctionComponent<MirrorBoxProps> = ({
             dispatch(
               setCollapseItem(
                 [...collapseNumber].map((item, i) =>
-                  i === index ? (item === true ? false : true) : item
+                  i === index ? !item : item
                 )
               )
             )

@@ -29,3 +29,9 @@ export type GrantBoxProps = {
   index: number;
   collapseNumber: boolean[];
 };
+
+export type ClaimedNFTBox = {
+  dispatch: Dispatch<AnyAction>;
+  index: number;
+  collapseNumber: boolean[];
+}
