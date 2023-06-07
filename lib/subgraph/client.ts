@@ -9,11 +9,11 @@ export const graphClient = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-const httpLinkDash = new HttpLink({
-  uri: "https://api.thegraph.com/subgraphs/name/digitalax/legend_testnet",
+const httpLinkTestnet = new HttpLink({
+  uri: "https://api.studio.thegraph.com/query/37770/legend_testnet/version/latest",
 });
 
-export const graphClientDash = new ApolloClient({
-  link: httpLinkDash,
+export const graphClientTestnet = new ApolloClient({
+  link: httpLinkTestnet,
   cache: new InMemoryCache(),
 });

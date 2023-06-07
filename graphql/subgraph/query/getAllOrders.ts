@@ -1,39 +1,37 @@
 import { gql } from "@apollo/client";
 import { graphClient } from "@/lib/subgraph/client";
 
-const GRANTS = `
+const ALL_ORDERS = `
   query {
-    factoryDeployeds(orderDirection: desc) {
-      keeperAddress
-      accessControlAddress
-      dynamicNFTAddress
-      name
-      profileId
-      pubId
-      timestamp
-      deployer
-    }
+      orderCreateds(orderDirection: desc) {
+        buyer
+        fulfillmentInformation
+        orderId
+        transactionHash
+        blockTimestamp
+        totalPrice
+        fulfillerId
+      }
   }
 `;
 
-const GRANT_DETAILS = `
-query($pubId: String!) {
-  factoryDeployeds(orderDirection: desc, where: {pubId: $pubId}) {
-    keeperAddress
-    accessControlAddress
-    dynamicNFTAddress
-    name
-    profileId
-    pubId
-    timestamp
-    deployer
+const GRANT_ORDERS = `
+  query($collectionIds: [Int]!) {
+    dropCreateds(orderDirection: desc, where: {collectionIds_contains: $collectionIds}) {
+        dropURI
+        dropId
+        collectionIds
+        blockTimestamp
+        creator
+        totalPrice
+        fulfillerId
+      }
   }
-}
 `;
 
-export const getAllGrants = async (): Promise<any> => {
+export const getAllOrders = async (): Promise<any> => {
   const queryPromise = graphClient.query({
-    query: gql(GRANTS),
+    query: gql(ALL_ORDERS),
     fetchPolicy: "no-cache",
     errorPolicy: "all",
   });
@@ -52,11 +50,13 @@ export const getAllGrants = async (): Promise<any> => {
   }
 };
 
-export const getGrantDetails = async (pubId: number): Promise<any> => {
+export const getGrantOrders = async (
+  collectionIds_contains: number[]
+): Promise<any> => {
   const queryPromise = graphClient.query({
-    query: gql(GRANT_DETAILS),
+    query: gql(GRANT_ORDERS),
     variables: {
-      pubId: pubId,
+      collectionIds_contains: collectionIds_contains,
     },
     fetchPolicy: "no-cache",
     errorPolicy: "all",
