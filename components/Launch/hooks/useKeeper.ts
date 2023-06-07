@@ -30,20 +30,20 @@ const useKeeper = () => {
   });
 
   const { config, error, isSuccess } = usePrepareContractWrite({
-    address: "0xb927AEf40a884656e95D03acD4087b100De76eca",
+    address: MUMBAI_UPKEEP,
     abi: UpkeepAbi,
     args: [
-      "test",
-      "0x",
-      "0xf740550ca94b1cbdbbc25949c42511b5ed94caaf",
+      postValues.title,
+      "0x00",
+      legendKeeperAddress,
       500000,
       address,
-      "0x",
+      "0x00",
+      "0x00",
       "2000000000000000000",
-      "0xb927AEf40a884656e95D03acD4087b100De76eca",
     ],
     functionName: "registerAndPredictID",
-    // enabled: Boolean(legendKeeperAddress),
+    enabled: Boolean(legendKeeperAddress),
   });
 
   const { writeAsync } = useContractWrite(config);
@@ -60,8 +60,6 @@ const useKeeper = () => {
   });
 
   const { writeAsync: sendWriteAsync } = useContractWrite(sendConfig);
-
-  // console.log({ error, isSuccess });
 
   const registerUpkeep = async () => {
     setKeeperRegisterLoading(true);
