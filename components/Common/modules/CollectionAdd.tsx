@@ -67,14 +67,14 @@ const CollectionAdd: FunctionComponent<CollectionAddProps> = ({
               </div>
               <input
                 type="file"
-                accept="png"
+                accept="image/png"
                 hidden
                 required
                 id="files"
                 multiple={false}
                 name="images"
                 className="caret-transparent"
-                disabled={imageLoading[index] ? true : false}
+                disabled={imageLoading[index] || minted[index] ? true : false}
               />
             </label>
             <div className="relative w-full h-full flex flex-row gap-2 items-end">
@@ -94,6 +94,8 @@ const CollectionAdd: FunctionComponent<CollectionAddProps> = ({
                     className="relative w-full h-full flex p-2 text-black font-earl text-sm bg-transparent rounded-md"
                     style={{ resize: "none" }}
                     onChange={(e: FormEvent) => handleTitle(e, index)}
+                    defaultValue={productInformation.uri.name}
+                    disabled={minted[index]}
                   ></textarea>
                 </div>
               </div>
@@ -115,6 +117,7 @@ const CollectionAdd: FunctionComponent<CollectionAddProps> = ({
                     type="number"
                     defaultValue={editionAmount}
                     onChange={(e: FormEvent) => handleEditionAmount(e, index)}
+                    disabled={minted[index]}
                   />
                 </div>
               </div>
@@ -135,6 +138,8 @@ const CollectionAdd: FunctionComponent<CollectionAddProps> = ({
                   className="relative w-full h-full flex p-2 text-black font-earl text-sm bg-transparent rounded-md"
                   style={{ resize: "none" }}
                   onChange={(e: FormEvent) => handleDescription(e, index)}
+                  defaultValue={productInformation.uri.description}
+                  disabled={minted[index]}
                 ></textarea>
               </div>
             </div>
@@ -187,6 +192,23 @@ const CollectionAdd: FunctionComponent<CollectionAddProps> = ({
                   }
                 })
                 .map((value: string[], indexTwo: number) => {
+                  let price;
+                  if (
+                    productInformation?.acceptedTokens?.includes(
+                      value[2].toLowerCase()
+                    )
+                  ) {
+                    const acceptedTokenIndex =
+                      productInformation?.acceptedTokens?.findIndex(
+                        (token: string) =>
+                          token.toLowerCase() === value[2].toLowerCase()
+                      );
+
+                    price = String(
+                      productInformation?.basePrices?.[acceptedTokenIndex]
+                    );
+                  }
+
                   return (
                     <div
                       key={indexTwo}
@@ -222,6 +244,8 @@ const CollectionAdd: FunctionComponent<CollectionAddProps> = ({
                           onChange={(e: FormEvent) =>
                             handleCollectionPrices(e, value[2], index)
                           }
+                          defaultValue={price}
+                          disabled={minted[index]}
                         />
                       </div>
                     </div>
@@ -259,13 +283,17 @@ const CollectionAdd: FunctionComponent<CollectionAddProps> = ({
                   ]).map((image: string[], indexTwo: number) => {
                     return (
                       <div
-                        className={`rounded-md relative border border-black flex w-full text-center text-sm justify-center items-center h-fit py-1.5 font-earl text-white uppercase px-2 cursor-pointer active:scale-95 ${
+                        className={`rounded-md relative border border-black flex w-full text-center text-sm justify-center items-center h-fit py-1.5 font-earl text-white uppercase px-2  ${
                           productInformation.printType === image[1]
                             ? "bg-blez"
                             : "bg-mist"
+                        } ${
+                          !minted[index] && "cursor-pointer active:scale-95"
                         }`}
                         key={indexTwo}
-                        onClick={() => handlePrintType(image[1], index)}
+                        onClick={() =>
+                          !minted[index] && handlePrintType(image[1], index)
+                        }
                       >
                         <div className="relative w-6 h-6 flex items-center justify-center">
                           <Image
@@ -285,12 +313,14 @@ const CollectionAdd: FunctionComponent<CollectionAddProps> = ({
                   Grant Collectors Only
                 </div>
                 <div
-                  className={`rounded-md relative border border-black flex w-full text-center text-sm justify-center items-center h-fit py-1.5 font-earl text-white uppercase px-3 cursor-pointer active:scale-95 ${
+                  className={`rounded-md relative border border-black flex w-full text-center text-sm justify-center items-center h-fit py-1.5 font-earl text-white uppercase px-3  ${
                     productInformation.grantOnly
                       ? "bg-darker"
                       : "bg-blez opacity-70"
-                  }`}
-                  onClick={(e: FormEvent) => handleGrantOnly(e, index)}
+                  } ${!minted[index] && "cursor-pointer active:scale-95"}`}
+                  onClick={(e: FormEvent) =>
+                    !minted[index] && handleGrantOnly(e, index)
+                  }
                 >
                   {productInformation.grantOnly ? "yes" : "no"}
                 </div>
@@ -311,8 +341,9 @@ const CollectionAdd: FunctionComponent<CollectionAddProps> = ({
                     className="relative w-full h-full flex p-2 text-black font-earl text-sm bg-transparent rounded-md"
                     style={{ resize: "none" }}
                     type="number"
-                    defaultValue={0}
+                    defaultValue={productInformation.discount}
                     onChange={(e: FormEvent) => handleDiscount(e, index)}
+                    disabled={minted[index]}
                   />
                 </div>
               </div>
@@ -328,6 +359,8 @@ const CollectionAdd: FunctionComponent<CollectionAddProps> = ({
                     productInformation.uri.image !== "" &&
                     productInformation.amount !== 0
                       ? "cursor-pointer active:scale-95 bg-darker"
+                      : minted[index]
+                      ? "bg-mal"
                       : "bg-blez opacity-70"
                   }`}
                   onClick={() =>

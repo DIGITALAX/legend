@@ -93,29 +93,34 @@ const Live: FunctionComponent<LiveProps> = ({
                     Recipients
                   </div>
                   <div className="flex flex-col relative w-full h-fit gap-3 justify-start items-start">
-                    {postValues.recipients.map(
-                      (
-                        recipient: {
-                          recipient: string;
-                          split: number;
-                        },
-                        index: number
-                      ) => {
-                        return (
-                          <div
-                            key={index}
-                            className="relative w-full h-full flex flex-row gap-1.5 font-earl text-mazul  border-dashed border-opacity-30 border-2 border-mazul py-1.5 px-1"
-                          >
-                            <div className="relative w-40 h-fit">
-                              {recipient.recipient.slice(0, 15)}...
+                    {postValues.recipients
+                      .filter(
+                        (recipient: { recipient: string; split: number }) =>
+                          recipient.recipient
+                      )
+                      .map(
+                        (
+                          recipient: {
+                            recipient: string;
+                            split: number;
+                          },
+                          index: number
+                        ) => {
+                          return (
+                            <div
+                              key={index}
+                              className="relative w-full h-full flex flex-row gap-1.5 font-earl text-mazul  border-dashed border-opacity-30 border-2 border-mazul py-1.5 px-1"
+                            >
+                              <div className="relative w-40 h-fit">
+                                {recipient.recipient.slice(0, 15)}...
+                              </div>
+                              <div className="relative w-fit h-fit">
+                                {recipient.split.toFixed(0)}%
+                              </div>
                             </div>
-                            <div className="relative w-fit h-fit">
-                              {recipient.split.toFixed(0)}%
-                            </div>
-                          </div>
-                        );
-                      }
-                    )}
+                          );
+                        }
+                      )}
                   </div>
                 </div>
               </div>
@@ -179,7 +184,7 @@ const Live: FunctionComponent<LiveProps> = ({
           <div className="relative w-full h-full items-center flex flex-col">
             <TopBarTwo />
             <div className="p-2 flex w-full h-full flex-col gap-3 items-center">
-              <div className="w-full h-80 border border-black bg-mist items-center justify-center flex cursor-pointer">
+              <div className="w-full h-80 border border-black bg-mist items-center justify-center flex">
                 <div className="relative w-full h-full flex items-center justify-center p-1">
                   <div className="relative w-full h-full flex items-center justify-center">
                     <Image
@@ -227,13 +232,14 @@ const Live: FunctionComponent<LiveProps> = ({
           <div className="relative w-full h-full items-center flex flex-col">
             <TopBarTwo />
             <div className="p-2 flex w-full h-full flex-col gap-3 items-center">
-              <div className="w-full h-52 border border-black bg-mist items-center justify-center flex cursor-pointer">
+              <div className="w-full h-52 border border-black bg-mist items-center justify-center flex">
                 <div className="relative w-full h-full flex items-center justify-center">
-                  <div className="relative w-20 h-20 flex items-center justify-center">
+                  <div className="relative w-full h-full flex items-center justify-center">
                     <Image
                       layout="fill"
-                      src={`${INFURA_GATEWAY}/QmV4pRmrrve6j3n5p8yTpgTcstxggh2Vz48GRg7ryZreNh`}
+                      src={`${INFURA_GATEWAY}/${storefrontValues[nextStore].uri.image}`}
                       draggable={false}
+                      objectFit="cover"
                     />
                   </div>
                 </div>
@@ -313,6 +319,11 @@ const Live: FunctionComponent<LiveProps> = ({
                       };
                     }
                   })
+                  .filter((item: string[]) =>
+                    storefrontValues[nextStore]?.acceptedTokens?.includes(
+                      item[2].toLowerCase()
+                    )
+                  )
                   .map((value: string[], indexTwo: number) => {
                     return (
                       <div
@@ -342,6 +353,9 @@ const Live: FunctionComponent<LiveProps> = ({
                               draggable={false}
                             />
                           </div>
+                          <div className="relative w-fit h-fit flex items-center justify-center text-xs font-earl">
+                            {(value as any).price}
+                          </div>
                         </div>
                       </div>
                     );
@@ -353,7 +367,7 @@ const Live: FunctionComponent<LiveProps> = ({
                     className={`rounded-md relative border border-black flex w-full text-center text-xs justify-center items-center h-fit py-1.5 font-earl text-white uppercase px-3 bg-darker`}
                   >
                     {storefrontValues[nextStore]?.grantOnly
-                      ? " Grant Collectors Only"
+                      ? "Grant Collectors Only"
                       : "All Collectors"}
                   </div>
                 </div>
@@ -394,7 +408,9 @@ const Live: FunctionComponent<LiveProps> = ({
                     className={`relative border border-black flex w-16 text-center text-sm justify-center items-center h-8 py-1.5 font-earl text-white uppercase px-3 cursor-pointer active:scale-95 bg-darker`}
                     onClick={() =>
                       setNextStore(
-                        nextStore < storefrontValues.length ? nextStore + 1 : 0
+                        nextStore < storefrontValues.length - 1
+                          ? nextStore + 1
+                          : 0
                       )
                     }
                   >
@@ -417,7 +433,7 @@ const Live: FunctionComponent<LiveProps> = ({
                 Factory Deployed Contracts
               </div>
               <div className="relative w-full h-full flex flex-col justify-center items-start gap-2">
-                <div className="relative w-full h-fit justify-start items-start font-mega text-mazul text-xs">
+                <div className="relative w-full h-fit justify-start items-start text-mazul text-xs font-mega">
                   Legend Access Controls
                 </div>
                 <div className="relative w-full h-8 flex items-center justify-center rounded-md border border-black">
@@ -428,7 +444,9 @@ const Live: FunctionComponent<LiveProps> = ({
                       draggable={false}
                     />
                   </div>
-                  {contractValues[1]}
+                  <div className="relative w-fit h-fit flex font-earl text-xs">
+                    {contractValues[1]}
+                  </div>
                 </div>
               </div>
               <div className="relative w-full h-full flex flex-col justify-center items-start gap-2">
@@ -443,7 +461,9 @@ const Live: FunctionComponent<LiveProps> = ({
                       draggable={false}
                     />
                   </div>
-                  {contractValues[0]}
+                  <div className="relative w-fit h-fit flex font-earl text-xs">
+                    {contractValues[0]}
+                  </div>
                 </div>
               </div>
               <div className="relative w-full h-full flex flex-col justify-center items-start gap-2">
@@ -458,7 +478,9 @@ const Live: FunctionComponent<LiveProps> = ({
                       draggable={false}
                     />
                   </div>
-                  {contractValues[2]}
+                  <div className="relative w-fit h-fit flex font-earl text-xs">
+                    {contractValues[2]}
+                  </div>
                 </div>
               </div>
             </div>

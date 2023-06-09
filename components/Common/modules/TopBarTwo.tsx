@@ -32,7 +32,7 @@ const TopBarTwo: FunctionComponent<TopBarTwoProps> = ({
           </div>
         </div>
         <div
-          className="border border-mazul bg-white h-4 w-4 items-center rounded-full justify-center flex font-mega text-xs p-1 text-mazul"
+          className="border border-mazul bg-white h-4 w-4 items-center rounded-full justify-center flex font-mega text-xs p-1 text-mazul cursor-pointer"
           onClick={() =>
             dispatch &&
             collapseNumber &&

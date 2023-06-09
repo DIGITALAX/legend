@@ -20,11 +20,11 @@ export const LENS_PERIPHERY_CONTRACT_MATIC: `0x${string}` =
   "0xeff187b4190E551FC25a7fA4dFC6cf7fDeF7194f";
 
 export const FACTORY_CONTRACT_MUMBAI: `0x${string}` =
-  "0xD026B4E1F9d6dD682faA2a7Fdc6BEcE3D1A557F6";
+  "0x0BD3C2a88A729c5f02276b7987A5922A12f465eB";
 export const LEGEND_COLLECTION_MUMBAI: `0x${string}` =
-  "0xE11feaB8ddfDCd7C5a1e2Fa68E88cbdA403e4B7F";
+  "0x4C0143d8321738A0b624491C38aaEeb873c578a9";
 export const LEGEND_MARKET_MUMBAI: `0x${string}` =
-  "0x12df1E0166c4abb8aB8df6392eCE253c47E0caa1";
+  "0xca351976Cf47A52Aa49a5e89034796F35f36E3E6";
 
 export const FACTORY_CONTRACT_MATIC: `0x${string}` = "0x";
 
@@ -39,7 +39,7 @@ export const MATIC_LINK_TOKEN: `0x${string}` =
   "0xb0897686c545045aFc77CF20eC7A532E3120E0F1";
 
 export const MUMBAI_UPKEEP: `0x${string}` =
-  "0x5627bd5d583227502b24a64b5fff8d1906994ba2";
+  "0x2568439a6fc2acc38952858e6a8d556e71e88b2d";
 export const MATIC_UPKEEP: `0x${string}` = "0x";
 
 export const AVAILABLE_TOKENS = [

@@ -9,12 +9,9 @@ import { INFURA_GATEWAY } from "@/lib/constants";
 import SmallBox from "@/components/Common/modules/SmallBox";
 import TopBarOne from "@/components/Common/modules/TopBarOne";
 import TopBarTwo from "@/components/Common/modules/TopBarTwo";
+import { setPostValues } from "@/redux/reducers/postValuesSlice";
 
 const PostDetails: FunctionComponent<PostDetailsProps> = ({
-  title,
-  setTitle,
-  recipients,
-  setRecipients,
   textElement,
   preElement,
   handlePostDescription,
@@ -24,22 +21,10 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
   caretCoord,
   handleMentionClick,
   handleKeyDownDelete,
-  editionAmount,
-  setEditionAmount,
-  currency,
-  setCurrency,
-  valueAmount,
-  setValueAmount,
-  setReferralFee,
-  referralFee,
   enabledCurrencies,
-  setInvolved,
-  setSustained,
-  sustained,
-  involved,
-  filledInAmount,
   collapseNumber,
   dispatch,
+  postValues,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex items-center z-1">
@@ -81,9 +66,22 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
                     className="relative w-full h-full flex cursor-white bg-mold border border-lily text-black font-mega text-sm p-1 rounded-md"
                     style={{ resize: "none" }}
                     onChange={(e: FormEvent) =>
-                      setTitle((e.target as HTMLFormElement).value)
+                      dispatch(
+                        setPostValues({
+                          title: (e.target as HTMLFormElement).value,
+                          editionAmount: postValues.editionAmount,
+                          description: postValues.description,
+                          sustained: postValues.sustained,
+                          involved: postValues.involved,
+                          price: postValues.price,
+                          referralFee: postValues.referralFee,
+                          currency: postValues.currency,
+                          recipients: postValues.recipients,
+                          filledInAmount: postValues.filledInAmount,
+                        })
+                      )
                     }
-                    value={title}
+                    value={postValues.title}
                   ></textarea>
                 </div>
               </div>
@@ -222,9 +220,22 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
                     className="relative w-full h-60 flex cursor-white bg-blez border border-glez text-black font-mega text-sm p-1 rounded-md"
                     style={{ resize: "none" }}
                     onChange={(e: FormEvent) =>
-                      setSustained((e.target as HTMLFormElement).value)
+                      dispatch(
+                        setPostValues({
+                          title: postValues.title,
+                          editionAmount: postValues.editionAmount,
+                          description: postValues.description,
+                          sustained: (e.target as HTMLFormElement).value,
+                          involved: postValues.involved,
+                          price: postValues.price,
+                          referralFee: postValues.referralFee,
+                          currency: postValues.currency,
+                          recipients: postValues.recipients,
+                          filledInAmount: postValues.filledInAmount,
+                        })
+                      )
                     }
-                    value={sustained}
+                    value={postValues.sustained}
                   ></textarea>
                 </div>
                 <div className="relative w-fit h-fit flex font-mega text-mazul text-xl uppercase">
@@ -250,9 +261,22 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
           <SmallBox
             title={"How many editions?"}
             onChangeFunction={(e: FormEvent) =>
-              setEditionAmount((e.target as HTMLFormElement).value)
+              dispatch(
+                setPostValues({
+                  title: postValues.title,
+                  editionAmount: (e.target as HTMLFormElement).value,
+                  description: postValues.description,
+                  sustained: postValues.sustained,
+                  involved: postValues.involved,
+                  price: postValues.price,
+                  referralFee: postValues.referralFee,
+                  currency: postValues.currency,
+                  recipients: postValues.recipients,
+                  filledInAmount: postValues.filledInAmount,
+                })
+              )
             }
-            value={editionAmount}
+            value={postValues.editionAmount}
             collapseNumber={collapseNumber}
             dispatch={dispatch}
             index={3}
@@ -266,9 +290,22 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
           <SmallBox
             title={"How much?"}
             onChangeFunction={(e: FormEvent) =>
-              setValueAmount((e.target as HTMLFormElement).value)
+              dispatch(
+                setPostValues({
+                  title: postValues.title,
+                  editionAmount: postValues.editionAmount,
+                  description: postValues.description,
+                  sustained: postValues.sustained,
+                  involved: postValues.involved,
+                  price: (e.target as HTMLFormElement).value,
+                  referralFee: postValues.referralFee,
+                  currency: postValues.currency,
+                  recipients: postValues.recipients,
+                  filledInAmount: postValues.filledInAmount,
+                })
+              )
             }
-            value={valueAmount}
+            value={postValues.price}
             collapseNumber={collapseNumber}
             dispatch={dispatch}
             index={4}
@@ -282,9 +319,22 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
           <SmallBox
             title={"Referral Fee?"}
             onChangeFunction={(e: FormEvent) =>
-              setReferralFee((e.target as HTMLFormElement).value)
+              dispatch(
+                setPostValues({
+                  title: postValues.title,
+                  editionAmount: postValues.editionAmount,
+                  description: postValues.description,
+                  sustained: postValues.sustained,
+                  involved: postValues.involved,
+                  price: postValues.price,
+                  referralFee: (e.target as HTMLFormElement).value,
+                  currency: postValues.currency,
+                  recipients: postValues.recipients,
+                  filledInAmount: postValues.filledInAmount,
+                })
+              )
             }
-            value={referralFee}
+            value={postValues.referralFee}
             collapseNumber={collapseNumber}
             dispatch={dispatch}
             index={5}
@@ -334,9 +384,22 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
                   className="relative w-full h-full flex p-2 text-black font-earl text-sm bg-transparent rounded-md"
                   style={{ resize: "none" }}
                   onChange={(e: FormEvent) =>
-                    setInvolved((e.target as HTMLFormElement).value)
+                    dispatch(
+                      setPostValues({
+                        title: postValues.title,
+                        editionAmount: postValues.editionAmount,
+                        description: postValues.description,
+                        sustained: postValues.sustained,
+                        involved: (e.target as HTMLFormElement).value,
+                        price: postValues.referralFee,
+                        referralFee: postValues.referralFee,
+                        currency: postValues.currency,
+                        recipients: postValues.recipients,
+                        filledInAmount: postValues.filledInAmount,
+                      })
+                    )
                   }
-                  value={involved}
+                  value={postValues.involved}
                 ></textarea>
               </div>
             </div>
@@ -367,11 +430,26 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
                     return (
                       <div
                         className={`border border-black flex items-center justify-center font-mega text-mazul px-3 py-2 cursor-pointer ${
-                          (currency === currencyValue.symbol ||
-                            currency === currencyValue.address) &&
+                          (postValues.currency === currencyValue.symbol ||
+                            postValues.currency === currencyValue.address) &&
                           "bg-mist"
                         }`}
-                        onClick={() => setCurrency(currencyValue.address)}
+                        onClick={() =>
+                          dispatch(
+                            setPostValues({
+                              title: postValues.title,
+                              editionAmount: postValues.editionAmount,
+                              description: postValues.description,
+                              sustained: postValues.sustained,
+                              involved: postValues.involved,
+                              price: postValues.referralFee,
+                              referralFee: postValues.referralFee,
+                              currency: currencyValue.address,
+                              recipients: postValues.recipients,
+                              filledInAmount: postValues.filledInAmount,
+                            })
+                          )
+                        }
                         key={index}
                       >
                         {currencyValue.symbol}
@@ -402,7 +480,7 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
               SET GRANT RECIPIENTS
             </div>
             <div className="relative w-fit h-fit flex flex-col gap-2">
-              {recipients?.map(
+              {postValues.recipients?.map(
                 (
                   recipient: {
                     recipient: string;
@@ -421,12 +499,26 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
                           className="relative w-full h-fit font-earl bg-oscura border border-azul rounded-md p-1"
                           value={recipient.recipient}
                           onChange={(e) => {
-                            const updatedRecipients = recipients.map((r, i) =>
-                              i === index
-                                ? { ...r, recipient: e.target.value.trim() }
-                                : r
+                            const updatedRecipients = postValues.recipients.map(
+                              (r, i) =>
+                                i === index
+                                  ? { ...r, recipient: e.target.value.trim() }
+                                  : r
                             );
-                            setRecipients(updatedRecipients);
+                            dispatch(
+                              setPostValues({
+                                title: postValues.title,
+                                editionAmount: postValues.editionAmount,
+                                description: postValues.description,
+                                sustained: postValues.sustained,
+                                involved: postValues.involved,
+                                price: postValues.referralFee,
+                                referralFee: postValues.referralFee,
+                                currency: postValues.currency,
+                                recipients: updatedRecipients,
+                                filledInAmount: postValues.filledInAmount,
+                              })
+                            );
                           }}
                         />
                       </div>
@@ -437,12 +529,31 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
                           type="number"
                           value={recipient.split.toFixed(0)}
                           onChange={(e) => {
-                            const updatedRecipients = recipients.map((r, i) =>
-                              i === index
-                                ? { ...r, split: Number(parseInt(e.target.value).toFixed(0)) }
-                                : r
+                            const updatedRecipients = postValues.recipients.map(
+                              (r, i) =>
+                                i === index
+                                  ? {
+                                      ...r,
+                                      split: Number(
+                                        parseInt(e.target.value).toFixed(0)
+                                      ),
+                                    }
+                                  : r
                             );
-                            setRecipients(updatedRecipients);
+                            dispatch(
+                              setPostValues({
+                                title: postValues.title,
+                                editionAmount: postValues.editionAmount,
+                                description: postValues.description,
+                                sustained: postValues.sustained,
+                                involved: postValues.involved,
+                                price: postValues.referralFee,
+                                referralFee: postValues.referralFee,
+                                currency: postValues.currency,
+                                recipients: updatedRecipients,
+                                filledInAmount: postValues.filledInAmount,
+                              })
+                            );
                           }}
                         />
                       </div>
@@ -464,7 +575,7 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
               <div
                 className="bg-azul rounded-full h-full"
                 style={{
-                  width: `${(filledInAmount / 5) * 100}%`,
+                  width: `${(postValues.filledInAmount / 7) * 100}%`,
                 }}
               ></div>
             </div>

@@ -1,20 +1,8 @@
+import { PostValues } from "@/components/Launch/types/launch.types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface PostValuesState {
-  value: {
-    title: string | undefined;
-    editionAmount: number;
-    description: string | undefined;
-    sustained: string | undefined;
-    involved: string | undefined;
-    price: number;
-    referralFee: number;
-    currency: string | undefined;
-    recipients: {
-      recipient: string;
-      split: number;
-    }[];
-  };
+  value: PostValues;
 }
 
 const initialPostValuesState: PostValuesState = {
@@ -27,7 +15,21 @@ const initialPostValuesState: PostValuesState = {
     price: 1,
     referralFee: 0,
     currency: "",
-    recipients: [],
+    recipients: [
+      {
+        recipient: "",
+        split: 0,
+      },
+      {
+        recipient: "",
+        split: 0,
+      },
+      {
+        recipient: "",
+        split: 0,
+      },
+    ],
+    filledInAmount: 0,
   },
 };
 
@@ -37,20 +39,7 @@ export const postValuesSlice = createSlice({
   reducers: {
     setPostValues: (
       state: PostValuesState,
-      action: PayloadAction<{
-        title: string | undefined;
-        editionAmount: number;
-        description: string | undefined;
-        sustained: string | undefined;
-        involved: string | undefined;
-        price: number;
-        referralFee: number;
-        currency: string | undefined;
-        recipients: {
-          recipient: string;
-          split: number;
-        }[];
-      }>
+      action: PayloadAction<PostValues>
     ) => {
       state.value = action.payload;
     },

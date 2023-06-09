@@ -3,15 +3,8 @@ import { PreviewProps } from "../types/launch.types";
 import TopBarThree from "@/components/Common/modules/TopBarThree";
 
 const Preview: FunctionComponent<PreviewProps> = ({
-  title,
   postDescription,
-  referralFee,
-  recipients,
-  editionAmount,
-  valueAmount,
-  currency,
-  involved,
-  sustained,
+  postValues,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full z-0 flex items-center justify-center">
@@ -23,7 +16,7 @@ const Preview: FunctionComponent<PreviewProps> = ({
               className="text-center flex w-full h-full justify-center"
               id="borderPreview"
             >
-              {title}
+              {postValues.title}
             </div>
           </div>
           <div className="flex flex-col gap-3 relative w-full h-fit">
@@ -36,7 +29,7 @@ const Preview: FunctionComponent<PreviewProps> = ({
                 id="borderPreview"
               >
                 <div className="text-center flex w-full h-full justify-center">
-                  {postDescription}
+                  {postDescription ? postDescription : postValues.description}
                 </div>
               </div>
             </div>
@@ -49,7 +42,7 @@ const Preview: FunctionComponent<PreviewProps> = ({
                 id="borderPreview"
               >
                 <div className="text-center flex w-full h-full justify-center">
-                  {sustained}
+                  {postValues.sustained}
                 </div>
               </div>
             </div>
@@ -62,7 +55,7 @@ const Preview: FunctionComponent<PreviewProps> = ({
                 id="borderPreview"
               >
                 <div className="text-center flex w-full h-full justify-center">
-                  {involved}
+                  {postValues.involved}
                 </div>
               </div>
             </div>
@@ -77,7 +70,7 @@ const Preview: FunctionComponent<PreviewProps> = ({
                 id="borderPreview"
               >
                 <div className="text-center flex w-full h-full justify-center">
-                  {valueAmount}
+                  {postValues.price}
                 </div>
               </div>
             </div>
@@ -88,7 +81,7 @@ const Preview: FunctionComponent<PreviewProps> = ({
                 id="borderPreview"
               >
                 <div className="text-center flex w-full h-full justify-center">
-                  {editionAmount}
+                  {postValues.editionAmount}
                 </div>
               </div>
             </div>
@@ -99,7 +92,7 @@ const Preview: FunctionComponent<PreviewProps> = ({
                 id="borderPreview"
               >
                 <div className="text-center flex w-full h-full justify-center">
-                  {referralFee}
+                  {postValues.referralFee}
                 </div>
               </div>
             </div>

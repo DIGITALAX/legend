@@ -7,18 +7,23 @@ import {
   MUMBAI_LINK_TOKEN,
   MUMBAI_UPKEEP,
 } from "@/lib/constants";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { waitForTransaction } from "@wagmi/core";
 import { useBalance } from "wagmi";
+import { setUpkeepID } from "@/redux/reducers/upkeepIDSlice";
 
 const useKeeper = () => {
   const legendKeeperAddress = useSelector(
     (state: RootState) => state.app.contractValuesReducer.value[0]
   );
+  const upkeepId = useSelector(
+    (state: RootState) => state.app.upkeepIDReducer.upkeepID
+  );
   const postValues = useSelector(
     (state: RootState) => state.app.postValuesReducer.value
   );
+  const dispatch = useDispatch();
   const { address } = useAccount();
   const [balanceAmount, setBalanceAmount] = useState<number>();
   const [text, setText] = useState<string>("send link");
@@ -29,7 +34,7 @@ const useKeeper = () => {
     token: MUMBAI_LINK_TOKEN,
   });
 
-  const { config, error, isSuccess } = usePrepareContractWrite({
+  const { config, error } = usePrepareContractWrite({
     address: MUMBAI_UPKEEP,
     abi: UpkeepAbi,
     args: [
@@ -51,12 +56,9 @@ const useKeeper = () => {
   const { config: sendConfig } = usePrepareContractWrite({
     address: MUMBAI_LINK_TOKEN,
     abi: LinkAbi,
-    args: [
-      "0xb927AEf40a884656e95D03acD4087b100De76eca",
-      Number("2000000000000000000"),
-    ],
+    args: [MUMBAI_UPKEEP, Number("2000000000000000000")],
     functionName: "transfer",
-    // enabled: Boolean(legendKeeperAddress),
+    enabled: Boolean(legendKeeperAddress),
   });
 
   const { writeAsync: sendWriteAsync } = useContractWrite(sendConfig);
@@ -68,7 +70,16 @@ const useKeeper = () => {
       const res = await waitForTransaction({
         hash: tx?.hash!,
       });
-      setText("view register");
+      if (res.status === "success") {
+        dispatch(
+          setUpkeepID(
+            res.logs[3].topics[1] && BigInt(res.logs[3].topics[1]).toString()
+          )
+        );
+        setText("view register");
+      } else {
+        // cause an error here / dispatch / cant have same name!!
+      }
     } catch (err: any) {
       console.error(err.message);
     }
@@ -88,7 +99,11 @@ const useKeeper = () => {
       const res = await waitForTransaction({
         hash: tx?.hash!,
       });
-      setText("register keeper");
+      if (res.status === "success") {
+        setText("register keeper");
+      } else {
+        // error here
+      }
     } catch (err: any) {
       console.error(err.message);
     }
@@ -100,6 +115,12 @@ const useKeeper = () => {
       setBalanceAmount(parseInt(balance.data?.value.toString()));
     }
   }, [balance.data?.value]);
+
+  useEffect(() => {
+    if (upkeepId) {
+      setText("view register");
+    }
+  }, []);
 
   return {
     keeperRegisterLoading,

@@ -9,18 +9,6 @@ export type SwitchLaunchProps = {
 };
 
 export type PostDetailsProps = {
-  title: string | undefined;
-  setTitle: (e: string) => void;
-  recipients: { recipient: string; split: number }[];
-  setRecipients: (e: { recipient: string; split: number }[]) => void;
-  currency: string | undefined;
-  setCurrency: (e: string) => void;
-  editionAmount: number;
-  setEditionAmount: (e: number) => void;
-  referralFee: number;
-  setReferralFee: (e: number) => void;
-  valueAmount: number;
-  setValueAmount: (e: number) => void;
   textElement: RefObject<HTMLTextAreaElement>;
   preElement: RefObject<HTMLPreElement>;
   handlePostDescription: (e: FormEvent) => Promise<void>;
@@ -34,25 +22,30 @@ export type PostDetailsProps = {
   handleMentionClick: (user: Profile) => void;
   handleKeyDownDelete: (e: KeyboardEvent<Element>) => void;
   enabledCurrencies: Erc20[];
-  involved: string | undefined;
-  setInvolved: (e: string) => void;
-  sustained: string | undefined;
-  setSustained: (e: string) => void;
-  filledInAmount: number;
   collapseNumber: boolean[];
   dispatch: Dispatch<AnyAction>;
+  postValues: PostValues;
 };
 
-export type PreviewProps = {
+export interface PostValues {
   title: string | undefined;
-  postDescription: string | undefined;
-  referralFee: number;
-  recipients: { recipient: string; split: number }[];
   editionAmount: number;
-  valueAmount: number;
-  currency: string | undefined;
-  involved: string | undefined;
+  description: string | undefined;
   sustained: string | undefined;
+  involved: string | undefined;
+  price: number;
+  referralFee: number;
+  currency: string | undefined;
+  recipients: {
+    recipient: string;
+    split: number;
+  }[];
+  filledInAmount: number;
+}
+
+export type PreviewProps = {
+  postDescription: string | undefined;
+  postValues: PostValues;
 };
 
 export type NextButtonProps = {
@@ -84,6 +77,7 @@ export type KeeperProps = {
   sendLink: () => Promise<void>;
   balanceAmount: number | undefined;
   text: string;
+  upkeepId: string | undefined;
 };
 
 export type StoreProps = {
@@ -92,12 +86,6 @@ export type StoreProps = {
     x: string;
     y: string;
   }[];
-  setNewPosition: (
-    e: {
-      x: string;
-      y: string;
-    }[]
-  ) => void;
   editionAmount: number;
   handleTitle: (e: FormEvent, index: number) => void;
   handleDescription: (e: FormEvent, index: number) => void;
@@ -115,6 +103,8 @@ export type StoreProps = {
   handleDiscount: (e: FormEvent, index: number) => void;
   handlePrintType: (e: string, index: number) => void;
   handleGrantOnly: (e: FormEvent, index: number) => void;
+  handleAddPosition: () => void;
+  handleRemovePosition: (index: number) => void;
 };
 
 export interface Collection {

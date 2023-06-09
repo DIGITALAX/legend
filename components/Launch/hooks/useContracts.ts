@@ -47,7 +47,7 @@ const useContracts = () => {
       },
     ],
     functionName: "createContracts",
-    enabled: Boolean(pubId),
+    enabled: Boolean(NFTValues.length > 0),
   });
 
   const { writeAsync } = useContractWrite(config);
@@ -78,17 +78,18 @@ const useContracts = () => {
         hash: tx?.hash!,
       });
       if (res.status === "success") {
-        dispatch(setContractValues(res.logs.map((log) => log.address)));
-        // for (let i = 0; i < addresses.length; i++) {
-        //   await fetch("/api/etherscan", {
-        //     method: "POST",
-        //     body: JSON.stringify({
-        //       address: addresses[i],
-        //     }),
-        //   });
-        // }
+        const cleanedHexString = res.logs[1].data?.slice(2);
+        const chunks = cleanedHexString.match(/.{1,64}/g);
+        dispatch(
+          setContractValues([
+            "0x" + chunks?.[0].slice(24),
+            "0x" + chunks?.[1].slice(24),
+            "0x" + chunks?.[2].slice(24),
+          ])
+        );
+        // set factory deployed text to null so they cant deploy again
       } else {
-        // cause an error here
+        // cause an error here / dispatch / cant have same name!!
       }
     } catch (err: any) {
       console.error(err.message);

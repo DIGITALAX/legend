@@ -10,6 +10,9 @@ const Launch: NextPage = (): JSX.Element => {
   const page = useSelector(
     (state: RootState) => state.app.launchPageCountReducer.value
   );
+  const fillAmount = useSelector(
+    (state: RootState) => state.app.postValuesReducer.value.filledInAmount
+  );
   const profile = useSelector(
     (state: RootState) => state.app.profileReducer.profile
   );
@@ -26,10 +29,14 @@ const Launch: NextPage = (): JSX.Element => {
             }
           />
         )}
-        <NextButton
-          text={"NEXT"}
-          setPage={() => dispatch(setLaunchPageCount(page < 5 ? page + 1 : 5))}
-        />
+        {((page === 0 && fillAmount === 7) || page > 0) && (
+          <NextButton
+            text={"NEXT"}
+            setPage={() =>
+              dispatch(setLaunchPageCount(page < 5 ? page + 1 : 5))
+            }
+          />
+        )}
       </div>
     </div>
   );

@@ -17,6 +17,8 @@ const ALL_COLLECTIONS = `
         owner
         printType
         uri
+        tokenIds
+        pubId
       }
   }
 `;
@@ -36,6 +38,8 @@ const GRANT_COLLECTIONS = `query($grantName: String!) {
         owner
         printType
         uri
+        tokenIds
+        pubId
       }
   }
 `;
@@ -55,6 +59,8 @@ const SPECIFIC_COLLECTION = `query($collectionId: Int!) {
         owner
         printType
         uri
+        tokenIds
+        pubId
       }
   }
 `;

@@ -10,6 +10,7 @@ const Keeper: FunctionComponent<KeeperProps> = ({
   sendLink,
   balanceAmount,
   text,
+  upkeepId,
 }): JSX.Element => {
   return (
     <Draggable enableUserSelectHack={false}>
@@ -37,7 +38,11 @@ const Keeper: FunctionComponent<KeeperProps> = ({
                 onClick={() =>
                   text == "send link"
                     ? sendLink()
-                    : text == "register keeper" ? registerUpkeep() : window.open(`https://`)
+                    : text == "register keeper"
+                    ? registerUpkeep()
+                    : window.open(
+                        `https://automation.chain.link/mumbai/${upkeepId}`
+                      )
                 }
               >
                 {keeperRegisterLoading ? (

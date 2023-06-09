@@ -47,6 +47,8 @@ import { useRouter } from "next/router";
 import { setPubId } from "@/redux/reducers/pubIdSlice";
 import { setNFTImageArray } from "@/redux/reducers/NFTImageArraySlice";
 import { setContractValues } from "@/redux/reducers/contractValuesSlice";
+import { setUpkeepID } from "@/redux/reducers/upkeepIDSlice";
+import { setProductInformation } from "@/redux/reducers/productInformationSlice";
 
 const usePost = () => {
   const router = useRouter();
@@ -62,39 +64,15 @@ const usePost = () => {
   const textElement = useRef<HTMLTextAreaElement>(null);
   const preElement = useRef<HTMLPreElement>(null);
   const [mentionProfiles, setMentionProfiles] = useState<Profile[]>([]);
-  const [title, setTitle] = useState<string>();
-  const [sustained, setSustained] = useState<string>();
-  const [involved, setInvolved] = useState<string>();
-  const [filledInAmount, setFilledInAmount] = useState<number>(0);
   const [nextStore, setNextStore] = useState<number>(0);
   const [nextURI, setNextURI] = useState<number>(0);
-  const [recipients, setRecipients] = useState<
-    { recipient: string; split: number }[]
-  >([
-    {
-      recipient: "",
-      split: 0,
-    },
-    {
-      recipient: "",
-      split: 0,
-    },
-    {
-      recipient: "",
-      split: 0,
-    },
-  ]);
   const [results, setResults] = useState<any>([]);
   const [gifs, setGifs] = useState<UploadedMedia[]>([]);
   const [searchGif, setSearchGif] = useState<string>("");
   const [postHTML, setPostHTML] = useState<string>("");
   const [contentURI, setContentURI] = useState<string>();
-  const [editionAmount, setEditionAmount] = useState<number>(100);
   const [enabledCurrencies, setEnabledCurrencies] = useState<Erc20[]>([]);
-  const [referralFee, setReferralFee] = useState<number>(0);
-  const [valueAmount, setValueAmount] = useState<number>(1);
-  const [currency, setCurrency] = useState<string>();
-  const { signTypedDataAsync } = useSignTypedData();
+  const { signTypedDataAsync, error } = useSignTypedData();
   const dispatch = useDispatch();
   const { uploadImage } = useImageUpload();
   const profileId = useSelector(
@@ -106,6 +84,9 @@ const usePost = () => {
   );
   const postImages = useSelector(
     (state: RootState) => state?.app?.publicationImageReducer?.value
+  );
+  const postValues = useSelector(
+    (state: RootState) => state?.app?.postValuesReducer?.value
   );
 
   const { config, isSuccess } = usePrepareContractWrite({
@@ -153,6 +134,20 @@ const usePost = () => {
       if (start === 0 && end === textElement.current!.value?.length) {
         setPostDescription("");
         setPostHTML("");
+        dispatch(
+          setPostValues({
+            title: postValues.title,
+            editionAmount: postValues.editionAmount,
+            description: "",
+            sustained: postValues.sustained,
+            involved: postValues.involved,
+            price: postValues.price,
+            referralFee: postValues.referralFee,
+            currency: postValues.currency,
+            recipients: postValues.recipients,
+            filledInAmount: postValues.filledInAmount,
+          })
+        );
         // highlightedContent.innerHTML = "";
       } else {
         const selectedText = selection!.toString();
@@ -173,6 +168,20 @@ const usePost = () => {
         setPostHTML(newHTML);
         setPostDescription(newDescription);
         (e.currentTarget! as any).value = newDescription;
+        dispatch(
+          setPostValues({
+            title: postValues.title,
+            editionAmount: postValues.editionAmount,
+            description: newDescription,
+            sustained: postValues.sustained,
+            involved: postValues.involved,
+            price: postValues.price,
+            referralFee: postValues.referralFee,
+            currency: postValues.currency,
+            recipients: postValues.recipients,
+            filledInAmount: postValues.filledInAmount,
+          })
+        );
         // highlightedContent.innerHTML = newHTML;
       }
     } else if (
@@ -193,6 +202,20 @@ const usePost = () => {
       : e.target.value;
     setPostHTML(getPostHTML(e, resultElement as Element));
     setPostDescription(newValue);
+    dispatch(
+      setPostValues({
+        title: postValues.title,
+        editionAmount: postValues.editionAmount,
+        description: newValue,
+        sustained: postValues.sustained,
+        involved: postValues.involved,
+        price: postValues.price,
+        referralFee: postValues.referralFee,
+        currency: postValues.currency,
+        recipients: postValues.recipients,
+        filledInAmount: postValues.filledInAmount,
+      })
+    );
     if (
       e.target.value.split(" ")[e.target.value.split(" ")?.length - 1][0] ===
         "@" &&
@@ -221,6 +244,20 @@ const usePost = () => {
   const clearPost = () => {
     setPostLoading(false);
     setPostDescription("");
+    dispatch(
+      setPostValues({
+        title: postValues.title,
+        editionAmount: postValues.editionAmount,
+        description: "",
+        sustained: postValues.sustained,
+        involved: postValues.involved,
+        price: postValues.price,
+        referralFee: postValues.referralFee,
+        currency: postValues.currency,
+        recipients: postValues.recipients,
+        filledInAmount: postValues.filledInAmount,
+      })
+    );
     setPostHTML("");
     setGifs([]);
     dispatch(setPublicationImages([]));
@@ -234,12 +271,13 @@ const usePost = () => {
     );
   };
 
+  console.log({error})
+
   const postGrant = async (): Promise<void> => {
     if (
-      (!postDescription ||
-        postDescription === "" ||
-        postDescription.trim()?.length < 0) &&
-      (!postImages?.length || postImages?.length < 1)
+      !postValues.description ||
+      postValues.description === "" ||
+      postValues.description.trim()?.length < 0
     ) {
       return;
     }
@@ -248,13 +286,13 @@ const usePost = () => {
     try {
       const contentURIValue = await uploadPostContent(
         postImages,
-        postDescription,
+        postValues.description as string,
         setContentURI,
         contentURI,
         dispatch,
-        title as string,
-        sustained as string,
-        involved as string
+        postValues.title as string,
+        postValues.sustained as string,
+        postValues.involved as string
       );
 
       if (dispatcher) {
@@ -264,12 +302,15 @@ const usePost = () => {
           collectModule: {
             multirecipientFeeCollectModule: {
               amount: {
-                currency: currency,
-                value: valueAmount,
+                currency: postValues.currency,
+                value: postValues.price,
               },
-              collectLimit: String(editionAmount),
-              recipients: recipients,
-              referralFee: referralFee,
+              collectLimit: String(postValues.editionAmount),
+              recipients: postValues.recipients.filter(
+                (recipient: { recipient: string; split: number }) =>
+                  recipient.recipient
+              ),
+              referralFee: Number(postValues.referralFee),
               followerOnly: false,
             },
           },
@@ -292,12 +333,15 @@ const usePost = () => {
           collectModule: {
             multirecipientFeeCollectModule: {
               amount: {
-                currency: currency,
-                value: valueAmount,
+                currency: postValues.currency,
+                value: postValues.price,
               },
-              collectLimit: String(editionAmount),
-              recipients: recipients,
-              referralFee: referralFee,
+              collectLimit: String(postValues.editionAmount),
+              recipients: postValues.recipients.filter(
+                (recipient: { recipient: string; split: number }) =>
+                  recipient.recipient
+              ),
+              referralFee: Number(postValues.referralFee),
               followerOnly: false,
             },
           },
@@ -311,8 +355,9 @@ const usePost = () => {
         const signature = await signTypedDataAsync({
           domain: omit(typedData?.domain, ["__typename"]),
           types: omit(typedData?.types, ["__typename"]),
-          value: omit(typedData?.value, ["__typename"]),
-        } as any);
+          primaryType: "Mail",
+          message: omit(typedData?.value, ["__typename"]),
+        });
 
         const broadcastResult: any = await broadcast({
           id: result?.data?.createPostTypedData?.id,
@@ -380,10 +425,13 @@ const usePost = () => {
             referralFee: 0,
             currency: "",
             recipients: [],
+            filledInAmount: 0,
           })
         );
+        dispatch(setProductInformation([]));
         dispatch(setNFTImageArray([]));
         dispatch(setContractValues([]));
+        dispatch(setUpkeepID(undefined));
       }
     } catch (err) {
       console.error(err);
@@ -401,6 +449,20 @@ const usePost = () => {
       postDescription?.substring(0, postDescription.lastIndexOf("@")) +
       `@${user?.handle}`;
     setPostDescription(newElementPost);
+    dispatch(
+      setPostValues({
+        title: postValues.title,
+        editionAmount: postValues.editionAmount,
+        description: newElementPost,
+        sustained: postValues.sustained,
+        involved: postValues.involved,
+        price: postValues.price,
+        referralFee: postValues.referralFee,
+        currency: postValues.currency,
+        recipients: postValues.recipients,
+        filledInAmount: postValues.filledInAmount,
+      })
+    );
 
     // if (newHTMLPost) (resultElement as any).innerHTML = newHTMLPost;
     setPostHTML(newHTMLPost);
@@ -444,36 +506,11 @@ const usePost = () => {
 
   useMemo(() => {
     try {
-      availableCurrencies(setEnabledCurrencies, setCurrency);
+      availableCurrencies(setEnabledCurrencies);
     } catch (err) {
       console.error(err);
     }
   }, []);
-
-  useEffect(() => {
-    dispatch(
-      setPostValues({
-        title,
-        editionAmount,
-        description: postDescription,
-        sustained,
-        involved,
-        price: valueAmount,
-        referralFee,
-        currency,
-        recipients,
-      })
-    );
-  }, [
-    title,
-    editionAmount,
-    postDescription,
-    sustained,
-    involved,
-    referralFee,
-    currency,
-    recipients,
-  ]);
 
   const isFilled = (str: string | undefined) =>
     typeof str === "string" && str?.trim() !== "";
@@ -481,21 +518,44 @@ const usePost = () => {
   useEffect(() => {
     let filledCounter: number = 0;
 
-    if (isFilled(title)) filledCounter++;
-    if (isFilled(sustained)) filledCounter++;
-    if (isFilled(involved)) filledCounter++;
+    if (isFilled(postValues.title)) filledCounter++;
+    if (isFilled(postValues.sustained)) filledCounter++;
+    if (isFilled(postValues.involved)) filledCounter++;
     if (isFilled(postDescription)) filledCounter++;
+    if (isFilled(postValues.currency)) filledCounter++;
+    if (postValues.price > 0) filledCounter++;
     if (
-      recipients &&
-      recipients.length > 0 &&
-      recipients[0].recipient?.trim() !== "" &&
-      recipients[0].split !== 0 &&
-      typeof recipients[0].split !== undefined
+      postValues.recipients &&
+      postValues.recipients.length > 0 &&
+      postValues.recipients[0].recipient?.trim() !== "" &&
+      postValues.recipients[0].split !== 0 &&
+      typeof postValues.recipients[0].split !== undefined
     )
       filledCounter++;
 
-    setFilledInAmount(filledCounter);
-  }, [title, sustained, involved, postDescription, recipients]);
+    dispatch(
+      setPostValues({
+        title: postValues.title,
+        editionAmount: postValues.editionAmount,
+        description: postValues.description,
+        sustained: postValues.sustained,
+        involved: postValues.involved,
+        price: postValues.price,
+        referralFee: postValues.referralFee,
+        currency: postValues.currency,
+        recipients: postValues.recipients,
+        filledInAmount: filledCounter,
+      })
+    );
+  }, [
+    postValues.title,
+    postValues.sustained,
+    postValues.involved,
+    postDescription,
+    postValues.recipients,
+    postValues.currency,
+    postValues.price,
+  ]);
 
   return {
     postDescription,
@@ -517,24 +577,7 @@ const usePost = () => {
     postGrant,
     preElement,
     handleImagePaste,
-    setTitle,
-    title,
-    recipients,
-    setRecipients,
-    editionAmount,
-    setEditionAmount,
-    currency,
-    setCurrency,
-    valueAmount,
-    setValueAmount,
-    setReferralFee,
-    referralFee,
     enabledCurrencies,
-    sustained,
-    setSustained,
-    involved,
-    setInvolved,
-    filledInAmount,
     nextStore,
     setNextStore,
     nextURI,

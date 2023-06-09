@@ -7,6 +7,7 @@ import LegendCollectionAbi from "./../../../abi/LegendCollection.json";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setStorefrontValues } from "@/redux/reducers/storefrontValuesSlice";
+import { setProductInformation } from "@/redux/reducers/productInformationSlice";
 
 const useStorefront = () => {
   const dispatch = useDispatch();
@@ -16,22 +17,11 @@ const useStorefront = () => {
   const storefrontValues = useSelector(
     (state: RootState) => state.app.storefrontValuesReducer.value
   );
-  const [productInformation, setProductInformation] = useState<Collection[]>(
-    Array.from({ length: 3 }, () => ({
-      acceptedTokens: [],
-      basePrices: [],
-      grantOnly: false,
-      discount: 0,
-      printType: "apparel",
-      uri: {
-        description: "",
-        external_url: "",
-        image: "",
-        name: "",
-        type: "",
-      },
-      amount: postValues.editionAmount,
-    }))
+  const NFTValues = useSelector(
+    (state: RootState) => state.app.NFTImageArrayReducer.value
+  );
+  const productInformation = useSelector(
+    (state: RootState) => state.app.productInformationReducer.value
   );
   const [imageLoading, setImageLoading] = useState<boolean[]>(
     Array.from({ length: productInformation.length }, () => false)
@@ -80,20 +70,23 @@ const useStorefront = () => {
 
     if (formattedValue === "") {
       if (tokenIndex !== -1) {
-        product.acceptedTokens?.splice(tokenIndex, 1);
-        product.basePrices?.splice(tokenIndex, 1);
+        product.acceptedTokens = [...product.acceptedTokens];
+        product.basePrices = [...product.basePrices];
+        product?.acceptedTokens?.splice(tokenIndex, 1);
+        product?.basePrices?.splice(tokenIndex, 1);
       }
     } else {
       if (tokenIndex === -1) {
-        product.acceptedTokens.push(address);
-        product.basePrices.push(Number(formattedValue));
+        product.acceptedTokens = [...product.acceptedTokens, address];
+        product.basePrices = [...product.basePrices, Number(formattedValue)];
       } else {
+        product.basePrices = [...product.basePrices];
         product.basePrices[tokenIndex] = Number(formattedValue);
       }
     }
 
     updatedProductInformation[index] = product;
-    setProductInformation(updatedProductInformation);
+    dispatch(setProductInformation(updatedProductInformation));
   };
 
   const handleTitle = (e: FormEvent, index: number) => {
@@ -106,8 +99,7 @@ const useStorefront = () => {
         name: (e.target as HTMLFormElement).value,
       },
     };
-
-    setProductInformation(updatedProductInformation);
+    dispatch(setProductInformation(updatedProductInformation));
   };
 
   const handleGrantOnly = (e: FormEvent, index: number) => {
@@ -119,7 +111,7 @@ const useStorefront = () => {
         updatedProductInformation[index].grantOnly === true ? false : true,
     };
 
-    setProductInformation(updatedProductInformation);
+    dispatch(setProductInformation(updatedProductInformation));
   };
 
   const handlePrintType = (e: string, index: number) => {
@@ -130,7 +122,7 @@ const useStorefront = () => {
       printType: e,
     };
 
-    setProductInformation(updatedProductInformation);
+    dispatch(setProductInformation(updatedProductInformation));
   };
 
   const handleDiscount = (e: FormEvent, index: number) => {
@@ -141,7 +133,7 @@ const useStorefront = () => {
       discount: (e.target as HTMLFormElement).value,
     };
 
-    setProductInformation(updatedProductInformation);
+    dispatch(setProductInformation(updatedProductInformation));
   };
 
   const handleDescription = (e: FormEvent, index: number) => {
@@ -155,7 +147,7 @@ const useStorefront = () => {
       },
     };
 
-    setProductInformation(updatedProductInformation);
+    dispatch(setProductInformation(updatedProductInformation));
   };
 
   const handleEditionAmount = (e: FormEvent, index: number) => {
@@ -166,7 +158,7 @@ const useStorefront = () => {
       amount: (e.target as HTMLFormElement).value,
     };
 
-    setProductInformation(updatedProductInformation);
+    dispatch(setProductInformation(updatedProductInformation));
   };
 
   const handleImageUpload = async (
@@ -201,7 +193,7 @@ const useStorefront = () => {
           },
         };
 
-        setProductInformation(updatedProductInformation);
+        dispatch(setProductInformation(updatedProductInformation));
       }
     } catch (err: any) {
       console.error(err.message);
@@ -218,16 +210,17 @@ const useStorefront = () => {
     );
     try {
       setMint(index);
-      const uri = await fetch("/api/ipfs", {
+      const response = await fetch("/api/ipfs", {
         method: "POST",
         body: JSON.stringify(productInformation[index].uri),
       });
+      const uri = await response.json();
       setArgs([
         productInformation[index].amount,
         {
           acceptedTokens: productInformation[index].acceptedTokens,
           basePrices: productInformation[index].basePrices,
-          uri,
+          uri: "ipfs://" + uri.cid,
           printType: productInformation[index].printType,
           fulfillerId: 1,
           discount: productInformation[index].discount,
@@ -271,8 +264,19 @@ const useStorefront = () => {
     );
   };
 
-  useEffect(() => {
-    if (newPosition.length > 0) {
+  const handleAddPosition = () => {
+    const positions = [
+      { x: "20", y: "100" },
+      { x: "60", y: "20" },
+      { x: "44", y: "44" },
+    ];
+
+    const randomIndex = Math.floor(Math.random() * positions.length);
+    const newPositionValue = positions[randomIndex];
+
+    setNewPosition([...newPosition, newPositionValue]);
+
+    dispatch(
       setProductInformation([
         ...productInformation,
         {
@@ -290,12 +294,29 @@ const useStorefront = () => {
           },
           amount: 0,
         },
-      ]);
-      setImageLoading([...imageLoading, false]);
-      setCollectionLoading([...collectionLoading, false]);
-      setMinted([...minted, false]);
-    }
-  }, [newPosition]);
+      ])
+    );
+    setImageLoading([...imageLoading, false]);
+    setCollectionLoading([...collectionLoading, false]);
+    setMinted([...minted, false]);
+  };
+
+  const handleRemovePosition = (index: number) => {
+    const updatedPositions = newPosition.filter((_, i) => i !== index);
+    const updatedMinted = minted.filter((_, i) => i !== index + 3);
+    const updatedCollectionLoading = collectionLoading.filter(
+      (_, i) => i !== index + 3
+    );
+    const updatedImageLoading = imageLoading.filter((_, i) => i !== index + 3);
+    const updatedProductInformation = [...productInformation].filter(
+      (_, i) => i !== index + 3
+    );
+    dispatch(setProductInformation(updatedProductInformation));
+    setImageLoading(updatedImageLoading);
+    setCollectionLoading(updatedCollectionLoading);
+    setMinted(updatedMinted);
+    setNewPosition(updatedPositions);
+  };
 
   useEffect(() => {
     if (args) {
@@ -303,8 +324,31 @@ const useStorefront = () => {
     }
   }, [args]);
 
+  useEffect(() => {
+    if (postValues.editionAmount === NFTValues.length) {
+      dispatch(
+        setProductInformation(
+          Array.from({ length: 3 }, () => ({
+            acceptedTokens: [],
+            basePrices: [],
+            grantOnly: false,
+            discount: 0,
+            printType: "apparel",
+            uri: {
+              description: "",
+              external_url: "",
+              image: "",
+              name: "",
+              type: "",
+            },
+            amount: postValues.editionAmount,
+          }))
+        )
+      );
+    }
+  }, [NFTValues.length]);
+
   return {
-    productInformation,
     newPosition,
     setNewPosition,
     handleCollectionPrices,
@@ -319,6 +363,8 @@ const useStorefront = () => {
     handleDiscount,
     handlePrintType,
     handleGrantOnly,
+    handleAddPosition,
+    handleRemovePosition,
   };
 };
 

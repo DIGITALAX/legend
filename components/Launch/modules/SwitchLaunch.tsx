@@ -40,24 +40,7 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
     caretCoord,
     handleMentionClick,
     handleKeyDownDelete,
-    title,
-    setTitle,
-    recipients,
-    setRecipients,
-    editionAmount,
-    setEditionAmount,
-    currency,
-    setCurrency,
-    valueAmount,
-    setValueAmount,
-    setReferralFee,
-    referralFee,
     enabledCurrencies,
-    sustained,
-    setSustained,
-    involved,
-    setInvolved,
-    filledInAmount,
     postGrant,
     nextStore,
     setNextStore,
@@ -72,7 +55,7 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
     zipLoading,
     currentImageIndex,
     setCurrentImageIndex,
-    handleDropImage
+    handleDropImage,
   } = useImageUpload();
 
   const { createContracts, createContractsLoading } = useContracts();
@@ -86,9 +69,7 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
   } = useKeeper();
 
   const {
-    productInformation,
     newPosition,
-    setNewPosition,
     handleCollectionPrices,
     handleDescription,
     handleTitle,
@@ -101,10 +82,15 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
     handleDiscount,
     handleGrantOnly,
     handlePrintType,
+    handleAddPosition,
+    handleRemovePosition
   } = useStorefront();
 
   const postValues = useSelector(
     (state: RootState) => state.app.postValuesReducer.value
+  );
+  const productInformation = useSelector(
+    (state: RootState) => state.app.productInformationReducer.value
   );
   const storefrontValues = useSelector(
     (state: RootState) => state.app.storefrontValuesReducer.value
@@ -121,6 +107,16 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
   const collapseNumber = useSelector(
     (state: RootState) => state.app.collapseItemLaunchReducer.value
   );
+  const upkeepId = useSelector(
+    (state: RootState) => state.app.upkeepIDReducer.upkeepID
+  );
+
+  console.log({
+    storefrontValues,
+    postValues,
+    contractValues,
+    productInformation,
+  });
 
   const dispatch = useDispatch();
 
@@ -148,7 +144,6 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
         <Store
           productInformation={productInformation}
           newPosition={newPosition}
-          setNewPosition={setNewPosition}
           editionAmount={postValues.editionAmount}
           handleCollectionPrices={handleCollectionPrices}
           handleDescription={handleDescription}
@@ -162,6 +157,8 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
           handleDiscount={handleDiscount}
           handleGrantOnly={handleGrantOnly}
           handlePrintType={handlePrintType}
+          handleAddPosition={handleAddPosition}
+          handleRemovePosition={handleRemovePosition}
         />
       );
 
@@ -173,6 +170,7 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
           sendLink={sendLink}
           balanceAmount={balanceAmount}
           text={text}
+          upkeepId={upkeepId}
         />
       );
 
@@ -214,44 +212,18 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
             textElement={textElement}
             preElement={preElement}
             handlePostDescription={handlePostDescription}
-            postDescription={postDescription}
             mentionProfiles={mentionProfiles}
             profilesOpen={profilesOpen}
             caretCoord={caretCoord}
             handleMentionClick={handleMentionClick}
             handleKeyDownDelete={handleKeyDownDelete}
-            title={title}
-            setTitle={setTitle}
-            recipients={recipients}
-            setRecipients={setRecipients}
-            editionAmount={editionAmount}
-            setEditionAmount={setEditionAmount}
-            currency={currency}
-            setCurrency={setCurrency}
-            valueAmount={valueAmount}
-            setValueAmount={setValueAmount}
-            setReferralFee={setReferralFee}
-            referralFee={referralFee}
             enabledCurrencies={enabledCurrencies}
-            sustained={sustained}
-            involved={involved}
-            setSustained={setSustained}
-            setInvolved={setInvolved}
-            filledInAmount={filledInAmount}
             collapseNumber={collapseNumber}
             dispatch={dispatch}
-          />
-          <Preview
-            title={title}
+            postValues={postValues}
             postDescription={postDescription}
-            referralFee={referralFee}
-            recipients={recipients}
-            editionAmount={editionAmount}
-            valueAmount={valueAmount}
-            currency={currency}
-            sustained={sustained}
-            involved={involved}
           />
+          <Preview postValues={postValues} postDescription={postDescription} />
         </div>
       );
   }
