@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { graphClient } from "@/lib/subgraph/client";
+import { graphClientTestnet } from "@/lib/subgraph/client";
 
 const UPKEEP_IDS = `
   query {
@@ -14,7 +14,7 @@ const UPKEEP_IDS = `
 `;
 
 export const getAllRegisteredUpkeeps = async (): Promise<any> => {
-  const queryPromise = graphClient.query({
+  const queryPromise = graphClientTestnet.query({
     query: gql(UPKEEP_IDS),
     fetchPolicy: "no-cache",
     errorPolicy: "all",

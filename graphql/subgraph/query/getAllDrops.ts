@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { graphClient } from "@/lib/subgraph/client";
+import { graphClientTestnet } from "@/lib/subgraph/client";
 
 const ALL_DROPS = `
   query {
@@ -26,7 +26,7 @@ const GRANT_DROPS = `
 `;
 
 export const getAllDrops = async (): Promise<any> => {
-  const queryPromise = graphClient.query({
+  const queryPromise = graphClientTestnet.query({
     query: gql(ALL_DROPS),
     fetchPolicy: "no-cache",
     errorPolicy: "all",
@@ -49,7 +49,7 @@ export const getAllDrops = async (): Promise<any> => {
 export const getGrantDrops = async (
   collectionIds_contains: number[]
 ): Promise<any> => {
-  const queryPromise = graphClient.query({
+  const queryPromise = graphClientTestnet.query({
     query: gql(GRANT_DROPS),
     variables: {
       collectionIds_contains: collectionIds_contains,

@@ -271,8 +271,6 @@ const usePost = () => {
     );
   };
 
-  console.log({error})
-
   const postGrant = async (): Promise<void> => {
     if (
       !postValues.description ||

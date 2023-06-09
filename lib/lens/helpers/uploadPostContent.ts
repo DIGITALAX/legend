@@ -79,7 +79,6 @@ const uploadPostContent = async (
     dispatch(setIPFS(true));
     console.error(err.message);
   }
-  console.log({contentURI})
   return contentURI;
 };
 

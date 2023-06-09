@@ -25,6 +25,8 @@ export const LEGEND_COLLECTION_MUMBAI: `0x${string}` =
   "0x4C0143d8321738A0b624491C38aaEeb873c578a9";
 export const LEGEND_MARKET_MUMBAI: `0x${string}` =
   "0xca351976Cf47A52Aa49a5e89034796F35f36E3E6";
+export const LEGEND_DROP_MUMBAI: `0x${string}` =
+  "0xFeE1aA1CdEA0E5776fc836B489BAaAb4936aa690";
 
 export const FACTORY_CONTRACT_MATIC: `0x${string}` = "0x";
 

@@ -18,6 +18,10 @@ import collapseItemReducer from "./reducers/collapseItemSlice";
 import pubIdReducer from "./reducers/pubIdSlice";
 import upkeepIDReducer from "./reducers/upkeepIDSlice";
 import productInformationReducer from "./reducers/productInformationSlice";
+import allCollectionsReducer from "./reducers/allCollectionsSlice";
+import grantCollectionReducer from "./reducers/grantCollectionSlice";
+import allDropsReducer from "./reducers/allDropsSlice";
+import dropModalReducer from "./reducers/dropModalSlice";
 
 const reducer = combineReducers({
   noHandleReducer,
@@ -38,6 +42,10 @@ const reducer = combineReducers({
   pubIdReducer,
   upkeepIDReducer,
   productInformationReducer,
+  allCollectionsReducer,
+  grantCollectionReducer,
+  allDropsReducer,
+  dropModalReducer
 });
 
 export const store = configureStore({

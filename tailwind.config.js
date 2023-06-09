@@ -27,6 +27,11 @@ module.exports = {
         blez: "#CEE2E3",
         glez: "#06B4BD",
         mist: "#4B4BF0",
+        vil: "#D9CBF9",
+        vil2: "#AC8FF0",
+      },
+      fontSize: {
+        xxs: "0.6rem",
       },
       fontFamily: {
         vcr: "VCR",

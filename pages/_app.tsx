@@ -3,7 +3,7 @@ import type { AppProps } from "next/app";
 import "@rainbow-me/rainbowkit/styles.css";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { polygon , polygonMumbai} from "wagmi/chains";
+import { polygon, polygonMumbai } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { useEffect, useState } from "react";
 import { getFirebaseApp } from "../firebase.config";
@@ -12,6 +12,7 @@ import Header from "@/components/Layout/Header";
 import Footer from "@/components/Layout/Footer";
 import { store } from "./../redux/store";
 import { Provider } from "react-redux";
+import Modals from "@/components/Common/modules/Modals/Modals";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [polygonMumbai],
@@ -52,6 +53,7 @@ export default function App({ Component, pageProps }: AppProps) {
               <Header />
               <Component {...pageProps} firebaseApp={firebaseApp} />
               <Footer />
+              <Modals />
             </div>
           </div>
         </RainbowKitProvider>

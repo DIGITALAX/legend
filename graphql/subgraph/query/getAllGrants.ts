@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { graphClient } from "@/lib/subgraph/client";
+import { graphClientTestnet } from "@/lib/subgraph/client";
 
 const GRANTS = `
   query {
@@ -32,7 +32,7 @@ query($pubId: String!) {
 `;
 
 export const getAllGrants = async (): Promise<any> => {
-  const queryPromise = graphClient.query({
+  const queryPromise = graphClientTestnet.query({
     query: gql(GRANTS),
     fetchPolicy: "no-cache",
     errorPolicy: "all",
@@ -53,7 +53,7 @@ export const getAllGrants = async (): Promise<any> => {
 };
 
 export const getGrantDetails = async (pubId: number): Promise<any> => {
-  const queryPromise = graphClient.query({
+  const queryPromise = graphClientTestnet.query({
     query: gql(GRANT_DETAILS),
     variables: {
       pubId: pubId,

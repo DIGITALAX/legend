@@ -58,3 +58,15 @@ export type TopBarOneProps = {
   dispatch?: Dispatch<AnyAction>;
   index?: number;
 };
+
+export type CreateDropProps = {
+  dispatch: Dispatch<AnyAction>;
+  message: string | undefined;
+  createDrop: () => Promise<void>;
+  dropLoading: boolean;
+  storefrontValues: Collection[];
+};
+
+export type TopBarFourProps = {
+  index: number;
+};

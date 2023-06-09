@@ -1,13 +1,20 @@
 import { FormEvent, useEffect, useState } from "react";
-import { Collection } from "../types/launch.types";
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
-import { AVAILABLE_TOKENS, LEGEND_COLLECTION_MUMBAI } from "@/lib/constants";
+import {
+  useContractWrite,
+  usePrepareContractWrite,
+  useContractRead,
+} from "wagmi";
+import { LEGEND_COLLECTION_MUMBAI, LEGEND_DROP_MUMBAI } from "@/lib/constants";
 import { waitForTransaction } from "@wagmi/core";
 import LegendCollectionAbi from "./../../../abi/LegendCollection.json";
+import LegendDropAbi from "./../../../abi/LegendDrop.json";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setStorefrontValues } from "@/redux/reducers/storefrontValuesSlice";
 import { setProductInformation } from "@/redux/reducers/productInformationSlice";
+import { setLaunchPageCount } from "@/redux/reducers/launchPageCountSlice";
+import { BigNumber } from "ethers";
+import { setDropModal } from "@/redux/reducers/dropModalSlice";
 
 const useStorefront = () => {
   const dispatch = useDispatch();
@@ -29,11 +36,13 @@ const useStorefront = () => {
   const [collectionLoading, setCollectionLoading] = useState<boolean[]>(
     Array.from({ length: productInformation.length }, () => false)
   );
+  const [dropLoading, setDropLoading] = useState<boolean>(false);
   const [minted, setMinted] = useState<boolean[]>(
     Array.from({ length: productInformation.length }, () => false)
   );
   const [mint, setMint] = useState<number>();
   const [args, setArgs] = useState<any>();
+  const [dropArgs, setDropArgs] = useState<any>();
   const [newPosition, setNewPosition] = useState<
     {
       x: string;
@@ -50,6 +59,22 @@ const useStorefront = () => {
   });
 
   const { writeAsync } = useContractWrite(config);
+
+  const { config: dropConfig } = usePrepareContractWrite({
+    address: LEGEND_DROP_MUMBAI,
+    abi: LegendDropAbi,
+    functionName: "createDrop",
+    enabled: Boolean(dropArgs),
+    args: dropArgs,
+  });
+
+  const { writeAsync: dropWriteAsync } = useContractWrite(dropConfig);
+
+  const { data } = useContractRead({
+    address: LEGEND_COLLECTION_MUMBAI,
+    abi: LegendCollectionAbi,
+    functionName: "getCollectionSupply",
+  });
 
   const handleCollectionPrices = (
     e: FormEvent,
@@ -264,6 +289,56 @@ const useStorefront = () => {
     );
   };
 
+  const createDrop = async () => {
+    setDropLoading(true);
+    try {
+      let lastCollection: number = 0;
+      if (data) {
+        lastCollection = parseInt(data as string);
+      }
+      const response = await fetch("/api/ipfs", {
+        method: "POST",
+        body: JSON.stringify({
+          name: postValues.title,
+          image: "ipfs://" + storefrontValues[0].uri.image,
+        }),
+      });
+      const cid = await response.json();
+      setDropArgs([
+        Array.from(
+          { length: storefrontValues.length },
+          (_, index) => lastCollection + index
+        ),
+        cid.cid,
+      ]);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setDropLoading(false);
+  };
+
+  const dropWrite = async () => {
+    setDropLoading(true);
+    try {
+      const tx = await dropWriteAsync?.();
+      const res = await waitForTransaction({
+        hash: tx?.hash!,
+      });
+      if (res.status === "success") {
+        dispatch(
+          setDropModal({
+            actionMessage: undefined,
+            actionValue: false,
+          })
+        );
+        dispatch(setLaunchPageCount(5));
+      }
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setDropLoading(false);
+  };
+
   const handleAddPosition = () => {
     const positions = [
       { x: "20", y: "100" },
@@ -325,6 +400,12 @@ const useStorefront = () => {
   }, [args]);
 
   useEffect(() => {
+    if (dropArgs) {
+      dropWrite();
+    }
+  }, [dropArgs]);
+
+  useEffect(() => {
     if (postValues.editionAmount === NFTValues.length) {
       dispatch(
         setProductInformation(
@@ -365,6 +446,8 @@ const useStorefront = () => {
     handleGrantOnly,
     handleAddPosition,
     handleRemovePosition,
+    dropLoading,
+    createDrop,
   };
 };
 

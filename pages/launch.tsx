@@ -1,5 +1,6 @@
 import NextButton from "@/components/Launch/modules/NextButton";
 import SwitchLaunch from "@/components/Launch/modules/SwitchLaunch";
+import { setDropModal } from "@/redux/reducers/dropModalSlice";
 import { setLaunchPageCount } from "@/redux/reducers/launchPageCountSlice";
 import { RootState } from "@/redux/store";
 import { NextPage } from "next";
@@ -20,7 +21,7 @@ const Launch: NextPage = (): JSX.Element => {
   return (
     <div className="relative w-full h-screen flex flex-col z-1">
       <SwitchLaunch profile={profile} page={page} />
-      <div className="flex flex-row gap-3 justify-end items-center h-fit w-full p-3">
+      <div className="flex flex-row gap-3 justify-end items-center w-full p-3 h-20">
         {page > 0 && (
           <NextButton
             text={"BACK"}
@@ -32,8 +33,17 @@ const Launch: NextPage = (): JSX.Element => {
         {((page === 0 && fillAmount === 7) || page > 0) && (
           <NextButton
             text={"NEXT"}
-            setPage={() =>
-              dispatch(setLaunchPageCount(page < 5 ? page + 1 : 5))
+            setPage={
+              page === 4
+                ? () =>
+                    dispatch(
+                      setDropModal({
+                        actionMessage:
+                          "Happy with your collections? Mint them together in your grant drop. you can always add more later.",
+                        actionValue: true,
+                      })
+                    )
+                : () => dispatch(setLaunchPageCount(page < 5 ? page + 1 : 5))
             }
           />
         )}

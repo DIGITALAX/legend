@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { graphClient } from "@/lib/subgraph/client";
+import { graphClientTestnet } from "@/lib/subgraph/client";
 
 const ALL_ORDERS = `
   query {
@@ -30,7 +30,7 @@ const GRANT_ORDERS = `
 `;
 
 export const getAllOrders = async (): Promise<any> => {
-  const queryPromise = graphClient.query({
+  const queryPromise = graphClientTestnet.query({
     query: gql(ALL_ORDERS),
     fetchPolicy: "no-cache",
     errorPolicy: "all",
@@ -53,7 +53,7 @@ export const getAllOrders = async (): Promise<any> => {
 export const getGrantOrders = async (
   collectionIds_contains: number[]
 ): Promise<any> => {
-  const queryPromise = graphClient.query({
+  const queryPromise = graphClientTestnet.query({
     query: gql(GRANT_ORDERS),
     variables: {
       collectionIds_contains: collectionIds_contains,

@@ -1,5 +1,5 @@
 import { FetchResult, gql } from "@apollo/client";
-import { graphClient } from "@/lib/subgraph/client";
+import { graphClientTestnet } from "@/lib/subgraph/client";
 
 const HISTORY = `
   query {
@@ -43,7 +43,7 @@ const GRANT_HISTORY_SPECIFIC = `query($tokenIds_contains: [Int]!) {
   }`;
 
 export const getPurchaseHistory = async (): Promise<FetchResult<any>> => {
-  return graphClient.query({
+  return graphClientTestnet.query({
     query: gql(HISTORY),
     fetchPolicy: "no-cache",
   });
@@ -52,7 +52,7 @@ export const getPurchaseHistory = async (): Promise<FetchResult<any>> => {
 export const getPurchaseHistorySpecific = async (
   buyer: string
 ): Promise<FetchResult<any>> => {
-  return graphClient.query({
+  return graphClientTestnet.query({
     query: gql(BUYER_HISTORY_SPECIFIC),
     variables: {
       buyer: buyer,
@@ -64,7 +64,7 @@ export const getPurchaseHistorySpecific = async (
 export const getPurchaseHistoryGrantSpecific = async (
   tokenIds_contains: number[]
 ): Promise<FetchResult<any>> => {
-  return graphClient.query({
+  return graphClientTestnet.query({
     query: gql(GRANT_HISTORY_SPECIFIC),
     variables: {
       tokenIds_contains: tokenIds_contains,

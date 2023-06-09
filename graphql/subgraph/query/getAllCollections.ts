@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { graphClient } from "@/lib/subgraph/client";
+import { graphClientTestnet } from "@/lib/subgraph/client";
 
 const ALL_COLLECTIONS = `
   query {
@@ -65,8 +65,8 @@ const SPECIFIC_COLLECTION = `query($collectionId: Int!) {
   }
 `;
 
-export const getAllCollections = async (): Promise<any> => {
-  const queryPromise = graphClient.query({
+export const getCollections = async (): Promise<any> => {
+  const queryPromise = graphClientTestnet.query({
     query: gql(ALL_COLLECTIONS),
     fetchPolicy: "no-cache",
     errorPolicy: "all",
@@ -87,7 +87,7 @@ export const getAllCollections = async (): Promise<any> => {
 };
 
 export const getCollectionsGrant = async (grantName: string): Promise<any> => {
-  const queryPromise = graphClient.query({
+  const queryPromise = graphClientTestnet.query({
     query: gql(GRANT_COLLECTIONS),
     variables: {
       grantName: grantName,
@@ -111,7 +111,7 @@ export const getCollectionsGrant = async (grantName: string): Promise<any> => {
 };
 
 export const getCollection = async (collectionId: number): Promise<any> => {
-  const queryPromise = graphClient.query({
+  const queryPromise = graphClientTestnet.query({
     query: gql(SPECIFIC_COLLECTION),
     variables: {
       collectionId: collectionId,
