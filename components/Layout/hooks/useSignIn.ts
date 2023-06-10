@@ -11,7 +11,6 @@ import {
   setAuthenticationToken,
 } from "@/lib/lens/utils";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import { setProfile } from "@/redux/reducers/profileSlice";
 import { setAuthStatus } from "@/redux/reducers/authSlice";
 import authenticate from "@/graphql/lens/mutate/authenticate";

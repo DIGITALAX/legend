@@ -26,6 +26,7 @@ export interface CollectionGraph {
   tokenIds: number[];
   pubId: number;
   profile: Profile | undefined;
+  soldTokens: number[];
 }
 
 export type AllStoreProps = {

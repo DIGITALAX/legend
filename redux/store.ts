@@ -25,6 +25,8 @@ import dropModalReducer from "./reducers/dropModalSlice";
 import filtersReducer from "./reducers/filtersSlice";
 import chosenCollectionReducer from "./reducers/chosenCollectionSlice";
 import imageViewerReducer from "./reducers/imageViewerSlice";
+import errorReducer from "./reducers/errorSlice";
+import cartItemsReducer from "./reducers/cartItemsSlice";
 
 const reducer = combineReducers({
   noHandleReducer,
@@ -52,6 +54,8 @@ const reducer = combineReducers({
   filtersReducer,
   chosenCollectionReducer,
   imageViewerReducer,
+  errorReducer,
+  cartItemsReducer,
 });
 
 export const store = configureStore({

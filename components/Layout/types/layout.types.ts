@@ -1,3 +1,6 @@
+import { CollectionGraph } from "@/components/StoreFront/types/storefront.types";
+import { AnyAction, Dispatch } from "redux";
+
 export type WalletProps = {
   handleTransaction: () => void;
   profile: string;
@@ -12,3 +15,9 @@ export type UseSignInResults = {
   signInLoading: boolean;
 };
 
+export type CartItemsProps = {
+  dispatch: Dispatch<AnyAction>;
+  cartItems: CollectionGraph[];
+  cartOpen: boolean;
+  setCartOpen: (e: boolean) => void;
+};

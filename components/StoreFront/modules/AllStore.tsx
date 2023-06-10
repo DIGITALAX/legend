@@ -42,13 +42,13 @@ const AllStore: FunctionComponent<AllStoreProps> = ({
       filtered = filtered.sort((a, b) => b.blockTimestamp - a.blockTimestamp);
     }
 
-    if (!filterValues.collectors) {
+    if (filterValues.collectors === false) {
       filtered = filtered.filter(
         (collection) => collection.grantCollectorsOnly
       );
     }
 
-    if (!filterValues.discount) {
+    if (filterValues.discount === false) {
       filtered = filtered.filter((collection) => collection.discount > 0);
     }
 

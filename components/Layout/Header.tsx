@@ -4,16 +4,23 @@ import Link from "next/link";
 import { FunctionComponent } from "react";
 import Wallet from "./modules/Wallet";
 import useSignIn from "./hooks/useSignIn";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import Cart from "./modules/Cart";
+import useCart from "./hooks/useCart";
 
 const Header: FunctionComponent = ({}): JSX.Element => {
+  const dispatch = useDispatch();
   const profile = useSelector(
     (state: RootState) => state.app.profileReducer.profile
+  );
+  const cartItems = useSelector(
+    (state: RootState) => state.app.cartItemsReducer.value
   );
 
   const { handleConnect, handleLensSignIn, connected, signInLoading } =
     useSignIn();
+  const { cartOpen, setCartOpen } = useCart();
   return (
     <div className="relative w-full h-fit flex flex-row text-white font-earl p-3 gap-6 items-start">
       <Link
@@ -130,6 +137,12 @@ const Header: FunctionComponent = ({}): JSX.Element => {
           }
           profile={profile?.id}
           signInLoading={signInLoading}
+        />
+        <Cart
+          dispatch={dispatch}
+          cartItems={cartItems}
+          cartOpen={cartOpen}
+          setCartOpen={setCartOpen}
         />
       </div>
     </div>
