@@ -1,13 +1,19 @@
 import { NextPage } from "next";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import Head from "next/head";
 import { INFURA_GATEWAY } from "@/lib/constants";
+import Image from "next/legacy/image";
+import lodash from "lodash";
+import createProfilePicture from "@/lib/lens/helpers/createProfilePicture";
+import { setImageViewer } from "@/redux/reducers/imageViewerSlice";
 
 const Collection: NextPage = (): JSX.Element => {
   const chosenCollection = useSelector(
     (state: RootState) => state.app.chosenCollectionReducer.value
   );
+  const dispatch = useDispatch();
+  const profile = createProfilePicture(chosenCollection?.profile);
   return (
     <div className="relative h-fit w-full bg-black/70 grid grid-flow-col auto-col-auto overflow-hidden">
       <Head>
@@ -87,7 +93,98 @@ const Collection: NextPage = (): JSX.Element => {
           type="font/ttf"
         />
       </Head>
-      <div></div>
+      <div
+        className="relative w-90 h-80 rounded-md bg-gris flex flex-col p-3 gap-5 cursor-pointer"
+        onClick={() => {
+          dispatch(
+            setImageViewer({
+              actionValue: true,
+              actionImage: chosenCollection?.uri.image,
+            })
+          );
+        }}
+      >
+        <div className="relative w-full h-full border-2 border-rosa">
+          <Image
+            src={`${INFURA_GATEWAY}/${chosenCollection?.uri?.image}`}
+            layout="fill"
+            objectFit="cover"
+            draggable={false}
+          />
+          {chosenCollection?.grantCollectorsOnly && (
+            <div className="absolute top-2 left-2 font-earl text-xs">
+              <div
+                className={`rounded-md relative border border-black flex w-full text-center text-xxs justify-center items-center h-fit py-1.5 font-earl text-white uppercase px-3 bg-darker`}
+              >
+                Grant Collectors
+                <br />
+                Only
+              </div>
+            </div>
+          )}
+          <div className="absolute w-fit h-fit bottom-2 right-2">
+            <div className="relative w-7 h-7 items-center justify-center flex border border-white bg-darker rounded-full p-1.5">
+              <div className="relative w-full h-full">
+                <Image
+                  src={`${INFURA_GATEWAY}/${
+                    lodash.find(
+                      [
+                        [
+                          "QmaZtrnJTEFFjDHn32ABFhzafakP8o9D3yMFfX2GZuvWLe",
+                          "poster",
+                        ],
+                        [
+                          "QmdBGb4C82EMpi7NxSpuCgTmaVYKsWBdao41GJoQoawX6G",
+                          "sticker",
+                        ],
+                        [
+                          "QmYdNGhxLN5hHhi8r3QLKd232fEzW97dia58RZog8yqFSw",
+                          "shirt",
+                        ],
+                        [
+                          "QmdiRJUu3xxEhGZbbRusMUJ8ffStRZeackYRAt8avpd5dn",
+                          "jacket",
+                        ],
+                        [
+                          "QmXVFuiHYe5k1J5qvgkMqNbgTKe5ZaP7PoByDKZ98cTFcQ",
+                          "longsleeve",
+                        ],
+                        [
+                          "QmcTwmM6LihAEFb8JjPBK2nrVaP3fjf8jwDMsXbwMyNTtn",
+                          "hoodie",
+                        ],
+                      ],
+                      ["1", chosenCollection?.printType]
+                    )?.[0]
+                  }`}
+                  layout="fill"
+                  draggable={false}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="relative bg-purp border-2 border-rosa w-full h-16 py-1 px-2 flex flex-row gap-3">
+          <div className="relative w-fit h-full flex items-center justify-center">
+            <div className="relative w-6 h-6 rounded-full bg-darker border border-white">
+              <Image
+                src={profile}
+                layout="fill"
+                objectFit="cover"
+                className="rounded-full"
+              />
+            </div>
+          </div>
+          <div className="relative w-full h-full flex flex-col gap-1">
+            <div className="font-mega text-white">
+              {chosenCollection?.uri.name}
+            </div>
+            <div className="font-mega text-white text-xxs">
+              {chosenCollection?.grantName}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

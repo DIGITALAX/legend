@@ -24,6 +24,7 @@ import allDropsReducer from "./reducers/allDropsSlice";
 import dropModalReducer from "./reducers/dropModalSlice";
 import filtersReducer from "./reducers/filtersSlice";
 import chosenCollectionReducer from "./reducers/chosenCollectionSlice";
+import imageViewerReducer from "./reducers/imageViewerSlice";
 
 const reducer = combineReducers({
   noHandleReducer,
@@ -49,7 +50,8 @@ const reducer = combineReducers({
   allDropsReducer,
   dropModalReducer,
   filtersReducer,
-  chosenCollectionReducer
+  chosenCollectionReducer,
+  imageViewerReducer,
 });
 
 export const store = configureStore({

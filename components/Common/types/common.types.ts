@@ -70,3 +70,8 @@ export type CreateDropProps = {
 export type TopBarFourProps = {
   index: number;
 };
+
+export type ImageViewerProps = {
+  dispatch: Dispatch<AnyAction>;
+  mainImage: string;
+};
