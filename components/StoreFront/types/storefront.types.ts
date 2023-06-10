@@ -1,4 +1,6 @@
 import { NextRouter } from "next/router";
+import { FormEvent } from "react";
+import { AnyAction, Dispatch } from "redux";
 
 export interface CollectionGraph {
   acceptedTokens: string[];
@@ -28,9 +30,30 @@ export type AllStoreProps = {
   collectionsLoading: boolean;
   allCollections: CollectionGraph[];
   router: NextRouter;
+  filterValues: {
+    print: string[];
+    grant: string | undefined;
+    timestamp: boolean | undefined;
+    tokens: string[];
+    discount: boolean | undefined;
+    collectors: boolean | undefined;
+  };
 };
 
 export type ItemProps = {
   collection: CollectionGraph;
   router: NextRouter;
+};
+
+export type FiltersProps = {
+  dispatch: Dispatch<AnyAction>;
+  filterValues: {
+    print: string[];
+    grant: string | undefined;
+    timestamp: boolean | undefined;
+    tokens: string[];
+    discount: boolean | undefined;
+    collectors: boolean | undefined;
+  };
+  handleFindGrant: (e: FormEvent) => void
 };

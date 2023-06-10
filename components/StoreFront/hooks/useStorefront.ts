@@ -1,6 +1,6 @@
 import { getCollections } from "@/graphql/subgraph/query/getAllCollections";
 import fetchIPFSJSON from "@/lib/lens/helpers/fetchIPFSJSON";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { CollectionGraph } from "../types/storefront.types";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -8,12 +8,14 @@ import { setAllCollections } from "@/redux/reducers/allCollectionsSlice";
 import { getAllDrops } from "@/graphql/subgraph/query/getAllDrops";
 import { setAllDrops } from "@/redux/reducers/allDropsSlice";
 import getDefaultProfile from "@/graphql/lens/query/getDefaultProfile";
+import { setFilters } from "@/redux/reducers/filtersSlice";
 
 const useStorefront = () => {
   const dispatch = useDispatch();
   const collectionsDispatched = useSelector(
     (state: RootState) => state.app.allCollectionsReducer.value
   );
+  const filters = useSelector((state: RootState) => state.app.filtersReducer);
   const [collectionsLoading, setCollectionsLoading] = useState<boolean>(false);
 
   const getAllCollections = async () => {
@@ -90,6 +92,20 @@ const useStorefront = () => {
     setCollectionsLoading(false);
   };
 
+  const handleFindGrant = (e: FormEvent) => {
+    dispatch(
+      setFilters({
+        actionPrint: filters.print,
+        actionGrant: (e.target as HTMLFormElement).value,
+        actionTimestamp: filters.timestamp,
+        actionPrice: filters.price,
+        actionTokens: filters.tokens,
+        actionDiscount: filters.discount,
+        actionCollectors: filters.collectors,
+      })
+    );
+  };
+
   useEffect(() => {
     if (collectionsDispatched.length < 1) {
       getAllCollections();
@@ -98,6 +114,7 @@ const useStorefront = () => {
 
   return {
     collectionsLoading,
+    handleFindGrant,
   };
 };
 

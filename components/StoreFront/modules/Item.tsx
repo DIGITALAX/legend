@@ -8,23 +8,9 @@ const Item: FunctionComponent<ItemProps> = ({
   collection,
   router,
 }): JSX.Element => {
-  console.log({
-    collection,
-    a: lodash.find(
-      [
-        ["QmaZtrnJTEFFjDHn32ABFhzafakP8o9D3yMFfX2GZuvWLe", "poster"],
-        ["QmdBGb4C82EMpi7NxSpuCgTmaVYKsWBdao41GJoQoawX6G", "sticker"],
-        ["QmYdNGhxLN5hHhi8r3QLKd232fEzW97dia58RZog8yqFSw", "shirt"],
-        ["QmdiRJUu3xxEhGZbbRusMUJ8ffStRZeackYRAt8avpd5dn", "jacket"],
-        ["QmXVFuiHYe5k1J5qvgkMqNbgTKe5ZaP7PoByDKZ98cTFcQ", "longsleeve"],
-        ["QmcTwmM6LihAEFb8JjPBK2nrVaP3fjf8jwDMsXbwMyNTtn", "hoodie"],
-      ],
-      ["1", collection.printType]
-    ),
-  });
   return (
     <div
-      className="relative w-90 h-80 rounded-md bg-gris top-10 flex flex-col p-3 gap-5 cursor-pointer"
+      className="relative w-90 h-80 rounded-md bg-gris flex flex-col p-3 gap-5 cursor-pointer"
       onClick={() => router.push(`/collection/${collection.collectionId}`)}
     >
       <div className="relative w-full h-full border-2 border-rosa">
