@@ -23,6 +23,7 @@ import grantCollectionReducer from "./reducers/grantCollectionSlice";
 import allDropsReducer from "./reducers/allDropsSlice";
 import dropModalReducer from "./reducers/dropModalSlice";
 import filtersReducer from "./reducers/filtersSlice";
+import chosenCollectionReducer from "./reducers/chosenCollectionSlice";
 
 const reducer = combineReducers({
   noHandleReducer,
@@ -48,6 +49,7 @@ const reducer = combineReducers({
   allDropsReducer,
   dropModalReducer,
   filtersReducer,
+  chosenCollectionReducer
 });
 
 export const store = configureStore({

@@ -3,15 +3,21 @@ import { ItemProps } from "../types/storefront.types";
 import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "@/lib/constants";
 import lodash from "lodash";
+import createProfilePicture from "@/lib/lens/helpers/createProfilePicture";
+import { setChosenCollection } from "@/redux/reducers/chosenCollectionSlice";
 
 const Item: FunctionComponent<ItemProps> = ({
   collection,
   router,
+  dispatch
 }): JSX.Element => {
+  const profile = createProfilePicture(collection.profile);
   return (
     <div
       className="relative w-90 h-80 rounded-md bg-gris flex flex-col p-3 gap-5 cursor-pointer"
-      onClick={() => router.push(`/collection/${collection.collectionId}`)}
+      onClick={() => {
+        dispatch(setChosenCollection(collection))
+        router.push(`/collection/${collection.collectionId}`)}}
     >
       <div className="relative w-full h-full border-2 border-rosa">
         <Image
@@ -31,15 +37,7 @@ const Item: FunctionComponent<ItemProps> = ({
             </div>
           </div>
         )}
-      </div>
-      <div className="relative bg-purp border-2 border-rosa w-full h-16 p-1 flex flex-row">
-        <div className="relative w-full h-full flex flex-col gap-1">
-          <div className="font-mega text-white">{collection.uri.name}</div>
-          <div className="font-mega text-white text-xxs">
-            {collection.grantName}
-          </div>
-        </div>
-        <div className="relative w-fit justify-end h-full flex items-center">
+        <div className="absolute w-fit h-fit bottom-2 right-2">
           <div className="relative w-7 h-7 items-center justify-center flex border border-white bg-darker rounded-full p-1.5">
             <div className="relative w-full h-full">
               <Image
@@ -78,6 +76,24 @@ const Item: FunctionComponent<ItemProps> = ({
                 draggable={false}
               />
             </div>
+          </div>
+        </div>
+      </div>
+      <div className="relative bg-purp border-2 border-rosa w-full h-16 py-1 px-2 flex flex-row gap-3">
+        <div className="relative w-fit h-full flex items-center justify-center">
+          <div className="relative w-6 h-6 rounded-full bg-darker border border-white">
+            <Image
+              src={profile}
+              layout="fill"
+              objectFit="cover"
+              className="rounded-full"
+            />
+          </div>
+        </div>
+        <div className="relative w-full h-full flex flex-col gap-1">
+          <div className="font-mega text-white">{collection.uri.name}</div>
+          <div className="font-mega text-white text-xxs">
+            {collection.grantName}
           </div>
         </div>
       </div>

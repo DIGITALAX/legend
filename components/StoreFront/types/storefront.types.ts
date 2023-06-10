@@ -1,3 +1,4 @@
+import { Profile } from "@/components/home.types";
 import { NextRouter } from "next/router";
 import { FormEvent } from "react";
 import { AnyAction, Dispatch } from "redux";
@@ -24,6 +25,7 @@ export interface CollectionGraph {
   owner: string;
   tokenIds: number[];
   pubId: number;
+  profile: Profile | undefined;
 }
 
 export type AllStoreProps = {
@@ -38,11 +40,13 @@ export type AllStoreProps = {
     discount: boolean | undefined;
     collectors: boolean | undefined;
   };
+  dispatch: Dispatch<AnyAction>;
 };
 
 export type ItemProps = {
   collection: CollectionGraph;
   router: NextRouter;
+  dispatch: Dispatch<AnyAction>;
 };
 
 export type FiltersProps = {
@@ -55,5 +59,5 @@ export type FiltersProps = {
     discount: boolean | undefined;
     collectors: boolean | undefined;
   };
-  handleFindGrant: (e: FormEvent) => void
+  handleFindGrant: (e: FormEvent) => void;
 };

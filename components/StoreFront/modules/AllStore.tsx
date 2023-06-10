@@ -7,6 +7,7 @@ const AllStore: FunctionComponent<AllStoreProps> = ({
   allCollections,
   router,
   filterValues,
+  dispatch
 }): JSX.Element => {
   const filteredCollections = useMemo(() => {
     let filtered = [...allCollections];
@@ -58,7 +59,7 @@ const AllStore: FunctionComponent<AllStoreProps> = ({
     <div className="relative w-full h-fit flex flex-row flex-wrap gap-5 justify-center">
       {filteredCollections?.map(
         (collection: CollectionGraph, index: number) => {
-          return <Item collection={collection} key={index} router={router} />;
+          return <Item collection={collection} key={index} router={router} dispatch={dispatch} />;
         }
       )}
     </div>

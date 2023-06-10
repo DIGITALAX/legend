@@ -28,6 +28,7 @@ const StoreFront: NextPage = (): JSX.Element => {
         collectionsLoading={collectionsLoading}
         allCollections={allCollections}
         filterValues={filterValues}
+        dispatch={dispatch}
       />
     </div>
   );

@@ -98,7 +98,6 @@ const useStorefront = () => {
         actionPrint: filters.print,
         actionGrant: (e.target as HTMLFormElement).value,
         actionTimestamp: filters.timestamp,
-        actionPrice: filters.price,
         actionTokens: filters.tokens,
         actionDiscount: filters.discount,
         actionCollectors: filters.collectors,
