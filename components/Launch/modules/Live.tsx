@@ -237,7 +237,7 @@ const Live: FunctionComponent<LiveProps> = ({
                   <div className="relative w-full h-full flex items-center justify-center">
                     <Image
                       layout="fill"
-                      src={`${INFURA_GATEWAY}/${storefrontValues[nextStore].uri.image}`}
+                      src={`${INFURA_GATEWAY}/${storefrontValues[nextStore]?.uri?.image}`}
                       draggable={false}
                       objectFit="cover"
                     />

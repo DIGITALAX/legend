@@ -57,7 +57,6 @@ const CreateDrop: FunctionComponent<CreateDropProps> = ({
                     )}
                   </div>
                 </div>
-
                 <div
                   className={`relative bg-darker border border-black flex w-40 text-center text-base justify-center items-center h-10 p-1 font-earl text-white uppercase cursor-pointer active:scale-95`}
                   onClick={() => createDrop()}

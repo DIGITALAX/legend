@@ -353,7 +353,7 @@ const usePost = () => {
         const signature = await signTypedDataAsync({
           domain: omit(typedData?.domain, ["__typename"]),
           types: omit(typedData?.types, ["__typename"]),
-          primaryType: "Mail",
+          primaryType: "PostWithSig",
           message: omit(typedData?.value, ["__typename"]),
         });
 

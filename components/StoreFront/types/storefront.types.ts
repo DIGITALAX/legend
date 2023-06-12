@@ -27,6 +27,38 @@ export interface CollectionGraph {
   pubId: number;
   profile: Profile | undefined;
   soldTokens: number[];
+  dynamicNFTAddress: string;
+}
+
+export interface PurchaseCollection {
+  acceptedTokens: string[];
+  basePrices: number[];
+  printType: string;
+  discount: number;
+  uri: {
+    description: string;
+    external_url: string;
+    image: string;
+    name: string;
+    type: string;
+  };
+  amount: number;
+  blockTimestamp: number;
+  collectionId: number;
+  dropId: number;
+  fulfillerId: number;
+  grantCollectorsOnly: boolean;
+  grantName: string;
+  owner: string;
+  tokenIds: number[];
+  pubId: number;
+  profile: Profile | undefined;
+  soldTokens: number[];
+  size: string;
+  purchaseToken: string;
+  purchaseAmount: number;
+  purchasePrice:  string;
+  baseColor: string;
 }
 
 export type AllStoreProps = {

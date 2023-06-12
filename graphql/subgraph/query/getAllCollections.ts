@@ -19,6 +19,7 @@ const ALL_COLLECTIONS = `
         uri
         tokenIds
         pubId
+        dynamicNFTAddress
       }
   }
 `;
@@ -40,6 +41,7 @@ const GRANT_COLLECTIONS = `query($grantName: String!) {
         uri
         tokenIds
         pubId
+        dynamicNFTAddress
       }
   }
 `;
@@ -61,6 +63,7 @@ const SPECIFIC_COLLECTION = `query($collectionId: Int!) {
         uri
         tokenIds
         pubId
+        dynamicNFTAddress
       }
   }
 `;

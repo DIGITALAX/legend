@@ -1,4 +1,8 @@
-import { CollectionGraph } from "@/components/StoreFront/types/storefront.types";
+import {
+  CollectionGraph,
+  PurchaseCollection,
+} from "@/components/StoreFront/types/storefront.types";
+import { NextRouter } from "next/router";
 import { AnyAction, Dispatch } from "redux";
 
 export type WalletProps = {
@@ -17,7 +21,8 @@ export type UseSignInResults = {
 
 export type CartItemsProps = {
   dispatch: Dispatch<AnyAction>;
-  cartItems: CollectionGraph[];
+  cartItems: PurchaseCollection[];
   cartOpen: boolean;
   setCartOpen: (e: boolean) => void;
+  router: NextRouter;
 };

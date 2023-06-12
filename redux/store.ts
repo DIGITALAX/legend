@@ -27,6 +27,8 @@ import chosenCollectionReducer from "./reducers/chosenCollectionSlice";
 import imageViewerReducer from "./reducers/imageViewerSlice";
 import errorReducer from "./reducers/errorSlice";
 import cartItemsReducer from "./reducers/cartItemsSlice";
+import fulfillmentReducer from "./reducers/fulfillmentSlice";
+import litClientReducer from "./reducers/litClientSlice";
 
 const reducer = combineReducers({
   noHandleReducer,
@@ -56,6 +58,8 @@ const reducer = combineReducers({
   imageViewerReducer,
   errorReducer,
   cartItemsReducer,
+  fulfillmentReducer,
+  litClientReducer
 });
 
 export const store = configureStore({

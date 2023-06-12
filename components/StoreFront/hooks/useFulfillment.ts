@@ -9,20 +9,38 @@ import {
   useContractRead,
   useAccount,
 } from "wagmi";
-import { ethers } from "ethers";
+import { BigNumber } from "ethers";
 import LegendMarketplaceABI from "./../../../abi/LegendMarketplace.json";
 import { setIndexModal } from "@/redux/reducers/indexSlice";
 import { setError } from "@/redux/reducers/errorSlice";
+import { setCartItems } from "@/redux/reducers/cartItemsSlice";
+import DynamicNFTABI from "./../../../abi/DynamicNFT.json";
+import { useRouter } from "next/router";
+import * as LitJsSdk from "@lit-protocol/lit-node-client";
+import { setLitClient } from "@/redux/reducers/litClientSlice";
+
 const useFulfillment = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const chosenCollection = useSelector(
     (state: RootState) => state.app.chosenCollectionReducer.value
   );
+  const lit = useSelector((state: RootState) => state.app.litClientReducer);
+  const cartItems = useSelector(
+    (state: RootState) => state.app.cartItemsReducer.value
+  );
   const { address } = useAccount();
-  const [approved, setApproved] = useState<boolean>(false);
-  const [tokenId, setTokenId] = useState<string>();
-  const [selectSize, setSelectSize] = useState<number>(0);
-  const [baseColor, setBaseColor] = useState<number>(0);
+  const [tokenIds, setTokenIds] = useState<
+    { tokenId: string; chosenAddress: string }[]
+  >([]);
+  const [baseColor, setBaseColor] = useState<string>("blue");
+  const [canCollect, setCanCollect] = useState<boolean>(true);
+  const [fulfillmentDetails, setFulfillmentDetails] = useState<
+    string | undefined
+  >();
+  const [purchaseAmount, setPurchaseAmount] = useState<number>(0);
+  const [purchasePrice, setPurchasePrice] = useState<string>("0");
+  const [size, setSize] = useState<string>("m");
   const [currency, setCurrency] = useState<string>(
     ACCEPTED_TOKENS.filter(
       (token) =>
@@ -31,24 +49,31 @@ const useFulfillment = () => {
     )?.[0]?.[0] ?? "MONA"
   );
   const [purchaseLoading, setPurchaseLoading] = useState<boolean>(false);
-  const [posterSize, setPosterSize] = useState<number>(0);
-  const [stickerPack, setStickerPack] = useState<number>(0);
-  const [posterAmount, setPosterAmount] = useState<number>(0);
-  const [totalAmount, setTotalAmount] = useState<number>(
-    !Number.isNaN(chosenCollection?.basePrices?.[0]) &&
-      isFinite(Number(chosenCollection?.basePrices?.[0]))
-      ? Number(chosenCollection?.basePrices?.[0]) /
-          (chosenCollection?.acceptedTokens?.[0] ===
-          "0xc2132d05d31c914a87c6611c10748aeb04b58e8f"
-            ? 10 ** 6
-            : 10 ** 18)
-      : 0
+  const [totalAmounts, setTotalAmounts] = useState<
+    { purchaseToken: string; totalPrice: number }[]
+  >([]);
+  const [index, setIndex] = useState<number>();
+  const [approved, setApproved] = useState<boolean[]>(
+    Array.from({ length: totalAmounts.length })
   );
+  const [addressArg, setAddressArg] = useState<
+    | {
+        newAddress: string;
+        totalPrice: bigint;
+      }
+    | undefined
+  >();
+
+  const { data: canCollectData } = useContractRead({
+    address: chosenCollection?.dynamicNFTAddress as `0x${string}`,
+    abi: DynamicNFTABI,
+    functionName: "getCollectorClaimedNFT",
+    args: [address as `0x${string}`],
+    enabled: Boolean(router.asPath.includes("collection")),
+  });
 
   const { data } = useContractRead({
-    address: ACCEPTED_TOKENS.filter(
-      (token) => token[0].toLowerCase() === currency?.toLowerCase()
-    )?.[0]?.[1] as `0x${string}`,
+    address: addressArg?.newAddress as `0x${string}`,
     abi: [
       {
         inputs: [
@@ -77,13 +102,11 @@ const useFulfillment = () => {
     ],
     functionName: "allowance",
     args: [address as `0x${string}`, LEGEND_MARKET_MUMBAI],
-    // enabled: Boolean(address) || Boolean(approved),
+    enabled: Boolean(addressArg?.newAddress),
   });
 
   const { config } = usePrepareContractWrite({
-    address: ACCEPTED_TOKENS.filter(
-      (token) => token[0].toLowerCase() === currency?.toLowerCase()
-    )?.[0]?.[1] as `0x${string}`,
+    address: addressArg?.newAddress as `0x${string}`,
     abi: [
       currency === "MONA"
         ? {
@@ -137,92 +160,83 @@ const useFulfillment = () => {
     functionName: "approve",
     args: [
       LEGEND_MARKET_MUMBAI,
-      ethers.utils.parseEther(totalAmount.toString()).toBigInt(),
+      addressArg?.totalPrice
+        ? addressArg?.totalPrice
+        : BigNumber.from("0").toBigInt(),
     ],
-    enabled: Boolean(!Number.isNaN(totalAmount)),
+    enabled: Boolean(addressArg?.newAddress),
   });
 
   const { config: buyNFTConfig } = usePrepareContractWrite({
     address: LEGEND_MARKET_MUMBAI,
     abi: LegendMarketplaceABI,
     args: [
-      [Number(tokenId)],
-      ACCEPTED_TOKENS.filter(
-        (token) => token[0].toLowerCase() === currency?.toLowerCase()
-      )?.[0]?.[1] as `0x${string}`,
+      tokenIds.map((item) => item.tokenId),
+      tokenIds.map((item) => item.chosenAddress),
+      fulfillmentDetails,
     ],
     functionName: "buyTokens",
-    enabled: Boolean(tokenId),
+    enabled: Boolean(fulfillmentDetails),
   });
 
-  const { writeAsync } = useContractWrite(config);
-  const { writeAsync: buyNFTAsync } = useContractWrite(buyNFTConfig);
+  const { writeAsync, isSuccess } = useContractWrite(config);
+  const { writeAsync: buyNFTAsync, isSuccess: isSuccessNFT } =
+    useContractWrite(buyNFTConfig);
 
-  const getTotalAmount = () => {
-    let number;
-    if (
-      chosenCollection?.acceptedTokens.find(
-        (token) =>
-          token ===
-          ACCEPTED_TOKENS.find(
-            (token) => token[0].toLowerCase() === currency?.toLowerCase()
-          )?.[1]!
-      )
-    ) {
-      number = Number(
-        chosenCollection?.basePrices[
-          chosenCollection?.acceptedTokens.indexOf(
-            ACCEPTED_TOKENS.find(
-              (token) => token[0].toLowerCase() === currency?.toLowerCase()
-            )?.[1]!
-          )
-        ]
-      );
-    } else {
-      setCurrency(
-        ACCEPTED_TOKENS.find(
-          (token) =>
-            token[1]?.toLowerCase() ===
-            chosenCollection?.acceptedTokens[0]?.toLowerCase()
-        )?.[0]!
-      );
-      number = Number(
-        chosenCollection?.basePrices[
-          chosenCollection?.acceptedTokens.indexOf(
-            ACCEPTED_TOKENS.find(
-              (token) =>
-                token[1].toLowerCase() ===
-                chosenCollection?.acceptedTokens[0].toLowerCase()
-            )?.[1]?.toLowerCase()!
-          )
-        ]
-      );
-    }
-    setTotalAmount(
-      currency === "USDT"
-        ? Number((number / 10 ** 6).toFixed(2))
-        : Number((number / 10 ** 18).toFixed(2))
-    );
-  };
+  const getTokenIds = (): void => {
+    let newTokenIds: { tokenId: string; chosenAddress: string }[] = [];
+    let highestSoldTokensPerCollection: { [key: string]: number } = {};
 
-  const getTokenId = (): void => {
-    if (
-      !chosenCollection?.soldTokens ||
-      chosenCollection?.soldTokens.length == 0
-    ) {
-      setTokenId(String(chosenCollection?.tokenIds[0]));
-    } else {
-      for (let i = 0; i < chosenCollection?.tokenIds.length; i++) {
-        if (
-          !chosenCollection?.soldTokens.includes(chosenCollection?.tokenIds[i])
-        ) {
-          setTokenId(String(chosenCollection?.tokenIds[i]));
-        }
+    cartItems.forEach((item) => {
+      let highestSoldToken =
+        highestSoldTokensPerCollection[item.collectionId] || 0;
+      if (item?.soldTokens && item?.soldTokens.length > 0) {
+        highestSoldToken = Math.max(highestSoldToken, ...item.soldTokens);
       }
-    }
+
+      for (let j = 0; j < item.purchaseAmount; j++) {
+        newTokenIds.push({
+          tokenId: String(highestSoldToken + j + 1),
+          chosenAddress: item.purchaseToken,
+        });
+      }
+
+      highestSoldTokensPerCollection[item.collectionId] =
+        highestSoldToken + item.purchaseAmount;
+    });
+
+    setTokenIds(newTokenIds);
   };
 
-  const approveSpend = async () => {
+  console.log({ tokenIds });
+
+  const approveSpend = async (
+    newAddress: string,
+    totalPrice: number,
+    index: number
+  ) => {
+    setPurchaseLoading(true);
+    try {
+      setIndex(index);
+      setAddressArg({
+        newAddress: ACCEPTED_TOKENS.find(
+          ([tokenName]) => tokenName === newAddress
+        )?.[1]!,
+        totalPrice: BigNumber.from(
+          (totalPrice.toString() + newAddress === "USDT"
+            ? "000000"
+            : "000000000000000000"
+          ).slice(0, 78)
+        ).toBigInt(),
+      });
+    } catch (err: any) {
+      setPurchaseLoading(false);
+      console.error(err.message);
+    }
+    setPurchaseLoading(false);
+  };
+
+  const writeSpend = async () => {
     setPurchaseLoading(true);
     try {
       const tx = await writeAsync?.();
@@ -230,7 +244,10 @@ const useFulfillment = () => {
         hash: tx?.hash!,
       });
       if (res.status === "success") {
-        setApproved(true);
+        setApproved(
+          approved.map((value, indexTwo) => (indexTwo === index ? true : value))
+        );
+        setAddressArg(undefined);
       }
     } catch (err: any) {
       setPurchaseLoading(false);
@@ -239,10 +256,71 @@ const useFulfillment = () => {
     setPurchaseLoading(false);
   };
 
+  const connectLit = async () => {
+    try {
+      const client = new LitJsSdk.LitNodeClient({ debug: false });
+      await client.connect();
+      dispatch(
+        setLitClient({
+          actionClient: client,
+          actionDecrypt: lit.decrypt,
+        })
+      );
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
   const buyNFT = async (): Promise<void> => {
-    if (!tokenId) return;
+    if (!tokenIds?.length || tokenIds?.length < 1) return;
     setPurchaseLoading(true);
-    setCurrency(currency);
+    try {
+      // encrypt fulfillment
+      await connectLit();
+      const authSig = await LitJsSdk.checkAndSignAuthMessage({
+        chain: "mumbai",
+      });
+      const { encryptedString, symmetricKey } = await LitJsSdk.encryptString(
+        fulfillmentDetails as string
+      );
+      const encryptedSymmetricKey = await lit.client.saveEncryptionKey({
+        accessControlConditions: [
+          {
+            contractAddress: "",
+            standardContractType: "",
+            chain: "mumbai",
+            method: "eth_getBalance",
+            parameters: [":userAddress"],
+            returnValueTest: {
+              comparator: ">=",
+              value: "0",
+            },
+          },
+        ],
+        symmetricKey,
+        authSig,
+        chain: "mumbai",
+      });
+      const storageString = await encryptedString.arrayBuffer();
+      setFulfillmentDetails(
+        JSON.stringify({
+          encryptedString: JSON.stringify(
+            Array.from(new Uint8Array(storageString))
+          ),
+          encryptedSymmetricKey: LitJsSdk.uint8arrayToString(
+            encryptedSymmetricKey,
+            "base16"
+          ),
+        })
+      );
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setPurchaseLoading(false);
+  };
+
+  const writeBuy = async () => {
+    setPurchaseLoading(true);
     try {
       const tx = await buyNFTAsync?.();
       await waitForTransaction({
@@ -271,10 +349,16 @@ const useFulfillment = () => {
           })
         );
       }, 8000);
+      router.push("/success");
     } catch (err: any) {
       setPurchaseLoading(false);
       if (!err.message.includes("User rejected request")) {
-        dispatch(setError(true));
+        dispatch(
+          setError({
+            actionValue: true,
+            actionMessage: "Looks like something went wrong. Try again.",
+          })
+        );
       }
       console.error(err.message);
     }
@@ -282,55 +366,124 @@ const useFulfillment = () => {
   };
 
   useEffect(() => {
-    if (chosenCollection?.acceptedTokens) {
-      getTotalAmount();
-    }
-  }, [currency, chosenCollection]);
-
-  useEffect(() => {
     if (address) {
-      if (
-        Number(data?.toString()) / (currency === "USDT" ? 10 ** 6 : 10 ** 18) >=
-        totalAmount
-      ) {
-        setApproved(true);
-      } else {
-        setApproved(false);
+      for (let i = 0; i <= totalAmounts?.length; i++) {
+        if (
+          Number(data?.toString()) /
+            (currency === "USDT" ? 10 ** 6 : 10 ** 18) >=
+          totalAmounts[i]?.totalPrice
+        ) {
+          setApproved(
+            approved.map((value, indexTwo) =>
+              indexTwo === index ? true : value
+            )
+          );
+        } else {
+          setApproved(
+            approved.map((value, indexTwo) =>
+              indexTwo === index ? false : value
+            )
+          );
+        }
       }
     }
-  }, [address, totalAmount, chosenCollection, data]);
+  }, [address, totalAmounts, chosenCollection, data]);
 
   useEffect(() => {
     if (chosenCollection) {
-      getTokenId();
+      getTokenIds();
     }
-    // dispatch(
-    //   setSuccess({
-    //     actionOpen: false,
-    //     actionMedia: chosenCollection?.uri.image,
-    //     actionName: chosenCollection?.grantName,
-    //   })
-    // );
-  }, [chosenCollection]);
+  }, [cartItems]);
+
+  useEffect(() => {
+    if (canCollectData !== undefined) {
+      setCanCollect(canCollectData as boolean);
+    }
+  }, [canCollectData]);
+
+  useEffect(() => {
+    if (isSuccessNFT) {
+      writeBuy();
+    }
+  }, [isSuccessNFT]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      writeSpend();
+    }
+  }, [isSuccess]);
+
+  useEffect(() => {
+    if (cartItems.length > 0) {
+      const newAmounts = Array.from(
+        new Set(cartItems?.map((obj) => obj.purchaseToken))
+      )?.map((purchaseToken) => {
+        const totalPrice = cartItems
+          .filter((obj) => obj.purchaseToken === purchaseToken)
+          .reduce(
+            (total, obj) =>
+              total + obj.purchaseAmount * Number(obj.purchasePrice),
+            0
+          );
+
+        return {
+          purchaseToken,
+          totalPrice,
+        };
+      });
+      setTotalAmounts(newAmounts);
+    }
+  }, [cartItems]);
+
+  const addItemToCart = () => {
+    let existingAmount = 0;
+    cartItems.forEach((item) => {
+      if (item.collectionId === chosenCollection?.collectionId) {
+        existingAmount += item.purchaseAmount;
+      }
+    });
+    if (purchaseAmount + existingAmount > chosenCollection?.tokenIds.length!) {
+      dispatch(
+        setError({
+          actionValue: true,
+          actionMessage: "Items exceed token limit.",
+        })
+      );
+      return;
+    }
+
+    dispatch(
+      setCartItems([
+        ...cartItems,
+        {
+          ...chosenCollection,
+          purchaseToken: currency,
+          purchasePrice,
+          purchaseAmount,
+          size,
+          baseColor,
+        } as any,
+      ])
+    );
+  };
 
   return {
     baseColor,
-    selectSize,
     setBaseColor,
-    setSelectSize,
     currency,
     setCurrency,
-    stickerPack,
-    setStickerPack,
-    posterSize,
-    setPosterSize,
-    posterAmount,
-    setPosterAmount,
-    totalAmount,
+    totalAmounts,
     approved,
     buyNFT,
     approveSpend,
     purchaseLoading,
+    size,
+    setSize,
+    canCollect,
+    addItemToCart,
+    setPurchaseAmount,
+    purchaseAmount,
+    setPurchasePrice,
   };
 };
 

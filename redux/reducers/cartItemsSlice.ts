@@ -1,8 +1,8 @@
-import { CollectionGraph } from "@/components/StoreFront/types/storefront.types";
+import { PurchaseCollection } from "@/components/StoreFront/types/storefront.types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface CartItemsState {
-  value: CollectionGraph[];
+  value: PurchaseCollection[];
 }
 
 const initialCartItemsState: CartItemsState = {
@@ -15,7 +15,7 @@ export const cartItemsSlice = createSlice({
   reducers: {
     setCartItems: (
       state: CartItemsState,
-      action: PayloadAction<CollectionGraph[]>
+      action: PayloadAction<PurchaseCollection[]>
     ) => {
       state.value = action.payload;
     },

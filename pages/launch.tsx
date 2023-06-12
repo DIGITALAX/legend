@@ -17,6 +17,9 @@ const Launch: NextPage = (): JSX.Element => {
   const profile = useSelector(
     (state: RootState) => state.app.profileReducer.profile
   );
+  const storefrontValues = useSelector(
+    (state: RootState) => state.app.storefrontValuesReducer.value
+  );
 
   return (
     <div className="relative w-full h-screen flex flex-col z-1">
@@ -34,7 +37,7 @@ const Launch: NextPage = (): JSX.Element => {
           <NextButton
             text={"NEXT"}
             setPage={
-              page === 4
+              page === 4 && storefrontValues.length > 0
                 ? () =>
                     dispatch(
                       setDropModal({

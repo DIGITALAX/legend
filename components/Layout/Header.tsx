@@ -8,9 +8,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import Cart from "./modules/Cart";
 import useCart from "./hooks/useCart";
+import { useRouter } from "next/router";
 
 const Header: FunctionComponent = ({}): JSX.Element => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const profile = useSelector(
     (state: RootState) => state.app.profileReducer.profile
   );
@@ -143,6 +145,7 @@ const Header: FunctionComponent = ({}): JSX.Element => {
           cartItems={cartItems}
           cartOpen={cartOpen}
           setCartOpen={setCartOpen}
+          router={router}
         />
       </div>
     </div>
