@@ -421,12 +421,12 @@ const useInteractions = () => {
     }
   }, [index.message]);
 
-//   useEffect(() => {
-//     getPostComments();
-//     getPostCollects();
-//     getPostMirrors();
-//     getPostReactions();
-//   }, []);
+  useEffect(() => {
+    getPostComments();
+    getPostCollects();
+    getPostMirrors();
+    getPostReactions();
+  }, []);
 
   return {
     commentors,

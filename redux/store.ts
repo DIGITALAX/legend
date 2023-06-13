@@ -39,6 +39,7 @@ import canCommentReducer from "./reducers/canCommentSlice";
 import approvalArgsReducer from "./reducers/approvalArgsSlice";
 import commentCollectReducer from "./reducers/commentCollectSlice";
 import collectInfoReducer from "./reducers/collectInfoSlice";
+import followerOnlyReducer from "./reducers/followerOnlySlice";
 
 const reducer = combineReducers({
   noHandleReducer,
@@ -79,7 +80,8 @@ const reducer = combineReducers({
   canCommentReducer,
   approvalArgsReducer,
   commentCollectReducer,
-  collectInfoReducer
+  collectInfoReducer,
+  followerOnlyReducer
 });
 
 export const store = configureStore({

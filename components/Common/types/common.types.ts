@@ -75,3 +75,61 @@ export type ImageViewerProps = {
   dispatch: Dispatch<AnyAction>;
   mainImage: string;
 };
+
+export type CollectInfoValuesProps = {
+  buttonText: string;
+  symbol?: string;
+  value?: string;
+  limit?: string;
+  time?: string;
+  totalCollected?: number;
+  canClick?: boolean;
+  isApproved?: boolean;
+  approveCurrency?: () => Promise<void>;
+  handleCollect?: (id?: string) => Promise<void>;
+  collectLoading: boolean;
+  approvalLoading?: boolean;
+  handleLensSignIn: () => void;
+  commentId: string;
+  lensProfile: string | undefined;
+  address: `0x${string}` | undefined;
+  openConnectModal: (() => void) | undefined
+};
+
+export type CollectInfoProps = {
+  collectInfoLoading: boolean;
+  approvalLoading: boolean;
+  address: `0x${string}` | undefined;
+  collectModuleValues: PostCollectValuesState;
+  lensProfile: string;
+  collectComment: (id?: any) => Promise<void>;
+  collectLoading: boolean;
+  approveCurrency: () => Promise<void>;
+  handleLensSignIn: () => void;
+  commentId: string;
+  openConnectModal: (() => void) | undefined
+  dispatch: Dispatch<AnyAction>;
+};
+
+export interface PostCollectValuesState {
+  type?: string;
+  followerOnly?: boolean;
+  limit?: string;
+  recipient?: string;
+  referralFee?: number;
+  endTime?: string;
+  optionalCollectLimit?: string;
+  optionalEndTimestamp?: string;
+  amount?: {
+    asset?: {
+      address: string;
+      decimals: number;
+      name: string;
+      symbol: string;
+    };
+    value?: string;
+  };
+  canCollect?: boolean;
+  isApproved?: boolean;
+  totalCollects?: number;
+}

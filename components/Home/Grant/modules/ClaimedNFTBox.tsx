@@ -4,12 +4,16 @@ import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import Draggable from "react-draggable";
 import { ClaimedNFTBox } from "../types/grant.types";
+import InfiniteScroll from "react-infinite-scroll-component";
+import createProfilePicture from "@/lib/lens/helpers/createProfilePicture";
 
 const ClaimedNFTBox: FunctionComponent<ClaimedNFTBox> = ({
   collapseNumber,
   dispatch,
   index,
-  getMoreProfiles
+  getMoreProfiles,
+  NFTCollectors,
+  hasMoreProfiles,
 }): JSX.Element => {
   return (
     <Draggable
@@ -46,6 +50,53 @@ const ClaimedNFTBox: FunctionComponent<ClaimedNFTBox> = ({
               layout="fill"
               draggable={false}
             />
+          </div>
+          <div className="relative w-full h-full top-5 flex flex-col gap-2">
+            <div className="relative w-full h-fit flex flex-col">
+              <InfiniteScroll
+                hasMore={hasMoreProfiles}
+                dataLength={NFTCollectors?.length}
+                next={getMoreProfiles}
+                loader={""}
+                height={"10rem"}
+                className="relative w-full h-fit flex flex-col px-4 gap-2 overflow-y-scroll"
+              >
+                {NFTCollectors?.map((collector: any, index: number) => {
+                  const profileImage = createProfilePicture(collector);
+
+                  return (
+                    <div
+                      key={index}
+                      className="relative w-full h-fit p-2 drop-shadow-lg flex flex-row bg-gradient-to-r from-offBlack via-gray-600 to-black auto-cols-auto rounded-lg border border-black font-economica text-white cursor-pointer"
+                    >
+                      <div className="relative w-fit h-fit flex flex-row gap-6">
+                        <div
+                          className="relative w-6 h-6 rounded-full col-start-1"
+                          id="crt"
+                        >
+                          {profileImage && (
+                            <Image
+                              src={profileImage}
+                              objectFit="cover"
+                              layout="fill"
+                              alt="pfp"
+                              className="relative w-fit h-fit rounded-full self-center flex"
+                              draggable={false}
+                            />
+                          )}
+                        </div>
+                        <div
+                          id="handle"
+                          className="relative w-fit h-fit justify-center flex"
+                        >
+                          @{collector.defaultProfile?.handle?.split(".lens")[0]}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </InfiniteScroll>
+            </div>
           </div>
         </div>
       </div>

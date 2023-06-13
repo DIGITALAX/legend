@@ -76,7 +76,7 @@ const StoreFrontBox: FunctionComponent<StorefrontBoxProps> = ({
                       draggable={false}
                       objectFit="cover"
                     />
-                    {grantCollection[nextItem].grantCollectorsOnly && (
+                    {grantCollection[nextItem]?.grantCollectorsOnly && (
                       <div className="absolute top-2 left-2 font-earl text-xs">
                         <div
                           className={`rounded-md relative border border-black flex w-full text-center text-xxs justify-center items-center h-fit py-1.5 font-earl text-white uppercase px-3 bg-darker`}

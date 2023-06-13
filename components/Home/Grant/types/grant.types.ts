@@ -104,6 +104,9 @@ export type CommentBoxProps = {
   collectGrant: (id?: string) => void;
   likeGrant: (id?: string) => void;
   mirrorGrant: (id?: string) => void;
+  handleLensSignIn: () => void;
+  handleConnect: () => void;
+  collectNotif: string;
 };
 
 export type DynamicNFTProps = {
@@ -128,6 +131,8 @@ export type ClaimedNFTBox = {
   index: number;
   collapseNumber: boolean[];
   getMoreProfiles: () => Promise<void>;
+  NFTCollectors: Profile[];
+  hasMoreProfiles: boolean;
 };
 
 export interface CollectValueType {

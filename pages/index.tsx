@@ -23,6 +23,8 @@ import useInteractions from "@/components/Home/Grant/hooks/useInteractions";
 import useComment from "@/components/Home/Grant/hooks/useCommentGrant";
 import useStore from "@/components/Home/Grant/hooks/useStore";
 import useImageUpload from "@/components/Launch/hooks/useImageUpload";
+import useCollectOptions from "@/components/Home/Grant/hooks/useCollectOptions";
+import useSignIn from "@/components/Layout/hooks/useSignIn";
 
 type HomeProps = {
   firebaseApp: FirebaseApp;
@@ -50,6 +52,8 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
     collectCommentLoading,
     collectInfoLoading,
     collectLoading,
+    NFTCollectors,
+    hasMoreProfiles,
   } = useMainGrant();
   const {
     storeLoading,
@@ -67,6 +71,7 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
     addItemToCart,
     canCollect,
   } = useStore();
+  const { handleLensSignIn, handleConnect } = useSignIn();
   const {
     commentors,
     getMorePostComments,
@@ -107,10 +112,8 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
     preElement,
     handleImagePaste,
   } = useComment();
+  const { collectNotif } = useCollectOptions();
   const { setImageLoading } = useImageUpload();
-  const mainGrant = useSelector(
-    (state: RootState) => state.app.homeGrantReducer.value
-  );
   const grantCollection = useSelector(
     (state: RootState) => state.app.grantCollectionReducer.value
   );
@@ -256,6 +259,8 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
             dispatch={dispatch}
             index={2}
             getMoreProfiles={getMoreProfiles}
+            NFTCollectors={NFTCollectors}
+            hasMoreProfiles={hasMoreProfiles}
           />
         </div>
         <div className="relative w-full items-center h-full flex flex-col">
@@ -316,6 +321,9 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
             collectGrant={collectGrant}
             likeGrant={likeGrant}
             mirrorGrant={mirrorGrant}
+            collectNotif={collectNotif}
+            handleConnect={handleConnect}
+            handleLensSignIn={handleLensSignIn}
           />
           <StoreFrontBox
             collapseNumber={collapseNumber}

@@ -17,6 +17,9 @@ import descriptionRegex from "@/lib/lens/helpers/descriptionRegex";
 import { MediaSet } from "@/components/home.types";
 import { AiOutlineLoading } from "react-icons/ai";
 import { setSecondaryComment } from "@/redux/reducers/secondaryCommentSlice";
+import { setCollectInfo } from "@/redux/reducers/collectInfoSlice";
+import { setFollowerOnly } from "@/redux/reducers/followerOnlySlice";
+import { setError } from "@/redux/reducers/errorSlice";
 
 const CommentBox: FunctionComponent<CommentBoxProps> = ({
   collapseNumber,
@@ -52,7 +55,14 @@ const CommentBox: FunctionComponent<CommentBoxProps> = ({
   collectGrant,
   likeGrant,
   mirrorGrant,
+  handleLensSignIn,
+  handleConnect,
+  handleGif,
+  handleSetGif,
+  handleGifSubmit,
+  collectNotif,
 }): JSX.Element => {
+  console.log({ commentors });
   return (
     <Draggable
       enableUserSelectHack={false}
@@ -91,8 +101,8 @@ const CommentBox: FunctionComponent<CommentBoxProps> = ({
           </div>
         </div>
         <div>
-          <div className="relative w-full h-fit flex flex-col items-center justify-center gap-3">
-            <div className="relative w-full h-40 grid grid-flow-row auto-rows-auto gap-5">
+          <div className="relative w-full h-fit flex flex-col items-center justify-center gap-5">
+            <div className="relative w-full h-60 grid grid-flow-row auto-rows-auto gap-5 top-5 overflow-y-scroll">
               <InfiniteScroll
                 className={`relative row-start-1 w-full h-full overflow-y-scroll`}
                 hasMore={hasMoreComments}
@@ -287,7 +297,7 @@ const CommentBox: FunctionComponent<CommentBoxProps> = ({
                                   ? () => collectGrant(comment?.id)
                                   : () =>
                                       dispatch(
-                                        setPurchase({
+                                        setCollectInfo({
                                           actionOpen: true,
                                           actionId: comment?.id,
                                           actionIndex: index,
@@ -471,8 +481,8 @@ const CommentBox: FunctionComponent<CommentBoxProps> = ({
                       : collectNotif !== ""
                       ? () =>
                           dispatch(
-                            setModal({
-                              actionOpen: true,
+                            setError({
+                              actionValue: true,
                               actionMessage: collectNotif,
                             })
                           )

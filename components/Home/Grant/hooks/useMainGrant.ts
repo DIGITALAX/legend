@@ -21,7 +21,11 @@ import {
   getPublication,
   getPublicationAuth,
 } from "@/graphql/lens/query/getPublication";
-import { ApprovedAllowanceAmount, Publication } from "@/components/home.types";
+import {
+  ApprovedAllowanceAmount,
+  Profile,
+  Publication,
+} from "@/components/home.types";
 import checkIfMirrored from "@/lib/lens/helpers/checkIfMirrored";
 import checkPostReactions from "@/lib/lens/helpers/checkPostReactions";
 import { getProfiles } from "@/graphql/lens/query/getProfiles";
@@ -68,11 +72,12 @@ const useMainGrant = () => {
   const dispatcher = useSelector(
     (state: RootState) => state.app.dispatcherReducer.value
   );
+  const [hasMoreProfiles, setHasMoreProfiles] = useState<boolean>(true);
   const [grantsLoading, setGrantsLoading] = useState<boolean>(false);
   const [mainPostLoading, setMainPostLoading] = useState<boolean>(false);
   const [slice, setSlice] = useState<number[]>([20, 40]);
   const [profilesPaginated, setProfilesPaginated] = useState<any>();
-  const [NFTCollectors, setNFTCollectors] = useState<string[]>([]);
+  const [NFTCollectors, setNFTCollectors] = useState<Profile[]>([]);
   const [mainPostInfo, setMainPostInfo] = useState<Publication>();
   const [mintLoading, setMintLoading] = useState<boolean>(false);
   const [canMint, setCanMint] = useState<boolean>(false);
@@ -96,7 +101,6 @@ const useMainGrant = () => {
   const [collectCommentLoading, setCollectCommentLoading] = useState<boolean[]>(
     Array.from({ length: commentors?.length }, () => false)
   );
-
 
   const { config: mirrorConfig, isSuccess } = usePrepareContractWrite({
     address: LENS_HUB_PROXY_ADDRESS_MUMBAI,
@@ -210,6 +214,11 @@ const useMainGrant = () => {
         ownedBy: data?.[4]?.result?.slice(0, 20) as string[],
         limit: 20,
       });
+      if (data?.[4]?.result?.length > 20) {
+        setHasMoreProfiles(true);
+      } else {
+        setHasMoreProfiles(false);
+      }
       setNFTCollectors(profs?.data?.profiles?.items);
       setProfilesPaginated(profs?.data?.pageInfo);
     } catch (err: any) {
@@ -219,11 +228,17 @@ const useMainGrant = () => {
 
   const getMoreProfiles = async () => {
     try {
+      if (!data?.[4]?.result) return;
       const profs = await getProfiles({
         ownedBy: data?.[4]?.result?.slice(...slice) as string[],
         limit: 20,
         cursor: profilesPaginated?.next,
       });
+      if (data?.[4]?.result?.length > 20) {
+        setHasMoreProfiles(true);
+      } else {
+        setHasMoreProfiles(false);
+      }
       setNFTCollectors([...NFTCollectors, ...profs?.data?.profiles?.items]);
       setProfilesPaginated(profs?.data?.pageInfo);
       setSlice([slice[0] + 20, slice[1] + 20]);
@@ -853,6 +868,8 @@ const useMainGrant = () => {
     likeCommentLoading,
     collectInfoLoading,
     approvalLoading,
+    approveCurrency,
+    hasMoreProfiles,
   };
 };
 
