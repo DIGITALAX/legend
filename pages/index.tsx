@@ -9,7 +9,6 @@ import {
   onDisconnect,
 } from "firebase/database";
 import { FirebaseApp } from "firebase/app";
-import { INFURA_GATEWAY } from "@/lib/constants";
 import GrantBox from "@/components/Home/Grant/modules/GrantBox";
 import CommentBox from "@/components/Home/Grant/modules/CommentBox";
 import DynamicNFT from "@/components/Home/Grant/modules/DynamicNFT";

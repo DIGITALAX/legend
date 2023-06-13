@@ -1,4 +1,7 @@
-import { CollectionGraph, PurchaseCollection } from "@/components/StoreFront/types/storefront.types";
+import {
+  CollectionGraph,
+  PurchaseCollection,
+} from "@/components/StoreFront/types/storefront.types";
 import { Publication } from "@/components/home.types";
 import { AnyAction, Dispatch } from "redux";
 
@@ -44,7 +47,7 @@ export type StorefrontBoxProps = {
   baseColor: string;
   setSize: (e: string) => void;
   setBaseColor: (e: string) => void;
-  setPurchasePrice: (e: number) => void;
+  setPurchasePrice: (e: string) => void;
   currency: string;
   setCurrency: (e: string) => void;
   purchaseAmount: number;
@@ -58,6 +61,17 @@ export type CommentBoxProps = {
   dispatch: Dispatch<AnyAction>;
   index: number;
   collapseNumber: boolean[];
+  commentGrant: (id?: string) => void;
+  commentors: any[];
+  getMorePostComments: () => Promise<void>;
+  commentsLoading: boolean;
+  hasMoreComments: boolean;
+  hasMirrored: boolean[];
+  hasReacted: boolean[];
+  commentorLoading: boolean;
+  likeCommentLoading: boolean[];
+  mirrorCommentLoading: boolean[];
+  collectCommentLoading: boolean[];
 };
 
 export type DynamicNFTProps = {

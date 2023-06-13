@@ -4,6 +4,9 @@ import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import Draggable from "react-draggable";
 import { CollectBoxProps } from "../types/grant.types";
+import { AiOutlineLoading } from "react-icons/ai";
+import InfiniteScroll from "react-infinite-scroll-component";
+import createProfilePicture from "@/lib/lens/helpers/createProfilePicture";
 
 const CollectBox: FunctionComponent<CollectBoxProps> = ({
   collapseNumber,
@@ -12,11 +15,10 @@ const CollectBox: FunctionComponent<CollectBoxProps> = ({
   collectGrant,
   collectors,
   collectorsLoading,
-  collectLoading, 
+  collectLoading,
   getMorePostCollects,
-  hasMoreCollects
+  hasMoreCollects,
 }): JSX.Element => {
-
   return (
     <Draggable
       enableUserSelectHack={false}
@@ -54,14 +56,70 @@ const CollectBox: FunctionComponent<CollectBoxProps> = ({
             />
           </div>
         </div>
-        <div className="relative w-full h-full">
-            {
-              collectors?.map((item, index: number) => {
+        <div className="relative w-full h-full top-5 flex flex-col gap-2">
+          <div className="relative w-full h-fit flex flex-col">
+            <InfiniteScroll
+              hasMore={hasMoreCollects}
+              dataLength={collectors?.length}
+              next={getMorePostCollects}
+              loader={""}
+              height={"10rem"}
+              className="relative w-full h-fit flex flex-col px-4 gap-2 overflow-y-scroll"
+            >
+              {collectors?.map((collector: any, index: number) => {
+                const profileImage = createProfilePicture(
+                  collector.defaultProfile
+                );
+
                 return (
-                  <div key={index}></div>
-                )
-              })
-            }
+                  <div
+                    key={index}
+                    className="relative w-full h-fit p-2 drop-shadow-lg flex flex-row bg-gradient-to-r from-offBlack via-gray-600 to-black auto-cols-auto rounded-lg border border-black font-economica text-white cursor-pointer"
+                  >
+                    <div className="relative w-fit h-fit flex flex-row gap-6">
+                      <div
+                        className="relative w-6 h-6 rounded-full col-start-1"
+                        id="crt"
+                      >
+                        {profileImage && (
+                          <Image
+                            src={profileImage}
+                            objectFit="cover"
+                            layout="fill"
+                            alt="pfp"
+                            className="relative w-fit h-fit rounded-full self-center flex"
+                            draggable={false}
+                          />
+                        )}
+                      </div>
+                      <div
+                        id="handle"
+                        className="relative w-fit h-fit justify-center flex"
+                      >
+                        @{collector.defaultProfile?.handle?.split(".lens")[0]}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </InfiniteScroll>
+          </div>
+          <div
+            className={`relative w-fit h-fit bg-darker ${
+              !collectLoading && "cursor-pointer active scale:95"
+            }`}
+            onClick={() => !collectLoading && collectGrant()}
+          >
+            {collectLoading ? (
+              <div className="relative w-fit h-fit animate-spin">
+                <AiOutlineLoading size={10} color="white" />
+              </div>
+            ) : (
+              <div className="relative w-fit h-fit font-earl text-white px-2">
+                collect grant
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </Draggable>

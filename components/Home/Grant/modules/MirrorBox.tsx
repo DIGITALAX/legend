@@ -1,14 +1,29 @@
 import { INFURA_GATEWAY } from "@/lib/constants";
 import { setCollapseItem } from "@/redux/reducers/collapseItemSlice";
+import InfiniteScroll from "react-infinite-scroll-component";
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import Draggable from "react-draggable";
 import { MirrorBoxProps } from "../types/grant.types";
+import createProfilePicture from "@/lib/lens/helpers/createProfilePicture";
+import { AiOutlineLoading } from "react-icons/ai";
 
 const MirrorBox: FunctionComponent<MirrorBoxProps> = ({
   collapseNumber,
   dispatch,
   index,
+  mirrorGrant,
+  mirrorInfoLoading,
+  mirrorLoading,
+  mirrorers,
+  likeGrant,
+  likeLoading,
+  reactInfoLoading,
+  reacters,
+  hasMoreMirror,
+  hasMoreReact,
+  getMorePostMirrors,
+  getMorePostReactions,
 }): JSX.Element => {
   return (
     <Draggable
@@ -53,6 +68,130 @@ const MirrorBox: FunctionComponent<MirrorBoxProps> = ({
             layout="fill"
             draggable={false}
           />
+        </div>
+        <div className="relative w-full h-full top-5 flex flex-col gap-2">
+          <div className="relative w-full h-fit flex flex-col">
+            <InfiniteScroll
+              hasMore={hasMoreMirror}
+              dataLength={mirrorers?.length}
+              next={getMorePostMirrors}
+              loader={""}
+              height={"10rem"}
+              className="relative w-full h-fit flex flex-col px-4 gap-2 overflow-y-scroll"
+            >
+              {mirrorers?.map((mirrorer: any, index: number) => {
+                const profileImage = createProfilePicture(mirrorer);
+
+                return (
+                  <div
+                    key={index}
+                    className="relative w-full h-fit p-2 drop-shadow-lg flex flex-row bg-gradient-to-r from-offBlack via-gray-600 to-black auto-cols-auto rounded-lg border border-black font-economica text-white cursor-pointer"
+                  >
+                    <div className="relative w-fit h-fit flex flex-row gap-6">
+                      <div
+                        className="relative w-6 h-6 rounded-full col-start-1"
+                        id="crt"
+                      >
+                        {profileImage && (
+                          <Image
+                            src={profileImage}
+                            objectFit="cover"
+                            layout="fill"
+                            alt="pfp"
+                            className="relative w-fit h-fit rounded-full self-center flex"
+                            draggable={false}
+                          />
+                        )}
+                      </div>
+                      <div
+                        id="handle"
+                        className="relative w-fit h-fit justify-center flex"
+                      >
+                        @{mirrorer?.handle?.split(".lens")[0]}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </InfiniteScroll>
+          </div>
+          <div
+            className={`relative w-fit h-fit bg-darker ${
+              !mirrorLoading && "cursor-pointer active scale:95"
+            }`}
+            onClick={() => !mirrorLoading && mirrorGrant()}
+          >
+            {mirrorLoading ? (
+              <div className="relative w-fit h-fit animate-spin">
+                <AiOutlineLoading size={10} color="white" />
+              </div>
+            ) : (
+              <div className="relative w-fit h-fit font-earl text-white px-2">
+                mirror grant
+              </div>
+            )}
+          </div>
+          <div className="relative w-full h-fit flex flex-col">
+            <InfiniteScroll
+              hasMore={hasMoreReact}
+              dataLength={reacters?.length}
+              next={getMorePostReactions}
+              loader={""}
+              height={"10rem"}
+              className="relative w-full h-fit flex flex-col px-4 gap-2 overflow-y-scroll"
+            >
+              {reacters?.map((reacter: any, index: number) => {
+                const profileImage = createProfilePicture(reacter?.profile);
+
+                return (
+                  <div
+                    key={index}
+                    className="relative w-full h-fit p-2 drop-shadow-lg flex flex-row bg-gradient-to-r from-offBlack via-gray-600 to-black auto-cols-auto rounded-lg border border-black font-economica text-white cursor-pointer"
+                  >
+                    <div className="relative w-fit h-fit flex flex-row gap-6">
+                      <div
+                        className="relative w-6 h-6 rounded-full col-start-1"
+                        id="crt"
+                      >
+                        {profileImage && (
+                          <Image
+                            src={profileImage}
+                            objectFit="cover"
+                            layout="fill"
+                            alt="pfp"
+                            className="relative w-fit h-fit rounded-full self-center flex"
+                            draggable={false}
+                          />
+                        )}
+                      </div>
+                      <div
+                        id="handle"
+                        className="relative w-fit h-fit justify-center flex"
+                      >
+                        @{reacter?.profile?.handle?.split(".lens")[0]}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </InfiniteScroll>
+          </div>
+          <div
+            className={`relative w-fit h-fit bg-darker ${
+              !likeLoading && "cursor-pointer active scale:95"
+            }`}
+            onClick={() => !likeLoading && likeGrant()}
+          >
+            {likeLoading ? (
+              <div className="relative w-fit h-fit animate-spin">
+                <AiOutlineLoading size={10} color="white" />
+              </div>
+            ) : (
+              <div className="relative w-fit h-fit font-earl text-white px-2">
+                like grant
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </Draggable>

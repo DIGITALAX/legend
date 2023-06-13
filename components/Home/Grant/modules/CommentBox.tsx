@@ -9,6 +9,17 @@ const CommentBox: FunctionComponent<CommentBoxProps> = ({
   collapseNumber,
   dispatch,
   index,
+  commentGrant,
+  commentors,
+  getMorePostComments,
+  commentsLoading,
+  hasMoreComments,
+  hasMirrored,
+  hasReacted,
+  commentorLoading,
+  likeCommentLoading,
+  mirrorCommentLoading,
+  collectCommentLoading,
 }): JSX.Element => {
   return (
     <Draggable
