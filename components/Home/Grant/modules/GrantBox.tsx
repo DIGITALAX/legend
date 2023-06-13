@@ -9,6 +9,8 @@ const GrantBox: FunctionComponent<GrantBoxProps> = ({
   collapseNumber,
   dispatch,
   index,
+  mainPostInfo,
+  mainPostLoading,
 }): JSX.Element => {
   return (
     <Draggable
@@ -45,6 +47,14 @@ const GrantBox: FunctionComponent<GrantBoxProps> = ({
               layout="fill"
               draggable={false}
             />
+          </div>
+        </div>
+        <div className="relative w-full h-fit flex flex-col gap-2 px-3 py-5">
+        <div className="relative w-fit h-fit flex overflow-y-scroll items-start justify-start font-earl">
+            {mainPostInfo?.metadata?.name}
+          </div>
+          <div className="relative w-fit h-24 flex overflow-y-scroll items-start justify-start font-earl">
+            {mainPostInfo?.metadata.content}
           </div>
         </div>
       </div>

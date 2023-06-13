@@ -2,17 +2,20 @@ import {
   FACTORY_CONTRACT_MUMBAI,
   LENS_HUB_PROXY_ADDRESS_MUMBAI,
 } from "@/lib/constants";
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import {
+  useContractRead,
+  useContractWrite,
+  usePrepareContractWrite,
+} from "wagmi";
 import LegendFactoryAbi from "./../../../abi/LegendFactory.json";
 import { useEffect, useState } from "react";
 import { waitForTransaction } from "@wagmi/core";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { profilePublications } from "@/graphql/lens/query/getPublications";
-import nextHex from "@/lib/lens/helpers/nextHex";
 import { useRouter } from "next/router";
 import { setContractValues } from "@/redux/reducers/contractValuesSlice";
 import { setPubId } from "@/redux/reducers/pubIdSlice";
+import LensHubProxyABI from "./../../../abi/LensHubProxy.json";
 
 const useContracts = () => {
   const router = useRouter();
@@ -32,7 +35,7 @@ const useContracts = () => {
   const [createContractsLoading, setCreateContractsLoading] =
     useState<boolean>(false);
 
-  const { config } = usePrepareContractWrite({
+  const { config, error } = usePrepareContractWrite({
     address: FACTORY_CONTRACT_MUMBAI,
     abi: LegendFactoryAbi,
     args: [
@@ -47,23 +50,27 @@ const useContracts = () => {
       },
     ],
     functionName: "createContracts",
-    enabled: Boolean(NFTValues.length > 0),
+    enabled: Boolean(NFTValues.length > 0 && profileId),
   });
 
   const { writeAsync } = useContractWrite(config);
 
+  const { data } = useContractRead({
+    address: LENS_HUB_PROXY_ADDRESS_MUMBAI,
+    abi: LensHubProxyABI,
+    functionName: "getPubCount",
+    args: [parseInt(profileId, 16)],
+    enabled: Boolean(profileId),
+  });
+
   const getLastPost = async () => {
     try {
-      const { data } = await profilePublications({
-        profileId,
-        publicationTypes: ["POST"],
-        limit: 1,
-      });
-      if (!data || !data || data?.publications?.items?.length < 1) {
+      if (!data) return;
+      if (parseInt(String(data)) === 0) {
         dispatch(setPubId(1));
       } else {
-        const next = nextHex(data?.publications?.items[0]?.id.split("-")[1]);
-        dispatch(setPubId(parseInt(next, 16)));
+        // const next = nextHex(String(parseInt(String(data))));
+        dispatch(setPubId(parseInt(String(data)) + 1));
       }
     } catch (err: any) {
       console.error(err.message);

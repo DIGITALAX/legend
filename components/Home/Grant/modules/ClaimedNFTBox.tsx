@@ -9,6 +9,7 @@ const ClaimedNFTBox: FunctionComponent<ClaimedNFTBox> = ({
   collapseNumber,
   dispatch,
   index,
+  getMoreProfiles
 }): JSX.Element => {
   return (
     <Draggable

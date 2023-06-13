@@ -16,7 +16,7 @@ const CreateDrop: FunctionComponent<CreateDropProps> = ({
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-20 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
-      <div className="relative w-full lg:w-[30vw] h-fit col-start-1 place-self-center bg-white rounded-lg">
+      <div className="relative w-full lg:w-[50vw] h-fit col-start-1 place-self-center bg-white rounded-lg">
         <div className="relative w-full row-start-2 h-fit rounded-xl grid grid-flow-col auto-cols-auto">
           <div className="relative w-full h-full col-start-1 rounded-xl place-self-center">
             <div className="relative w-full h-full grid grid-flow-row auto-rows-auto gap-4 pb-8">
@@ -36,13 +36,13 @@ const CreateDrop: FunctionComponent<CreateDropProps> = ({
                 <div className="relative w-3/4 h-fit justify-center items-center text-black font-mega text-sm text-center">
                   {message}
                 </div>
-                <div className="relative w-fit overflow-x-scroll h-full">
-                  <div className="relative w-full h-full flex flex-row gap-1.5">
+                <div className="relative w-fit  h-full">
+                  <div className="relative w-full h-full flex flex-row gap-1.5 overflow-x-scroll">
                     {storefrontValues?.map(
                       (item: Collection, index: number) => {
                         return (
                           <div
-                            className="relative w-1/2 h-36 preG:h-52 lg:h-40 xl:h-52 justify-center items-center rounded-lg border border-black"
+                            className="relative w-40 h-40 justify-center items-center rounded-lg border border-black"
                             id="staticLoad"
                           >
                             <Image
@@ -58,7 +58,7 @@ const CreateDrop: FunctionComponent<CreateDropProps> = ({
                   </div>
                 </div>
                 <div
-                  className={`relative bg-darker border border-black flex w-40 text-center text-base justify-center items-center h-10 p-1 font-earl text-white uppercase cursor-pointer active:scale-95`}
+                  className={`relative bg-darker border border-black flex w-28 text-center text-base justify-center items-center h-10 p-1 font-earl text-white uppercase cursor-pointer active:scale-95`}
                   onClick={() => createDrop()}
                 >
                   {dropLoading ? (

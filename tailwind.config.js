@@ -49,6 +49,10 @@ module.exports = {
         100: "32rem",
         128: "42rem",
       },
+      backgroundImage: {
+        scroll:
+          "url('https://chromadin.infura-ipfs.io/ipfs/Qme3dKpZyyv9oMEu9AbaS3Q3xXGcbXj5V2JXhhJW8bRfQV')",
+      },
       zIndex: {
         0.5: "0.5",
         1: "1",

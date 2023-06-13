@@ -217,20 +217,21 @@ const usePost = () => {
       })
     );
     if (
-      e.target.value.split(" ")[e.target.value.split(" ")?.length - 1][0] ===
+      e.target.value?.split(" ")[e.target.value?.split(" ")?.length - 1][0] ===
         "@" &&
-      e.target.value.split(" ")[e.target.value.split(" ")?.length - 1]
+      e.target.value?.split(" ")[e.target.value?.split(" ")?.length - 1]
         ?.length === 1
     ) {
       setCaretCoord(getCaretPos(e, textElement));
       setProfilesOpen(true);
     }
     if (
-      e.target.value.split(" ")[e.target.value.split(" ")?.length - 1][0] ===
+      e.target.value?.split(" ")[e.target.value?.split(" ")?.length - 1][0] ===
       "@"
     ) {
       const allProfiles = await searchProfile({
-        query: e.target.value.split(" ")[e.target.value.split(" ")?.length - 1],
+        query:
+          e.target.value?.split(" ")[e.target.value?.split(" ")?.length - 1],
         type: "PROFILE",
         limit: 50,
       });
@@ -243,6 +244,26 @@ const usePost = () => {
 
   const clearPost = () => {
     setPostLoading(false);
+    router.push(`/grant/${pubId}`);
+    dispatch(setPubId(undefined));
+    dispatch(
+      setPostValues({
+        title: undefined,
+        editionAmount: 100,
+        description: undefined,
+        sustained: undefined,
+        involved: undefined,
+        price: 1,
+        referralFee: 0,
+        currency: "",
+        recipients: [],
+        filledInAmount: 0,
+      })
+    );
+    dispatch(setProductInformation([]));
+    dispatch(setNFTImageArray([]));
+    dispatch(setContractValues([]));
+    dispatch(setUpkeepID(undefined));
     setPostDescription("");
     dispatch(
       setPostValues({
@@ -404,32 +425,12 @@ const usePost = () => {
     setPostLoading(true);
     try {
       const tx = await writeAsync?.();
-      clearPost();
       const res = await waitForTransaction({
         hash: tx?.hash!,
       });
       await handleIndexCheck(res?.transactionHash, dispatch, true);
       if (res.status === "success") {
-        router.push(`/grant/${pubId}`);
-        dispatch(setPubId(undefined));
-        dispatch(
-          setPostValues({
-            title: undefined,
-            editionAmount: 100,
-            description: undefined,
-            sustained: undefined,
-            involved: undefined,
-            price: 1,
-            referralFee: 0,
-            currency: "",
-            recipients: [],
-            filledInAmount: 0,
-          })
-        );
-        dispatch(setProductInformation([]));
-        dispatch(setNFTImageArray([]));
-        dispatch(setContractValues([]));
-        dispatch(setUpkeepID(undefined));
+        clearPost();
       }
     } catch (err) {
       console.error(err);
@@ -474,7 +475,7 @@ const usePost = () => {
         e.preventDefault();
         e.stopPropagation();
         const file = items[i].getAsFile();
-        await uploadImage(file as File, true);
+        await uploadImage([file as File], true);
       }
     }
   };

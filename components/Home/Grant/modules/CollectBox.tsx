@@ -9,7 +9,14 @@ const CollectBox: FunctionComponent<CollectBoxProps> = ({
   collapseNumber,
   dispatch,
   index,
+  collectGrant,
+  collectors,
+  collectorsLoading,
+  collectLoading, 
+  getMorePostCollects,
+  hasMoreCollects
 }): JSX.Element => {
+
   return (
     <Draggable
       enableUserSelectHack={false}
@@ -46,6 +53,15 @@ const CollectBox: FunctionComponent<CollectBoxProps> = ({
               draggable={false}
             />
           </div>
+        </div>
+        <div className="relative w-full h-full">
+            {
+              collectors?.map((item, index: number) => {
+                return (
+                  <div key={index}></div>
+                )
+              })
+            }
         </div>
       </div>
     </Draggable>

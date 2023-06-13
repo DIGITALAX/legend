@@ -13,7 +13,6 @@ import { RootState } from "@/redux/store";
 import { setStorefrontValues } from "@/redux/reducers/storefrontValuesSlice";
 import { setProductInformation } from "@/redux/reducers/productInformationSlice";
 import { setLaunchPageCount } from "@/redux/reducers/launchPageCountSlice";
-import { BigNumber } from "ethers";
 import { setDropModal } from "@/redux/reducers/dropModalSlice";
 
 const useStorefront = () => {
@@ -50,7 +49,13 @@ const useStorefront = () => {
     }[]
   >([]);
 
-  const { config } = usePrepareContractWrite({
+  const { data } = useContractRead({
+    address: LEGEND_COLLECTION_MUMBAI,
+    abi: LegendCollectionAbi,
+    functionName: "getCollectionSupply",
+  });
+
+  const { config, isError, error } = usePrepareContractWrite({
     address: LEGEND_COLLECTION_MUMBAI,
     abi: LegendCollectionAbi,
     functionName: "mintCollection",
@@ -60,7 +65,7 @@ const useStorefront = () => {
 
   const { writeAsync } = useContractWrite(config);
 
-  const { config: dropConfig } = usePrepareContractWrite({
+  const { config: dropConfig, isError: dropError } = usePrepareContractWrite({
     address: LEGEND_DROP_MUMBAI,
     abi: LegendDropAbi,
     functionName: "createDrop",
@@ -69,12 +74,6 @@ const useStorefront = () => {
   });
 
   const { writeAsync: dropWriteAsync } = useContractWrite(dropConfig);
-
-  const { data } = useContractRead({
-    address: LEGEND_COLLECTION_MUMBAI,
-    abi: LegendCollectionAbi,
-    functionName: "getCollectionSupply",
-  });
 
   const handleCollectionPrices = (
     e: FormEvent,
@@ -265,6 +264,7 @@ const useStorefront = () => {
   };
 
   const mintWrite = async (index: number) => {
+    if (isError) return;
     setCollectionLoading(
       [...imageLoading].map((value, i) => (i === index ? true : value))
     );
@@ -273,11 +273,13 @@ const useStorefront = () => {
       const res = await waitForTransaction({
         hash: tx?.hash!,
       });
-      setArgs(undefined);
-      setMinted([...minted].map((value, i) => (i === index ? true : value)));
-      dispatch(
-        setStorefrontValues([...storefrontValues, productInformation[index]])
-      );
+      if (res.status === "success") {
+        setArgs(undefined);
+        setMinted([...minted].map((value, i) => (i === index ? true : value)));
+        dispatch(
+          setStorefrontValues([...storefrontValues, productInformation[index]])
+        );
+      }
     } catch (err: any) {
       setCollectionLoading(
         [...imageLoading].map((value, i) => (i === index ? false : value))
@@ -290,12 +292,14 @@ const useStorefront = () => {
   };
 
   const createDrop = async () => {
+    setCollectionLoading([...imageLoading].map((value) => (value = false)));
     setDropLoading(true);
     try {
       let lastCollection: number = 0;
       if (data) {
-        lastCollection = parseInt(data as string);
+        lastCollection = parseInt(data as string) - storefrontValues.length + 1;
       }
+
       const response = await fetch("/api/ipfs", {
         method: "POST",
         body: JSON.stringify({
@@ -309,7 +313,7 @@ const useStorefront = () => {
           { length: storefrontValues.length },
           (_, index) => lastCollection + index
         ),
-        cid.cid,
+        "ipfs://" + cid.cid,
       ]);
     } catch (err: any) {
       console.error(err.message);
@@ -395,6 +399,7 @@ const useStorefront = () => {
 
   useEffect(() => {
     if (args) {
+      if (isError) return;
       mintWrite(mint as number);
     }
   }, [args]);

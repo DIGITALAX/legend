@@ -3,7 +3,7 @@ import { FunctionComponent } from "react";
 import Draggable from "react-draggable";
 import { LiveProps } from "../types/launch.types";
 import { AiOutlineLoading } from "react-icons/ai";
-import { INFURA_GATEWAY } from "@/lib/constants";
+import { ACCEPTED_TOKENS_MUMBAI, INFURA_GATEWAY } from "@/lib/constants";
 import Image from "next/legacy/image";
 import createProfilePicture from "@/lib/lens/helpers/createProfilePicture";
 import TopBarTwo from "@/components/Common/modules/TopBarTwo";
@@ -245,7 +245,7 @@ const Live: FunctionComponent<LiveProps> = ({
                 </div>
               </div>
               <div className="relative w-full h-full flex flex-col justify-center items-start gap-2">
-                <div className="relative w-full h-8 flex items-center justify-center rounded-md border border-black">
+                <div className="relative w-full h-8 flex items-center justify-center rounded-md border border-black font-earl">
                   <div className="absolute w-full h-full flex opacity-70">
                     <Image
                       layout="fill"
@@ -257,73 +257,41 @@ const Live: FunctionComponent<LiveProps> = ({
                 </div>
               </div>
               <div className="relative w-full h-full flex flex-col justify-center items-start gap-2">
-                <div className="relative w-full h-14 flex items-center justify-center rounded-md border border-black">
-                  <div className="absolute w-full h-full flex opacity-70">
-                    <Image
-                      layout="fill"
-                      src={`${INFURA_GATEWAY}/Qme3dKpZyyv9oMEu9AbaS3Q3xXGcbXj5V2JXhhJW8bRfQV`}
-                      draggable={false}
-                    />
-                  </div>
+                <div className="relative w-full h-14 flex items-start justify-start rounded-md border border-black font-earl overflow-y-scroll bg-scroll">
                   {storefrontValues[nextStore]?.uri?.description}
                 </div>
               </div>
               <div className="relative grid grid-cols-4 gap-2 w-full h-fit font-earl">
-                {Array.from([
-                  [
-                    "QmYYUQ8nGDnyuk8jQSung1WmTksvLEQBXjnCctdRrKtsNk",
-                    "WMATIC",
-                    "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
-                  ],
-                  [
-                    "QmZRhUgjK6bJM8fC7uV145yf66q2e7vGeT7CLosw1SdMdN",
-                    "WETH",
-                    "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
-                  ],
-                  [
-                    "QmSbpsDRwxSCPBWPkwWvcb49jViSxzmNHjYy3AcGF3qM2x",
-                    "USDT",
-                    "0xc2132d05d31c914a87c6611c10748aeb04b58e8f",
-                  ],
-                  [
-                    "QmS6f8vrNZok9j4pJttUuWpNrjsf4vP9RD5mRL36z6UdaL",
-                    "MONA",
-                    "0x6968105460f67c3bf751be7c15f92f5286fd0ce5",
-                  ],
-                ])
+                {ACCEPTED_TOKENS_MUMBAI.filter((item: string[]) => {
+                  const token = item[1].toLowerCase();
+                  return storefrontValues[nextStore]?.acceptedTokens
+                    ?.map((t) => t.toLowerCase())
+                    .includes(token);
+                })
                   .map((item: string[]) => {
-                    if (
-                      storefrontValues[nextStore]?.acceptedTokens?.includes(
-                        item[2].toLowerCase()
-                      )
-                    ) {
-                      const acceptedTokenIndex = storefrontValues[
-                        nextStore
-                      ]?.acceptedTokens?.findIndex(
-                        (token: string) =>
-                          token.toLowerCase() === item[2].toLowerCase()
+                    const token = item[1].toLowerCase();
+                    const acceptedTokenIndex = storefrontValues[
+                      nextStore
+                    ]?.acceptedTokens
+                      ?.map((t) => t.toLowerCase())
+                      .findIndex(
+                        (acceptedToken: string) => acceptedToken === token
                       );
 
-                      return {
-                        ...item,
-                        price: String(
-                          storefrontValues[nextStore]?.basePrices?.[
-                            acceptedTokenIndex
-                          ]
-                        ),
-                      };
-                    } else {
-                      return {
-                        ...item,
-                        price: "",
-                      };
-                    }
+                    const price =
+                      acceptedTokenIndex !== -1
+                        ? String(
+                            storefrontValues[nextStore]?.basePrices?.[
+                              acceptedTokenIndex
+                            ]
+                          )
+                        : "";
+
+                    return {
+                      ...item,
+                      price,
+                    };
                   })
-                  .filter((item: string[]) =>
-                    storefrontValues[nextStore]?.acceptedTokens?.includes(
-                      item[2].toLowerCase()
-                    )
-                  )
                   .map((value: string[], indexTwo: number) => {
                     return (
                       <div
@@ -333,7 +301,7 @@ const Live: FunctionComponent<LiveProps> = ({
                         <div className="relative flex flex-row gap-1 w-full h-fit items-center">
                           <div className="relative w-4 h-5 flex rounded-full items-center justify-center">
                             <Image
-                              src={`${INFURA_GATEWAY}/${value[0]}`}
+                              src={`${INFURA_GATEWAY}/${value[2]}`}
                               draggable={false}
                               layout="fill"
                               className="flex"
@@ -341,7 +309,7 @@ const Live: FunctionComponent<LiveProps> = ({
                           </div>
                           <div className="relative w-fit h-full flex items-center justify-start text-xs">
                             <div className="relative flex w-full h-full items-center top-px">
-                              {value[1]}
+                              {value[0]}
                             </div>
                           </div>
                         </div>
@@ -375,7 +343,7 @@ const Live: FunctionComponent<LiveProps> = ({
                   <div className="relative w-fit h-fit flex font-earl text-mazul text-xs">
                     Discount
                   </div>
-                  <div className="relative w-full h-8 flex items-center justify-center rounded-md border border-black">
+                  <div className="relative w-full h-8 flex items-center justify-center rounded-md border border-black font-earl">
                     <div className="absolute w-full h-full flex opacity-70">
                       <Image
                         layout="fill"
@@ -392,7 +360,7 @@ const Live: FunctionComponent<LiveProps> = ({
                   <div className="relative w-fit h-fit flex font-mega text-mazul text-sm">
                     Amount
                   </div>
-                  <div className="relative w-1/4 h-8 flex items-center justify-center rounded-md border border-black">
+                  <div className="relative w-1/4 h-8 flex items-center justify-center rounded-md border border-black font-earl">
                     <div className="absolute w-full h-full flex opacity-70">
                       <Image
                         layout="fill"

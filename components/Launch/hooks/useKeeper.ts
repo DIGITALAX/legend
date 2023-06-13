@@ -3,7 +3,6 @@ import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 import UpkeepAbi from "./../../../abi/Upkeep.json";
 import LinkAbi from "./../../../abi/LinkToken.json";
 import {
-  MATIC_LINK_TOKEN,
   MUMBAI_LINK_TOKEN,
   MUMBAI_UPKEEP,
 } from "@/lib/constants";

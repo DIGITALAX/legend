@@ -1,4 +1,4 @@
-import { INFURA_GATEWAY } from "@/lib/constants";
+import { ACCEPTED_TOKENS_MUMBAI, INFURA_GATEWAY } from "@/lib/constants";
 import Image from "next/legacy/image";
 import { FormEvent, FunctionComponent } from "react";
 import { FiltersProps } from "../types/storefront.types";
@@ -124,44 +124,23 @@ const Filters: FunctionComponent<FiltersProps> = ({
         <div className="flex flex-col relative w-fit h-fit gap-2">
           <div className="relative w-full h-fit font-mega">Order By Tokens</div>
           <div className="relative w-full h-full flex flex-row gap-2">
-            {Array.from([
-              [
-                "QmYYUQ8nGDnyuk8jQSung1WmTksvLEQBXjnCctdRrKtsNk",
-                "WMATIC",
-                "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
-              ],
-              [
-                "QmZRhUgjK6bJM8fC7uV145yf66q2e7vGeT7CLosw1SdMdN",
-                "WETH",
-                "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
-              ],
-              [
-                "QmSbpsDRwxSCPBWPkwWvcb49jViSxzmNHjYy3AcGF3qM2x",
-                "USDT",
-                "0xc2132d05d31c914a87c6611c10748aeb04b58e8f",
-              ],
-              [
-                "QmS6f8vrNZok9j4pJttUuWpNrjsf4vP9RD5mRL36z6UdaL",
-                "MONA",
-                "0x6968105460f67c3bf751be7c15f92f5286fd0ce5",
-              ],
-            ]).map((value: string[], index: number) => {
+            {ACCEPTED_TOKENS_MUMBAI.map((value: string[], index: number) => {
               return (
                 <div
                   key={index}
                   className={`relative w-full h-fit flex flex-col gap-1 items-center justify-start cursor-pointer active:scale-95 ${
-                    filterValues.tokens.includes(value[2])
+                    filterValues.tokens.includes(value[1])
                       ? "opacity-70"
                       : "opacity-100"
                   }`}
                   onClick={() => {
                     let newArray;
-                    if (filterValues.tokens.includes(value[2])) {
+                    if (filterValues.tokens.includes(value[1])) {
                       newArray = filterValues.tokens.filter(
-                        (prevItem) => prevItem !== value[2]
+                        (prevItem) => prevItem !== value[1]
                       );
                     } else {
-                      newArray = [...filterValues.tokens, value[2]];
+                      newArray = [...filterValues.tokens, value[1]];
                     }
 
                     dispatch(
@@ -178,7 +157,7 @@ const Filters: FunctionComponent<FiltersProps> = ({
                 >
                   <div className="relative w-7 h-8 flex rounded-full items-center justify-center">
                     <Image
-                      src={`${INFURA_GATEWAY}/${value[0]}`}
+                      src={`${INFURA_GATEWAY}/${value[2]}`}
                       draggable={false}
                       layout="fill"
                       className="flex"

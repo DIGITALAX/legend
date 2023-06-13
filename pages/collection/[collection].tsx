@@ -2,7 +2,7 @@ import { NextPage } from "next";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import Head from "next/head";
-import { INFURA_GATEWAY } from "@/lib/constants";
+import { ACCEPTED_TOKENS_MUMBAI, INFURA_GATEWAY } from "@/lib/constants";
 import Image from "next/legacy/image";
 import lodash from "lodash";
 import createProfilePicture from "@/lib/lens/helpers/createProfilePicture";
@@ -49,7 +49,7 @@ const Collection: NextPage = (): JSX.Element => {
         <meta
           name="og:image"
           content={`${INFURA_GATEWAY}/${
-            chosenCollection?.uri.image.split("ipfs://")[1]
+            chosenCollection?.uri.image?.split("ipfs://")[1]
           }`}
         />
         <meta name="twitter:card" content="summary" />
@@ -60,7 +60,7 @@ const Collection: NextPage = (): JSX.Element => {
         <meta
           name="og:image"
           content={`${INFURA_GATEWAY}/${
-            chosenCollection?.uri.image.split("ipfs://")[1]
+            chosenCollection?.uri.image?.split("ipfs://")[1]
           }`}
         />
         <meta name="twitter:card" content="summary_large_image" />
@@ -69,20 +69,20 @@ const Collection: NextPage = (): JSX.Element => {
         <meta
           name="twitter:image"
           content={`${INFURA_GATEWAY}/${
-            chosenCollection?.uri.image.split("ipfs://")[1]
+            chosenCollection?.uri.image?.split("ipfs://")[1]
           }`}
         />
         <meta
           name="twitter:url"
           content={`${INFURA_GATEWAY}/${
-            chosenCollection?.uri.image.split("ipfs://")[1]
+            chosenCollection?.uri.image?.split("ipfs://")[1]
           }`}
         />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="canonical"
           content={`${INFURA_GATEWAY}/${
-            chosenCollection?.uri.image.split("ipfs://")[1]
+            chosenCollection?.uri.image?.split("ipfs://")[1]
           }`}
         />
         <link
@@ -360,40 +360,18 @@ const Collection: NextPage = (): JSX.Element => {
                 </div>
               )}
               <div className="relative w-full h-fit flex justify-center items-center gap-2">
-                {Array.from([
-                  [
-                    "QmYYUQ8nGDnyuk8jQSung1WmTksvLEQBXjnCctdRrKtsNk",
-                    "WMATIC",
-                    "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
-                  ],
-                  [
-                    "QmZRhUgjK6bJM8fC7uV145yf66q2e7vGeT7CLosw1SdMdN",
-                    "WETH",
-                    "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
-                  ],
-                  [
-                    "QmSbpsDRwxSCPBWPkwWvcb49jViSxzmNHjYy3AcGF3qM2x",
-                    "USDT",
-                    "0xc2132d05d31c914a87c6611c10748aeb04b58e8f",
-                  ],
-                  [
-                    "QmS6f8vrNZok9j4pJttUuWpNrjsf4vP9RD5mRL36z6UdaL",
-                    "MONA",
-                    "0x6968105460f67c3bf751be7c15f92f5286fd0ce5",
-                  ],
-                ])
-                  .map((token) => {
-                    const tokenIndex: number =
-                      chosenCollection?.acceptedTokens.indexOf(token[2])!;
-                    if (tokenIndex !== -1) {
-                      return {
-                        ...token,
-                        price: chosenCollection?.basePrices[tokenIndex],
-                        symbol: token[1],
-                      };
-                    }
-                    return null;
-                  })
+                {ACCEPTED_TOKENS_MUMBAI.map((token) => {
+                  const tokenIndex: number =
+                    chosenCollection?.acceptedTokens.indexOf(token[1].toLowerCase())!;
+                  if (tokenIndex !== -1) {
+                    return {
+                      ...token,
+                      price: chosenCollection?.basePrices[tokenIndex],
+                      symbol: token[0],
+                    };
+                  }
+                  return null;
+                })
                   .filter((token) => token !== null)
                   .map((value: any, index: number) => {
                     return (
@@ -403,18 +381,18 @@ const Collection: NextPage = (): JSX.Element => {
                       >
                         <div
                           className={`relative w-fit h-fit flex flex-col gap-1 items-center justify-center cursor-pointer active:scale-95 ${
-                            currency?.includes(value[1])
+                            currency?.includes(value[0])
                               ? "opacity-50"
                               : "opacity-100"
                           }`}
                           onClick={() => {
-                            setCurrency(value[1]);
+                            setCurrency(value[0]);
                             setPurchasePrice(value.price);
                           }}
                         >
                           <div className="relative w-7 h-8 flex rounded-full items-center justify-center">
                             <Image
-                              src={`${INFURA_GATEWAY}/${value[0]}`}
+                              src={`${INFURA_GATEWAY}/${value[2]}`}
                               draggable={false}
                               layout="fill"
                               className="flex"

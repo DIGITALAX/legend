@@ -29,6 +29,16 @@ import errorReducer from "./reducers/errorSlice";
 import cartItemsReducer from "./reducers/cartItemsSlice";
 import fulfillmentReducer from "./reducers/fulfillmentSlice";
 import litClientReducer from "./reducers/litClientSlice";
+import homeGrantReducer from "./reducers/homeGrantSlice";
+import grantsReducer from "./reducers/grantsSlice";
+import reactIdReducer from "./reducers/reactIdSlice";
+import collectOpenReducer from "./reducers/collectOpenSlice";
+import secondaryCommentReducer from "./reducers/secondaryCommentSlice";
+import collectValueTypeReducer from "./reducers/collectValueTypeSlice";
+import canCommentReducer from "./reducers/canCommentSlice";
+import approvalArgsReducer from "./reducers/approvalArgsSlice";
+import commentCollectReducer from "./reducers/commentCollectSlice";
+import collectInfoReducer from "./reducers/collectInfoSlice";
 
 const reducer = combineReducers({
   noHandleReducer,
@@ -59,7 +69,17 @@ const reducer = combineReducers({
   errorReducer,
   cartItemsReducer,
   fulfillmentReducer,
-  litClientReducer
+  litClientReducer,
+  homeGrantReducer,
+  grantsReducer,
+  reactIdReducer,
+  collectOpenReducer,
+  secondaryCommentReducer,
+  collectValueTypeReducer,
+  canCommentReducer,
+  approvalArgsReducer,
+  commentCollectReducer,
+  collectInfoReducer
 });
 
 export const store = configureStore({

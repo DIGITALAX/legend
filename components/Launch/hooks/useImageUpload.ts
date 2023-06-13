@@ -42,118 +42,101 @@ const useImageUpload = () => {
   >([]);
 
   const uploadImage = async (
-    e: FormEvent | File,
-    canvas?: boolean,
+    e: FormEvent | File[],
+    pasted?: boolean,
     feed?: boolean
   ): Promise<void> => {
-    if (!canvas) {
+    if (!pasted) {
       if ((e as any)?.target?.files?.length < 1) {
         return;
       }
-    }
-    let finalImages: UploadedMedia[] = [];
-    setImageLoading(true);
-    if (canvas) {
-      try {
-        // const compressedImage = await compressImageFiles(e as File);
-        const response = await fetch("/api/ipfs", {
-          method: "POST",
-          body: e as File,
-        });
-        let cid = await response.json();
-        if (response.status !== 200) {
-          setImageLoading(false);
-        } else {
-          finalImages.push({
-            cid: String(cid?.cid),
-            type: MediaType.Image,
-          });
-          setMappedFeaturedFiles([
-            ...(router.asPath.includes("launch")
-              ? imagesUploadedPub
-              : (imagesUploaded as any)),
-            ...finalImages,
-          ]);
-          if (feed) {
-            if (!router.asPath.includes("launch")) {
-              const postStorage = JSON.parse(getCommentData() || "{}");
-              setCommentData(
-                JSON.stringify({
-                  ...postStorage,
-                  images: [
-                    ...(router.asPath.includes("launch")
-                      ? imagesUploadedPub
-                      : (imagesUploaded as any)),
-                    ...finalImages,
-                  ],
-                })
-              );
-            }
-          }
-        }
-
-        setImageLoading(false);
-      } catch (err: any) {
-        setImageLoading(false);
-        dispatch(setIPFS(true));
-        console.error(err.message);
-      }
     } else {
-      if (fileLimitAlert((e as any).target.files[0])) {
-        setImageLoading(false);
+      if ((e as File[]).length < 1) {
         return;
       }
-      Array.from(((e as FormEvent).target as HTMLFormElement)?.files).map(
-        async (_, index: number) => {
-          try {
-            // const compressedImage = await compressImageFiles(
-            //   (e as any).target.files[index] as File
-            // );
-            const response = await fetch("/api/ipfs", {
-              method: "POST",
-              body: (e as any).target.files[index],
-            });
-            if (response.status !== 200) {
-              setImageLoading(false);
-            } else {
-              let cid = await response.json();
-              finalImages.push({
-                cid: String(cid?.cid),
-                type: MediaType.Image,
-              });
-              if (
-                finalImages?.length ===
-                ((e as FormEvent).target as HTMLFormElement).files?.length
-              ) {
-                let newArr = [
-                  ...(router.asPath.includes("launch")
-                    ? imagesUploadedPub
-                    : (imagesUploaded as any)),
-                  ...finalImages,
-                ];
-                setMappedFeaturedFiles(newArr);
-                if (feed) {
-                  if (!router.asPath.includes("launch")) {
-                    const postStorage = JSON.parse(getCommentData() || "{}");
-                    setCommentData(
-                      JSON.stringify({
-                        ...postStorage,
-                        images: newArr,
-                      })
-                    );
-                  }
-                }
+    }
 
-                setImageLoading(false);
+    let uploadCounter = 0;
+    let finalImages: UploadedMedia[] = [];
+    setImageLoading(true);
+
+    const numberOfFiles = pasted
+      ? (e as File[]).length
+      : (e as any).target.files.length;
+
+    const imageFiles = Array.from(
+      pasted
+        ? (e as File[])
+        : ((e as FormEvent).target as HTMLFormElement)?.files
+    );
+
+    await Promise.all(
+      imageFiles.map(async (_, index: number) => {
+        try {
+          // const compressedImage = await compressImageFiles(
+          //   (e as any).target.files[index] as File
+          // );
+          const response = await fetch("/api/ipfs", {
+            method: "POST",
+            body: pasted
+              ? (e as File[])[index]
+              : (e as any).target.files[index],
+          });
+          if (response.status !== 200) {
+            setImageLoading(false);
+            return;
+          } else {
+            let cid = await response.json();
+            finalImages.push({
+              cid: String(cid?.cid),
+              type: MediaType.Image,
+            });
+            uploadCounter += 1; // increment counter here
+
+            if (uploadCounter === numberOfFiles) {
+              // check counter here
+              setImageLoading(false);
+            }
+            
+            if (
+              finalImages?.length ===
+              (pasted
+                ? (e as File[]).length
+                : ((e as FormEvent).target as HTMLFormElement).files?.length)
+            ) {
+              let newArr = [
+                ...(router.asPath.includes("launch")
+                  ? imagesUploadedPub
+                  : (imagesUploaded as any)),
+                ...finalImages,
+              ];
+
+              setMappedFeaturedFiles(newArr);
+              if (feed) {
+                if (!router.asPath.includes("launch")) {
+                  const postStorage = JSON.parse(getCommentData() || "{}");
+                  setCommentData(
+                    JSON.stringify({
+                      ...postStorage,
+                      images: [
+                        ...(router.asPath.includes("launch")
+                          ? imagesUploadedPub
+                          : (imagesUploaded as any)),
+                        ...finalImages,
+                      ],
+                    })
+                  );
+                }
               }
             }
-          } catch (err: any) {
-            dispatch(setIPFS(true));
-            console.error(err.message);
           }
+        } catch (err: any) {
+          dispatch(setIPFS(true));
+          console.error(err.message);
+          setImageLoading(false);
         }
-      );
-    }
+      })
+    );
   };
 
   const uploadVideo = async (e: FormEvent, feed?: boolean) => {

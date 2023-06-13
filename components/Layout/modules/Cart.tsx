@@ -23,7 +23,7 @@ const Cart: FunctionComponent<CartItemsProps> = ({
         <AiOutlineShoppingCart size={20} color="white" />
       </div>
       {cartOpen && (
-        <div className="absolute rounded-md bg-white h-60 w-40 right-0 z-1 top-6 p-2 flex flex-col">
+        <div className="absolute rounded-md bg-white h-60 w-40 right-0 top-6 p-2 flex flex-col z-20">
           <div className="relative w-full h-fit flex flex-col gap-2 overflow-y-scroll">
             {cartItems?.map((cart: PurchaseCollection, index: number) => {
               return (

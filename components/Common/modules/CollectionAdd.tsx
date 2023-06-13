@@ -2,7 +2,7 @@ import { FormEvent, FunctionComponent } from "react";
 import Draggable from "react-draggable";
 import TopBarTwo from "./TopBarTwo";
 import Image from "next/legacy/image";
-import { INFURA_GATEWAY } from "@/lib/constants";
+import { ACCEPTED_TOKENS_MUMBAI, INFURA_GATEWAY } from "@/lib/constants";
 import { CollectionAddProps } from "../types/common.types";
 import { AiOutlineLoading } from "react-icons/ai";
 
@@ -144,38 +144,17 @@ const CollectionAdd: FunctionComponent<CollectionAddProps> = ({
               </div>
             </div>
             <div className="relative grid grid-cols-4 gap-2 w-full h-fit font-earl">
-              {Array.from([
-                [
-                  "QmYYUQ8nGDnyuk8jQSung1WmTksvLEQBXjnCctdRrKtsNk",
-                  "WMATIC",
-                  "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
-                ],
-                [
-                  "QmZRhUgjK6bJM8fC7uV145yf66q2e7vGeT7CLosw1SdMdN",
-                  "WETH",
-                  "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
-                ],
-                [
-                  "QmSbpsDRwxSCPBWPkwWvcb49jViSxzmNHjYy3AcGF3qM2x",
-                  "USDT",
-                  "0xc2132d05d31c914a87c6611c10748aeb04b58e8f",
-                ],
-                [
-                  "QmS6f8vrNZok9j4pJttUuWpNrjsf4vP9RD5mRL36z6UdaL",
-                  "MONA",
-                  "0x6968105460f67c3bf751be7c15f92f5286fd0ce5",
-                ],
-              ])
+              {ACCEPTED_TOKENS_MUMBAI
                 .map((item: string[]) => {
                   if (
                     productInformation?.acceptedTokens?.includes(
-                      item[2].toLowerCase()
+                      item[1].toLowerCase()
                     )
                   ) {
                     const acceptedTokenIndex =
                       productInformation?.acceptedTokens?.findIndex(
                         (token: string) =>
-                          token.toLowerCase() === item[2].toLowerCase()
+                          token.toLowerCase() === item[1].toLowerCase()
                       );
 
                     return {
@@ -195,13 +174,13 @@ const CollectionAdd: FunctionComponent<CollectionAddProps> = ({
                   let price;
                   if (
                     productInformation?.acceptedTokens?.includes(
-                      value[2].toLowerCase()
+                      value[1].toLowerCase()
                     )
                   ) {
                     const acceptedTokenIndex =
                       productInformation?.acceptedTokens?.findIndex(
                         (token: string) =>
-                          token.toLowerCase() === value[2].toLowerCase()
+                          token.toLowerCase() === value[1].toLowerCase()
                       );
 
                     price = String(
@@ -217,7 +196,7 @@ const CollectionAdd: FunctionComponent<CollectionAddProps> = ({
                       <div className="relative flex flex-row gap-1 w-full h-fit items-center">
                         <div className="relative w-4 h-5 flex rounded-full items-center justify-center">
                           <Image
-                            src={`${INFURA_GATEWAY}/${value[0]}`}
+                            src={`${INFURA_GATEWAY}/${value[2]}`}
                             draggable={false}
                             layout="fill"
                             className="flex"
@@ -225,7 +204,7 @@ const CollectionAdd: FunctionComponent<CollectionAddProps> = ({
                         </div>
                         <div className="relative w-fit h-full flex items-center justify-start text-xs">
                           <div className="relative flex w-full h-full items-center top-px">
-                            {value[1]}
+                            {value[0]}
                           </div>
                         </div>
                       </div>
@@ -242,7 +221,7 @@ const CollectionAdd: FunctionComponent<CollectionAddProps> = ({
                           style={{ resize: "none" }}
                           type="number"
                           onChange={(e: FormEvent) =>
-                            handleCollectionPrices(e, value[2], index)
+                            handleCollectionPrices(e, value[1], index)
                           }
                           defaultValue={price}
                           disabled={minted[index]}

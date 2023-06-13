@@ -34,13 +34,9 @@ const useStorefront = () => {
       const drops = await getAllDrops();
       dispatch(setAllDrops(drops?.data?.dropCreateds));
 
-      const validCollections = [...data?.data?.collectionMinteds].filter(
-        (collection: CollectionGraph) => {
-          const collectionDrops = [...drops?.data?.dropCreateds]?.filter(
-            (drop: any) =>
-              drop?.collectionIds?.includes(collection.collectionId)
-          );
-          return collectionDrops.length > 0;
+      const validCollections = data?.data?.collectionMinteds.filter(
+        (item: CollectionGraph) => {
+          return item.dropId > 0;
         }
       );
 
@@ -65,10 +61,12 @@ const useStorefront = () => {
             let dropjson;
             if (collectionDrops?.length > 0) {
               dropjson = await fetchIPFSJSON(
-                collectionDrops[0]?.dropURI
-                  ?.split("ipfs://")[1]
-                  ?.replace(/"/g, "")
-                  ?.trim()
+                collectionDrops[0]?.dropURI.includes("ipfs://")
+                  ? collectionDrops[0]?.dropURI
+                      ?.split("ipfs://")[1]
+                      ?.replace(/"/g, "")
+                      ?.trim()
+                  : collectionDrops[0]?.dropURI
               );
             }
             const defaultProfile = await getDefaultProfile(collection.owner);

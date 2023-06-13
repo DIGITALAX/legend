@@ -3,7 +3,7 @@ import { graphClientTestnet } from "@/lib/subgraph/client";
 
 const GRANTS = `
   query {
-    factoryDeployeds(orderDirection: desc) {
+    factoryDeployeds(orderBy: timestamp, orderDirection: desc) {
       keeperAddress
       accessControlAddress
       dynamicNFTAddress

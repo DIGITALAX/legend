@@ -1,4 +1,4 @@
-import { ACCEPTED_TOKENS, LEGEND_MARKET_MUMBAI } from "@/lib/constants";
+import { ACCEPTED_TOKENS_MUMBAI, LEGEND_MARKET_MUMBAI } from "@/lib/constants";
 import { RootState } from "@/redux/store";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -42,7 +42,7 @@ const useFulfillment = () => {
   const [purchasePrice, setPurchasePrice] = useState<string>("0");
   const [size, setSize] = useState<string>("m");
   const [currency, setCurrency] = useState<string>(
-    ACCEPTED_TOKENS.filter(
+    ACCEPTED_TOKENS_MUMBAI.filter(
       (token) =>
         token[1]?.toLowerCase() ===
         chosenCollection?.acceptedTokens?.[0]?.toLowerCase()
@@ -208,8 +208,6 @@ const useFulfillment = () => {
     setTokenIds(newTokenIds);
   };
 
-  console.log({ tokenIds });
-
   const approveSpend = async (
     newAddress: string,
     totalPrice: number,
@@ -219,7 +217,7 @@ const useFulfillment = () => {
     try {
       setIndex(index);
       setAddressArg({
-        newAddress: ACCEPTED_TOKENS.find(
+        newAddress: ACCEPTED_TOKENS_MUMBAI.find(
           ([tokenName]) => tokenName === newAddress
         )?.[1]!,
         totalPrice: BigNumber.from(

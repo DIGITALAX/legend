@@ -19,12 +19,104 @@ import StoreFrontBox from "@/components/Home/Grant/modules/StoreFrontBox";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import ClaimedNFTBox from "@/components/Home/Grant/modules/ClaimedNFTBox";
+import useMainGrant from "@/components/Home/Grant/hooks/useMainGrant";
+import useInteractions from "@/components/Home/Grant/hooks/useInteractions";
+import useComment from "@/components/Home/Grant/hooks/useCommentGrant";
+import useStore from "@/components/Home/Grant/hooks/useStore";
 
 type HomeProps = {
   firebaseApp: FirebaseApp;
 };
 
 export default function Home({ firebaseApp }: HomeProps): JSX.Element {
+  const {
+    grantsLoading,
+    mainURI,
+    handleMintDynamicNFT,
+    currentCounter,
+    editionAmount,
+    canMint,
+    mainPostInfo,
+    mainPostLoading,
+    mintLoading,
+    collectGrant,
+    mirrorGrant,
+    likeGrant,
+    likeCommentLoading,
+    likeLoading,
+    mirrorCommentLoading,
+    mirrorLoading,
+    getMoreProfiles,
+    collectCommentLoading,
+    collectInfoLoading,
+    collectLoading,
+  } = useMainGrant();
+  const {
+    storeLoading,
+    nextItem,
+    setNextItem,
+    size,
+    baseColor,
+    setSize,
+    setBaseColor,
+    setPurchasePrice,
+    currency,
+    setCurrency,
+    purchaseAmount,
+    setPurchaseAmount,
+    addItemToCart,
+    canCollect,
+  } = useStore();
+  const {
+    commentors,
+    getMorePostComments,
+    commentsLoading,
+    collectors,
+    collectorsLoading,
+    getMorePostCollects,
+    hasMoreCollects,
+    hasMoreComments,
+    hasMirrored,
+    hasReacted,
+    getMorePostReactions,
+    getMorePostMirrors,
+    mirrorers,
+    reacters,
+    reactInfoLoading,
+    mirrorInfoLoading,
+    hasMoreReact,
+    hasMoreMirror,
+  } = useInteractions();
+  const {
+    commentGrant,
+    commentDescription,
+    textElement,
+    handleCommentDescription,
+    commentLoading,
+    caretCoord,
+    mentionProfiles,
+    profilesOpen,
+    handleMentionClick,
+    handleGifSubmit,
+    handleGif,
+    results,
+    gifs,
+    handleSetGif,
+    gifOpen,
+    setGifOpen,
+    handleKeyDownDelete,
+    preElement,
+    handleImagePaste,
+  } = useComment();
+  const mainGrant = useSelector(
+    (state: RootState) => state.app.homeGrantReducer.value
+  );
+  const grantCollection = useSelector(
+    (state: RootState) => state.app.grantCollectionReducer.value
+  );
+  const cartItems = useSelector(
+    (state: RootState) => state.app.cartItemsReducer.value
+  );
   const collapseNumber = useSelector(
     (state: RootState) => state.app.collapseItemReducer.value
   );
@@ -35,82 +127,82 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
   const [dbError, setDbError] = useState<boolean>(false);
   const cursorImage = useRef<HTMLImageElement | null>(null);
 
-  useEffect(() => {
-    cursorImage.current = new Image();
-    cursorImage.current.src = `${INFURA_GATEWAY}/QmSvwVtnD6NRM64xRiPthdYRP8mW3jJHmCEohZMyr7zD4T`;
-    cursorImage.current.onload = () => setImageLoaded(true);
-  }, []);
+  // useEffect(() => {
+  //   cursorImage.current = new Image();
+  //   cursorImage.current.src = `${INFURA_GATEWAY}/QmSvwVtnD6NRM64xRiPthdYRP8mW3jJHmCEohZMyr7zD4T`;
+  //   cursorImage.current.onload = () => setImageLoaded(true);
+  // }, []);
 
-  useEffect(() => {
-    let userId = sessionStorage.getItem("userId");
-    if (!userId) {
-      userId = uuidv4();
-      sessionStorage.setItem("userId", userId);
-    }
+  // useEffect(() => {
+  //   let userId = sessionStorage.getItem("userId");
+  //   if (!userId) {
+  //     userId = uuidv4();
+  //     sessionStorage.setItem("userId", userId);
+  //   }
 
-    if (!firebaseApp || !canvasRef.current) {
-      return;
-    }
+  //   if (!firebaseApp || !canvasRef.current) {
+  //     return;
+  //   }
 
-    const canvas = canvasRef.current;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+  //   const canvas = canvasRef.current;
+  //   canvas.width = window.innerWidth;
+  //   canvas.height = window.innerHeight;
 
-    const context = canvas.getContext("2d");
-    if (!context) {
-      return;
-    }
+  //   const context = canvas.getContext("2d");
+  //   if (!context) {
+  //     return;
+  //   }
 
-    try {
-      const db = getDatabase(firebaseApp);
-      const cursorRef = ref(db, `cursors/${userId}`);
-      onDisconnect(cursorRef).remove();
+  //   try {
+  //     const db = getDatabase(firebaseApp);
+  //     const cursorRef = ref(db, `cursors/${userId}`);
+  //     onDisconnect(cursorRef).remove();
 
-      const handleMouseMove = (event: MouseEvent) => {
-        const cursorPosition = {
-          x: event.clientX,
-          y: event.clientY,
-          id: userId,
-        };
-        set(cursorRef, cursorPosition);
-      };
+  //     const handleMouseMove = (event: MouseEvent) => {
+  //       const cursorPosition = {
+  //         x: event.clientX,
+  //         y: event.clientY,
+  //         id: userId,
+  //       };
+  //       set(cursorRef, cursorPosition);
+  //     };
 
-      window.addEventListener("mousemove", handleMouseMove);
+  //     window.addEventListener("mousemove", handleMouseMove);
 
-      const cursorsRef = ref(db, "cursors");
-      onValue(cursorsRef, (snapshot) => {
-        const cursorPositions = snapshot.val();
-        if (cursorPositions) {
-          context.clearRect(0, 0, canvas.width, canvas.height);
-          Object.values(cursorPositions).forEach((position: any) => {
-            if (position.id !== userId && imageLoaded && cursorImage.current) {
-              context.drawImage(
-                cursorImage.current,
-                position.x - cursorImage.current.width / 2,
-                position.y - cursorImage.current.height / 2
-              );
-            }
-          });
-        }
-      });
+  //     const cursorsRef = ref(db, "cursors");
+  //     onValue(cursorsRef, (snapshot) => {
+  //       const cursorPositions = snapshot.val();
+  //       if (cursorPositions) {
+  //         context.clearRect(0, 0, canvas.width, canvas.height);
+  //         Object.values(cursorPositions).forEach((position: any) => {
+  //           if (position.id !== userId && imageLoaded && cursorImage.current) {
+  //             context.drawImage(
+  //               cursorImage.current,
+  //               position.x - cursorImage.current.width / 2,
+  //               position.y - cursorImage.current.height / 2
+  //             );
+  //           }
+  //         });
+  //       }
+  //     });
 
-      const handleUnload = () => {
-        off(cursorRef);
-        set(cursorRef, null);
-      };
+  //     const handleUnload = () => {
+  //       off(cursorRef);
+  //       set(cursorRef, null);
+  //     };
 
-      window.addEventListener("unload", handleUnload);
+  //     window.addEventListener("unload", handleUnload);
 
-      return () => {
-        window.removeEventListener("mousemove", handleMouseMove);
-        off(cursorsRef);
-        window.removeEventListener("unload", handleUnload);
-      };
-    } catch (err: any) {
-      setDbError(true);
-      return;
-    }
-  }, [firebaseApp, imageLoaded]);
+  //     return () => {
+  //       window.removeEventListener("mousemove", handleMouseMove);
+  //       off(cursorsRef);
+  //       window.removeEventListener("unload", handleUnload);
+  //     };
+  //   } catch (err: any) {
+  //     setDbError(true);
+  //     return;
+  //   }
+  // }, [firebaseApp, imageLoaded]);
 
   return (
     <div
@@ -123,24 +215,52 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
             collapseNumber={collapseNumber}
             dispatch={dispatch}
             index={0}
+            collectGrant={collectGrant}
+            collectors={collectors}
+            collectorsLoading={collectorsLoading}
+            collectLoading={collectLoading}
+            getMorePostCollects={getMorePostCollects}
+            hasMoreCollects={hasMoreCollects}
           />
           <MirrorBox
             collapseNumber={collapseNumber}
             dispatch={dispatch}
             index={1}
+            mirrorGrant={mirrorGrant}
+            likeGrant={likeGrant}
+            mirrorLoading={mirrorLoading}
+            likeLoading={likeLoading}
+            getMorePostReactions={getMorePostReactions}
+            getMorePostMirrors={getMorePostMirrors}
+            mirrorers={mirrorers}
+            reacters={reacters}
+            reactInfoLoading={reactInfoLoading}
+            mirrorInfoLoading={mirrorInfoLoading}
+            hasMoreReact={hasMoreReact}
+            hasMoreMirror={hasMoreMirror}
           />
           <ClaimedNFTBox
             collapseNumber={collapseNumber}
             dispatch={dispatch}
             index={2}
+            getMoreProfiles={getMoreProfiles}
           />
         </div>
         <div className="relative w-full items-center h-full flex flex-col">
-          <DynamicNFT />
+          <DynamicNFT
+            mainURI={mainURI}
+            currentCounter={currentCounter}
+            handleMintDynamicNFT={handleMintDynamicNFT}
+            editionAmount={editionAmount}
+            canMint={canMint}
+            mintLoading={mintLoading}
+          />
           <GrantBox
             collapseNumber={collapseNumber}
             dispatch={dispatch}
             index={3}
+            mainPostInfo={mainPostInfo}
+            mainPostLoading={mainPostLoading}
           />
         </div>
         <div className="w-full h-full flex justify-center">
@@ -148,11 +268,38 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
             collapseNumber={collapseNumber}
             dispatch={dispatch}
             index={4}
+            commentGrant={commentGrant}
+            commentors={commentors}
+            getMorePostComments={getMorePostComments}
+            commentsLoading={commentsLoading}
+            hasMoreComments={hasMoreComments}
+            hasMirrored={hasMirrored}
+            hasReacted={hasReacted}
+            commentorLoading={commentLoading}
+            likeCommentLoading={likeCommentLoading}
+            mirrorCommentLoading={mirrorCommentLoading}
+            collectCommentLoading={collectCommentLoading}
           />
           <StoreFrontBox
             collapseNumber={collapseNumber}
             dispatch={dispatch}
             index={5}
+            grantCollection={grantCollection}
+            storeLoading={storeLoading}
+            nextItem={nextItem}
+            setNextItem={setNextItem}
+            size={size}
+            baseColor={baseColor}
+            setSize={setSize}
+            setBaseColor={setBaseColor}
+            setPurchasePrice={setPurchasePrice}
+            currency={currency}
+            setCurrency={setCurrency}
+            purchaseAmount={purchaseAmount}
+            setPurchaseAmount={setPurchaseAmount}
+            addItemToCart={addItemToCart}
+            canCollect={canCollect}
+            cartItems={cartItems}
           />
         </div>
       </div>

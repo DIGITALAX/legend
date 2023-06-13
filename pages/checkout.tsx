@@ -18,8 +18,6 @@ const Checkout: NextPage = (): JSX.Element => {
   const { approveSpend, approved, purchaseLoading, buyNFT, totalAmounts } =
     useFulfillment();
 
-  console.log({ approved });
-
   return (
     <div className="relative w-full h-full flex flex-row">
       <div className="relative w-full h-full flex flex-col gap-2 overflow-y-scroll bg-white">

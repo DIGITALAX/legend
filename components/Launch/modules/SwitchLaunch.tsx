@@ -111,13 +111,6 @@ const SwitchLaunch: FunctionComponent<SwitchLaunchProps> = ({
     (state: RootState) => state.app.upkeepIDReducer.upkeepID
   );
 
-  console.log({
-    storefrontValues,
-    postValues,
-    contractValues,
-    productInformation,
-  });
-
   const dispatch = useDispatch();
 
   switch (decideStringAction()) {
