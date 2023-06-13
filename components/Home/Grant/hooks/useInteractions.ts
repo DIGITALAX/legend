@@ -422,11 +422,13 @@ const useInteractions = () => {
   }, [index.message]);
 
   useEffect(() => {
-    getPostComments();
-    getPostCollects();
-    getPostMirrors();
-    getPostReactions();
-  }, []);
+    if (homeGrant) {
+      getPostComments();
+      getPostCollects();
+      getPostMirrors();
+      getPostReactions();
+    }
+  }, [homeGrant]);
 
   return {
     commentors,

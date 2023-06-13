@@ -39,10 +39,10 @@ const uploadPostContent = async (
     version: "2.0.0",
     metadata_id: uuidv4(),
     description: title
-      ? `${title}<br/><br/>What's being built?<br/>${postDescription}<br/><br/>Who's involved?<br/>${involved}<br/><br/>How will the grant be sustained?<br/>${sustained}`
+      ? `${title}\n\nWhat's being built?\n${postDescription}\n\nWho's involved?\n${involved}\n\nHow will the grant be sustained?\n${sustained}`
       : postDescription,
     content: title
-      ? `${title}<br/><br/>What's being built?<br/>${postDescription}<br/><br/>Who's involved?<br/>${involved}<br/><br/>How will the grant be sustained?<br/>${sustained}`
+      ? `${title}\n\nWhat's being built?\n${postDescription}\n\nWho's involved?\n${involved}\n\nHow will the grant be sustained?\n${sustained}`
       : postDescription,
     external_url: "https://www.legend.irrevocable.xyz/",
     image: coverImage.length > 0 ? (coverImage[0] as any).item : null,

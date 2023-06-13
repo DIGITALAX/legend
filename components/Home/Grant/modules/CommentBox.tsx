@@ -62,7 +62,6 @@ const CommentBox: FunctionComponent<CommentBoxProps> = ({
   handleGifSubmit,
   collectNotif,
 }): JSX.Element => {
-  console.log({ commentors });
   return (
     <Draggable
       enableUserSelectHack={false}
