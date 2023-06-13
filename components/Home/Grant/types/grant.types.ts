@@ -2,7 +2,8 @@ import {
   CollectionGraph,
   PurchaseCollection,
 } from "@/components/StoreFront/types/storefront.types";
-import { Publication } from "@/components/home.types";
+import { Profile, Publication } from "@/components/home.types";
+import { ClipboardEvent, FormEvent, KeyboardEvent, RefObject } from "react";
 import { AnyAction, Dispatch } from "redux";
 
 export type CollectBoxProps = {
@@ -72,6 +73,37 @@ export type CommentBoxProps = {
   likeCommentLoading: boolean[];
   mirrorCommentLoading: boolean[];
   collectCommentLoading: boolean[];
+  commentDescription: string;
+  commentLoading: boolean;
+  handleCommentDescription: (e: FormEvent) => Promise<void>;
+  textElement: RefObject<HTMLTextAreaElement>;
+  preElement: RefObject<HTMLPreElement>;
+  caretCoord: {
+    x: number;
+    y: number;
+  };
+  mentionProfiles: Profile[];
+  profilesOpen: boolean;
+  handleMentionClick: (user: any) => void;
+  handleKeyDownDelete: (e: KeyboardEvent<Element>) => void;
+  commentId: string | undefined;
+  canComment: boolean;
+  handleImagePaste: (
+    e: ClipboardEvent<HTMLTextAreaElement>,
+    setImageLoading: (e: boolean) => void
+  ) => void;
+  setImageLoading: (e: boolean) => void;
+  handleGifSubmit: () => Promise<void>;
+  handleGif: (e: FormEvent) => void;
+  results: any[];
+  handleSetGif: (result: any) => void;
+  setGifOpen: (e: boolean) => void;
+  gifOpen: boolean;
+  lensProfile: string | undefined;
+  authStatus: boolean;
+  collectGrant: (id?: string) => void;
+  likeGrant: (id?: string) => void;
+  mirrorGrant: (id?: string) => void;
 };
 
 export type DynamicNFTProps = {

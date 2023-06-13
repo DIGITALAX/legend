@@ -97,7 +97,7 @@ const useImageUpload = () => {
               // check counter here
               setImageLoading(false);
             }
-            
+
             if (
               finalImages?.length ===
               (pasted
@@ -361,6 +361,7 @@ const useImageUpload = () => {
     currentImageIndex,
     setCurrentImageIndex,
     handleDropImage,
+    setImageLoading,
   };
 };
 

@@ -22,6 +22,7 @@ import useMainGrant from "@/components/Home/Grant/hooks/useMainGrant";
 import useInteractions from "@/components/Home/Grant/hooks/useInteractions";
 import useComment from "@/components/Home/Grant/hooks/useCommentGrant";
 import useStore from "@/components/Home/Grant/hooks/useStore";
+import useImageUpload from "@/components/Launch/hooks/useImageUpload";
 
 type HomeProps = {
   firebaseApp: FirebaseApp;
@@ -99,7 +100,6 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
     handleGifSubmit,
     handleGif,
     results,
-    gifs,
     handleSetGif,
     gifOpen,
     setGifOpen,
@@ -107,6 +107,7 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
     preElement,
     handleImagePaste,
   } = useComment();
+  const { setImageLoading } = useImageUpload();
   const mainGrant = useSelector(
     (state: RootState) => state.app.homeGrantReducer.value
   );
@@ -118,6 +119,18 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
   );
   const collapseNumber = useSelector(
     (state: RootState) => state.app.collapseItemReducer.value
+  );
+  const commentId = useSelector(
+    (state: RootState) => state.app.secondaryCommentReducer.value
+  );
+  const canComment = useSelector(
+    (state: RootState) => state.app.canCommentReducer.value
+  );
+  const lensProfile = useSelector(
+    (state: RootState) => state.app.profileReducer.profile?.id
+  );
+  const authStatus = useSelector(
+    (state: RootState) => state.app.authReducer.value
   );
   const dispatch = useDispatch();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -278,6 +291,31 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
             likeCommentLoading={likeCommentLoading}
             mirrorCommentLoading={mirrorCommentLoading}
             collectCommentLoading={collectCommentLoading}
+            textElement={textElement}
+            preElement={preElement}
+            handleCommentDescription={handleCommentDescription}
+            handleKeyDownDelete={handleKeyDownDelete}
+            handleImagePaste={handleImagePaste}
+            setImageLoading={setImageLoading}
+            commentLoading={commentLoading}
+            commentDescription={commentDescription}
+            canComment={canComment}
+            caretCoord={caretCoord}
+            mentionProfiles={mentionProfiles}
+            commentId={commentId}
+            handleMentionClick={handleMentionClick}
+            profilesOpen={profilesOpen}
+            handleGifSubmit={handleGifSubmit}
+            handleGif={handleGif}
+            results={results}
+            handleSetGif={handleSetGif}
+            gifOpen={gifOpen}
+            setGifOpen={setGifOpen}
+            lensProfile={lensProfile}
+            authStatus={authStatus}
+            collectGrant={collectGrant}
+            likeGrant={likeGrant}
+            mirrorGrant={mirrorGrant}
           />
           <StoreFrontBox
             collapseNumber={collapseNumber}

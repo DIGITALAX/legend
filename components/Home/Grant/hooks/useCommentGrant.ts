@@ -134,7 +134,7 @@ const useComment = () => {
   };
 
   const handleKeyDownDelete = (e: KeyboardEvent<Element>) => {
-    const highlightedContent = document.querySelector("#highlighted-content")!;
+    const highlightedContent = document.querySelector("#highlighted-content2")!;
     const selection = window.getSelection();
     const postStorage = JSON.parse(getCommentData() || "{}");
     if (e.key === "Backspace" && selection?.toString() !== "") {
@@ -196,7 +196,7 @@ const useComment = () => {
   };
 
   const handleCommentDescription = async (e: any): Promise<void> => {
-    let resultElement = document.querySelector("#highlighted-content");
+    let resultElement = document.querySelector("#highlighted-content2");
     const newValue = e.target.value.endsWith("\n")
       ? e.target.value + " "
       : e.target.value;
@@ -403,7 +403,7 @@ const useComment = () => {
 
   const handleMentionClick = (user: any) => {
     setProfilesOpen(false);
-    let resultElement = document.querySelector("#highlighted-content");
+    let resultElement = document.querySelector("#highlighted-content2");
     const newHTMLPost =
       commentHTML?.substring(0, commentHTML.lastIndexOf("@")) +
       `@${user?.handle}</span>`;
@@ -435,7 +435,7 @@ const useComment = () => {
     if (savedData && JSON.parse(savedData).post) {
       setCommentDescription(JSON.parse(savedData).post);
 
-      let resultElement = document.querySelector("#highlighted-content");
+      let resultElement = document.querySelector("#highlighted-content2");
       if (
         JSON.parse(savedData).post[JSON.parse(savedData).post?.length - 1] ==
         "\n"
@@ -453,8 +453,8 @@ const useComment = () => {
   }, [gifs]);
 
   useEffect(() => {
-    if (document.querySelector("#highlighted-content")) {
-      document.querySelector("#highlighted-content")!.innerHTML =
+    if (document.querySelector("#highlighted-content2")) {
+      document.querySelector("#highlighted-content2")!.innerHTML =
         commentHTML.length === 0 ? "Have something to say?" : commentHTML;
     }
   }, [commentHTML, gifOpen, collectOpen]);
@@ -472,7 +472,6 @@ const useComment = () => {
     handleGifSubmit,
     handleGif,
     results,
-    gifs,
     handleSetGif,
     gifOpen,
     setGifOpen,

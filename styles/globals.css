@@ -96,3 +96,30 @@ div::-webkit-scrollbar-track:active {
 div::-webkit-scrollbar-thumb:active {
   background-color: #172534 !important;
 }
+
+
+#highlighted-content2 {
+  font-family: "Earls Revenge";
+  font-size: 1rem;
+  line-height: 1.5rem;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+#highlighted-content2::-webkit-scrollbar {
+  display: none;
+}
+
+#post2 {
+  color: transparent;
+  background: transparent;
+  caret-color: black;
+}
+
+#post2 #highlighting2 * {
+  font-family: "Earls Revenge";
+  font-size: 1rem; /* 16px */
+  line-height: 1.5rem;
+  overflow-y: auto;
+  white-space: pre-wrap;
+}
