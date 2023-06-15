@@ -520,7 +520,7 @@ const usePost = () => {
     if (isFilled(postValues.title)) filledCounter++;
     if (isFilled(postValues.sustained)) filledCounter++;
     if (isFilled(postValues.involved)) filledCounter++;
-    if (isFilled(postDescription)) filledCounter++;
+    if (isFilled(postValues.description)) filledCounter++;
     if (isFilled(postValues.currency)) filledCounter++;
     if (postValues.price > 0) filledCounter++;
     if (

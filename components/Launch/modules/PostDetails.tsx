@@ -10,6 +10,7 @@ import SmallBox from "@/components/Common/modules/SmallBox";
 import TopBarOne from "@/components/Common/modules/TopBarOne";
 import TopBarTwo from "@/components/Common/modules/TopBarTwo";
 import { setPostValues } from "@/redux/reducers/postValuesSlice";
+import { setError } from "@/redux/reducers/errorSlice";
 
 const PostDetails: FunctionComponent<PostDetailsProps> = ({
   textElement,
@@ -499,6 +500,23 @@ const PostDetails: FunctionComponent<PostDetailsProps> = ({
                           className="relative w-full h-fit font-earl bg-oscura border border-azul rounded-md p-1"
                           value={recipient.recipient}
                           onChange={(e) => {
+                            const isRecipientExist = postValues.recipients.some(
+                              (r, i) =>
+                                r.recipient === e.target.value.trim() &&
+                                i !== index
+                            );
+
+                            if (isRecipientExist) {
+                              dispatch(
+                                setError({
+                                  actionValue: true,
+                                  actionMessage:
+                                    "All recipients must be unique addresses.",
+                                })
+                              );
+                              return;
+                            }
+
                             const updatedRecipients = postValues.recipients.map(
                               (r, i) =>
                                 i === index

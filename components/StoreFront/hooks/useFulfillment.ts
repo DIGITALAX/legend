@@ -425,47 +425,65 @@ const useFulfillment = () => {
   }, [cartItems]);
 
   const addItemToCart = () => {
-    let existingAmount = 0;
-    cartItems.forEach((item) => {
-      if (item.collectionId === chosenCollection?.collectionId) {
-        existingAmount += item.purchaseAmount;
+    let existingItemIndex = -1;
+    cartItems.forEach((item, index) => {
+      if (
+        item.collectionId === chosenCollection?.collectionId &&
+        item.size === size &&
+        item.baseColor === baseColor &&
+        item.purchaseToken === currency
+      ) {
+        existingItemIndex = index;
       }
     });
-    if (purchaseAmount + existingAmount > chosenCollection?.tokenIds.length!) {
-      dispatch(
-        setError({
-          actionValue: true,
-          actionMessage: "Items exceed token limit.",
-        })
-      );
-      return;
+
+    let updatedCartItems = cartItems.map((item, index) => {
+      if (index === existingItemIndex) {
+        return {
+          ...item,
+          purchaseAmount: item.purchaseAmount + purchaseAmount,
+        };
+      }
+      return item;
+    });
+
+    if (existingItemIndex === -1) {
+      if (
+        purchaseAmount > chosenCollection?.tokenIds.length! ||
+        purchaseAmount + cartItems.length > chosenCollection?.tokenIds.length!
+      ) {
+        dispatch(
+          setError({
+            actionValue: true,
+            actionMessage: "Items exceed token limit.",
+          })
+        );
+        return;
+      }
+
+      updatedCartItems.push({
+        ...chosenCollection,
+        purchaseToken: currency,
+        purchasePrice:
+          purchasePrice === "0" || !purchasePrice
+            ? chosenCollection?.basePrices[
+                chosenCollection?.acceptedTokens
+                  .map((token) => token.toLowerCase())
+                  .indexOf(
+                    ACCEPTED_TOKENS_MUMBAI.find(
+                      (value) =>
+                        value[0].toLowerCase() === currency.toLowerCase()
+                    )?.[1]?.toLowerCase()!
+                  )
+              ]
+            : purchasePrice,
+        purchaseAmount,
+        size,
+        baseColor,
+      } as any);
     }
 
-    dispatch(
-      setCartItems([
-        ...cartItems,
-        {
-          ...chosenCollection,
-          purchaseToken: currency,
-          purchasePrice:
-            purchasePrice === "0" || !purchasePrice
-              ? chosenCollection?.basePrices[
-                  chosenCollection?.acceptedTokens
-                    .map((token) => token.toLowerCase())
-                    .indexOf(
-                      ACCEPTED_TOKENS_MUMBAI.find(
-                        (value) =>
-                          value[0].toLowerCase() === currency.toLowerCase()
-                      )?.[1]?.toLowerCase()!
-                    )
-                ]
-              : purchasePrice,
-          purchaseAmount,
-          size,
-          baseColor,
-        } as any,
-      ])
-    );
+    dispatch(setCartItems(updatedCartItems));
   };
 
   return {

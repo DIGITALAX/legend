@@ -16,6 +16,7 @@ import { useRouter } from "next/router";
 import { setContractValues } from "@/redux/reducers/contractValuesSlice";
 import { setPubId } from "@/redux/reducers/pubIdSlice";
 import LensHubProxyABI from "./../../../abi/LensHubProxy.json";
+import { setError } from "@/redux/reducers/errorSlice";
 
 const useContracts = () => {
   const router = useRouter();
@@ -50,7 +51,18 @@ const useContracts = () => {
       },
     ],
     functionName: "createContracts",
-    enabled: Boolean(NFTValues.length > 0 && profileId),
+    enabled: Boolean(postValues.title && profileId),
+    onError: (error) => {
+      if (error.message.includes("LegendFactory: Grant Name must be unique.")) {
+        dispatch(
+          setError({
+            actionValue: true,
+            actionMessage:
+              "You have already used this grant name before. It must be unique. Try something else.",
+          })
+        );
+      }
+    },
   });
 
   const { writeAsync } = useContractWrite(config);

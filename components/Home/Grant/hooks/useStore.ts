@@ -124,50 +124,66 @@ const useStore = () => {
   }, [grantCollection, homeGrant]);
 
   const addItemToCart = () => {
-    let existingAmount = 0;
-    cartItems.forEach((item) => {
-      if (item.collectionId === grantCollection[nextItem]?.collectionId) {
-        existingAmount += item.purchaseAmount;
+    let existingItemIndex = -1;
+    cartItems.forEach((item, index) => {
+      if (
+        item.collectionId === grantCollection[nextItem]?.collectionId &&
+        item.size === size &&
+        item.baseColor === baseColor &&
+        item.purchaseToken === currency
+      ) {
+        existingItemIndex = index;
       }
     });
-    if (
-      purchaseAmount + existingAmount >
-      grantCollection[nextItem]?.tokenIds.length!
-    ) {
-      dispatch(
-        setError({
-          actionValue: true,
-          actionMessage: "Items exceed token limit.",
-        })
-      );
-      return;
+
+    let updatedCartItems = cartItems.map((item, index) => {
+      if (index === existingItemIndex) {
+        return {
+          ...item,
+          purchaseAmount: item.purchaseAmount + purchaseAmount,
+        };
+      }
+      return item;
+    });
+
+    if (existingItemIndex === -1) {
+      if (
+        purchaseAmount > grantCollection[nextItem]?.tokenIds.length! ||
+        purchaseAmount + cartItems.length >
+          grantCollection[nextItem]?.tokenIds.length!
+      ) {
+        dispatch(
+          setError({
+            actionValue: true,
+            actionMessage: "Items exceed token limit.",
+          })
+        );
+        return;
+      }
+
+      updatedCartItems.push({
+        ...grantCollection[nextItem],
+        purchaseToken: currency,
+        purchasePrice:
+          purchasePrice === "0" || !purchasePrice
+            ? grantCollection[nextItem]?.basePrices[
+                grantCollection[nextItem]?.acceptedTokens
+                  .map((token) => token.toLowerCase())
+                  .indexOf(
+                    ACCEPTED_TOKENS_MUMBAI.find(
+                      (value) =>
+                        value[0].toLowerCase() === currency.toLowerCase()
+                    )?.[1]?.toLowerCase()!
+                  )
+              ]
+            : purchasePrice,
+        purchaseAmount,
+        size,
+        baseColor,
+      });
     }
 
-    dispatch(
-      setCartItems([
-        ...cartItems,
-        {
-          ...grantCollection[nextItem],
-          purchaseToken: currency,
-          purchasePrice:
-            purchasePrice === "0" || !purchasePrice
-              ? grantCollection[nextItem].basePrices[
-                  grantCollection[nextItem].acceptedTokens
-                    .map((token) => token.toLowerCase())
-                    .indexOf(
-                      ACCEPTED_TOKENS_MUMBAI.find(
-                        (value) =>
-                          value[0].toLowerCase() === currency.toLowerCase()
-                      )?.[1]?.toLowerCase()!
-                    )
-                ]
-              : purchasePrice,
-          purchaseAmount,
-          size,
-          baseColor,
-        } as any,
-      ])
-    );
+    dispatch(setCartItems(updatedCartItems));
   };
 
   useEffect(() => {

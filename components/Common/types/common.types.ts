@@ -94,7 +94,7 @@ export type CollectInfoValuesProps = {
   commentId: string;
   lensProfile: string | undefined;
   address: `0x${string}` | undefined;
-  openConnectModal: (() => void) | undefined
+  openConnectModal: (() => void) | undefined;
 };
 
 export type CollectInfoProps = {
@@ -108,7 +108,7 @@ export type CollectInfoProps = {
   approveCurrency: () => Promise<void>;
   handleLensSignIn: () => void;
   commentId: string;
-  openConnectModal: (() => void) | undefined
+  openConnectModal: (() => void) | undefined;
   dispatch: Dispatch<AnyAction>;
 };
 
@@ -180,5 +180,10 @@ export type OptionsProps = {
   gifOpen: boolean;
   collectOpen: boolean;
   dispatch: Dispatch<AnyAction>;
-  commentImages: UploadedMedia[] | undefined
+  commentImages: UploadedMedia[] | undefined;
+};
+
+export type ErrorProps = {
+  dispatch: Dispatch<AnyAction>;
+  message: string | undefined;
 };

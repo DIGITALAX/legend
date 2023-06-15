@@ -9,12 +9,14 @@ import { useConnectModal } from "@rainbow-me/rainbowkit";
 import useMainGrant from "@/components/Home/Grant/hooks/useMainGrant";
 import useSignIn from "@/components/Layout/hooks/useSignIn";
 import { useAccount } from "wagmi";
+import Error from "./Error";
 
 const Modals: FunctionComponent = (): JSX.Element => {
   const dispatch = useDispatch();
   const dropModal = useSelector(
     (state: RootState) => state.app.dropModalReducer
   );
+  const errorModal = useSelector((state: RootState) => state.app.errorReducer);
   const storefrontValues = useSelector(
     (state: RootState) => state.app.storefrontValuesReducer.value
   );
@@ -72,6 +74,9 @@ const Modals: FunctionComponent = (): JSX.Element => {
           dispatch={dispatch}
           openConnectModal={openConnectModal}
         />
+      )}
+      {errorModal.value && (
+        <Error dispatch={dispatch} message={errorModal.message} />
       )}
     </>
   );

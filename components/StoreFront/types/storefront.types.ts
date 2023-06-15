@@ -57,7 +57,7 @@ export interface PurchaseCollection {
   size: string;
   purchaseToken: string;
   purchaseAmount: number;
-  purchasePrice:  string;
+  purchasePrice: any;
   baseColor: string;
 }
 

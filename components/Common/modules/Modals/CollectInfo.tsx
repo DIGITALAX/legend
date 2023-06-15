@@ -23,7 +23,7 @@ const CollectInfo: FunctionComponent<CollectInfoProps> = ({
   return (
     <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
       <div
-        className="relative w-full md:w-[22rem] h-fit col-start-1 place-self-center rounded-lg p-px bg-offBlack flex flex-col border border-white"
+        className="relative w-full md:w-[22rem] h-fit col-start-1 place-self-center rounded-lg p-px bg-black flex flex-col border border-white"
         id="modal"
       >
         <div
