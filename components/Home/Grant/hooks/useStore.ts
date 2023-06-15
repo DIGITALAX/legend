@@ -149,7 +149,19 @@ const useStore = () => {
         {
           ...grantCollection[nextItem],
           purchaseToken: currency,
-          purchasePrice,
+          purchasePrice:
+            purchasePrice === "0" || !purchasePrice
+              ? grantCollection[nextItem].basePrices[
+                  grantCollection[nextItem].acceptedTokens
+                    .map((token) => token.toLowerCase())
+                    .indexOf(
+                      ACCEPTED_TOKENS_MUMBAI.find(
+                        (value) =>
+                          value[0].toLowerCase() === currency.toLowerCase()
+                      )?.[1]?.toLowerCase()!
+                    )
+                ]
+              : purchasePrice,
           purchaseAmount,
           size,
           baseColor,

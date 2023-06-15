@@ -2,6 +2,7 @@ import { Dispatch, FormEvent } from "react";
 import TopBarTwo from "../modules/TopBarTwo";
 import { Collection } from "@/components/Launch/types/launch.types";
 import { AnyAction } from "redux";
+import { Erc20, UploadedMedia } from "@/components/home.types";
 
 export type SmallBoxProps = {
   title: string;
@@ -133,3 +134,51 @@ export interface PostCollectValuesState {
   isApproved?: boolean;
   totalCollects?: number;
 }
+
+export type CollectButtonProps = {
+  values?: string[] | Erc20[];
+  col: string;
+  row: string;
+  openDropdown: boolean;
+  handleOpenDropdown: (e: boolean) => void;
+  selectValue: string | undefined;
+  selectFunction: (e: string) => void;
+  label: string;
+  mixtape?: boolean;
+};
+
+export type CollectInputProps = {
+  id: string;
+  name: string;
+  step?: string;
+  min?: string;
+  placeholder?: string;
+  defaultValue?: string;
+  col?: string;
+  row?: string;
+  label?: string;
+  handleValueChange: (e: number) => void;
+};
+
+export type BoxImagesProps = {
+  handleRemoveImage: (e: UploadedMedia, feed?: boolean) => void;
+  commentLoading: boolean;
+  postImagesDispatched?: UploadedMedia[];
+};
+
+export type OptionsProps = {
+  videoLoading: boolean;
+  imageLoading: boolean;
+  commentLoading: boolean;
+  uploadImage: (
+    e: FormEvent,
+    canvas?: boolean,
+    feed?: boolean
+  ) => Promise<void>;
+  uploadVideo: (e: FormEvent, feed?: boolean) => Promise<void>;
+  setGifOpen: (e: boolean) => void;
+  gifOpen: boolean;
+  collectOpen: boolean;
+  dispatch: Dispatch<AnyAction>;
+  commentImages: UploadedMedia[] | undefined
+};

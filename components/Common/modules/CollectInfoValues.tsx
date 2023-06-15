@@ -28,7 +28,7 @@ const CollectInfoValues: FunctionComponent<CollectInfoValuesProps> = ({
     <div className="relative w-full h-full flex flex-row text-center gap-3 items-center">
       <div className="relative w-full h-60 flex p-2">
         <Image
-          src={`${INFURA_GATEWAY}/ipfs/QmcHYeemWE3z8qy7m42pJbasYzyvMRWNPRMfXvSNz6XKoK`}
+          src={`${INFURA_GATEWAY}/QmcHYeemWE3z8qy7m42pJbasYzyvMRWNPRMfXvSNz6XKoK`}
           layout="fill"
           objectFit="cover"
           className="relative w-fit h-fit flex rounded-md"

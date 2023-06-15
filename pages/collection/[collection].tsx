@@ -276,7 +276,7 @@ const Collection: NextPage = (): JSX.Element => {
               <div className="font-mega text-white text-xl">
                 {chosenCollection?.uri.name}
               </div>
-              <div className="relative w-fit h-fit text-sm font-mega text-white/80">
+              <div className="relative w-fit h-60 text-sm font-mega text-white/80 overflow-y-scroll flex justify-start items-start">
                 {chosenCollection?.uri.description}
               </div>
             </div>

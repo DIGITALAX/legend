@@ -102,10 +102,9 @@ const useFulfillment = () => {
     ],
     functionName: "allowance",
     args: [address as `0x${string}`, LEGEND_MARKET_MUMBAI],
-    enabled: Boolean(addressArg?.newAddress),
   });
 
-  const { config } = usePrepareContractWrite({
+  const { config, error } = usePrepareContractWrite({
     address: addressArg?.newAddress as `0x${string}`,
     abi: [
       currency === "MONA"
@@ -119,20 +118,20 @@ const useFulfillment = () => {
             stateMutability: "nonpayable",
             type: "function",
           }
-        : currency === "WMATIC"
-        ? {
-            constant: false,
-            inputs: [
-              { name: "guy", type: "address" },
-              { name: "wad", type: "uint256" },
-            ],
-            name: "approve",
-            outputs: [{ name: "", type: "bool" }],
-            payable: false,
-            stateMutability: "nonpayable",
-            type: "function",
-          }
-        : {
+        : /* :  currency === "WMATIC"
+        // ? {
+        //     constant: false,
+        //     inputs: [
+        //       { name: "guy", type: "address" },
+        //       { name: "wad", type: "uint256" },
+        //     ],
+        //     name: "approve",
+        //     outputs: [{ name: "", type: "bool" }],
+        //     payable: false,
+        //     stateMutability: "nonpayable",
+        //     type: "function",
+        //   } */
+          {
             inputs: [
               {
                 internalType: "address",
@@ -160,11 +159,10 @@ const useFulfillment = () => {
     functionName: "approve",
     args: [
       LEGEND_MARKET_MUMBAI,
-      addressArg?.totalPrice
-        ? addressArg?.totalPrice
-        : BigNumber.from("0").toBigInt(),
+      (addressArg?.totalPrice ? addressArg?.totalPrice : 0) as any,
     ],
     enabled: Boolean(addressArg?.newAddress),
+    value: 0 as any,
   });
 
   const { config: buyNFTConfig } = usePrepareContractWrite({
@@ -176,10 +174,10 @@ const useFulfillment = () => {
       fulfillmentDetails,
     ],
     functionName: "buyTokens",
-    enabled: Boolean(fulfillmentDetails),
+    enabled: Boolean(addressArg),
   });
 
-  const { writeAsync, isSuccess } = useContractWrite(config);
+  const { writeAsync, isSuccess, error: aerror } = useContractWrite(config);
   const { writeAsync: buyNFTAsync, isSuccess: isSuccessNFT } =
     useContractWrite(buyNFTConfig);
 
@@ -217,16 +215,15 @@ const useFulfillment = () => {
     try {
       setIndex(index);
       setAddressArg({
-        newAddress: ACCEPTED_TOKENS_MUMBAI.find(
-          ([tokenName]) => tokenName === newAddress
-        )?.[1]!,
-        totalPrice: BigNumber.from(
-          (totalPrice.toString() + newAddress === "USDT"
-            ? "000000"
-            : "000000000000000000"
-          ).slice(0, 78)
-        ).toBigInt(),
+        newAddress,
+        totalPrice: Number(
+          BigNumber.from(
+            totalPrice.toString() +
+              (newAddress === "USDT" ? "000000" : "000000000000000000")
+          )
+        ) as any,
       });
+      await writeSpend();
     } catch (err: any) {
       setPurchaseLoading(false);
       console.error(err.message);
@@ -365,25 +362,15 @@ const useFulfillment = () => {
 
   useEffect(() => {
     if (address) {
-      for (let i = 0; i <= totalAmounts?.length; i++) {
-        if (
+      const newApproved = approved.map((value, indexTwo) => {
+        const totalPrice = totalAmounts[indexTwo]?.totalPrice || 0;
+        const isApproved =
           Number(data?.toString()) /
             (currency === "USDT" ? 10 ** 6 : 10 ** 18) >=
-          totalAmounts[i]?.totalPrice
-        ) {
-          setApproved(
-            approved.map((value, indexTwo) =>
-              indexTwo === index ? true : value
-            )
-          );
-        } else {
-          setApproved(
-            approved.map((value, indexTwo) =>
-              indexTwo === index ? false : value
-            )
-          );
-        }
-      }
+          totalPrice;
+        return indexTwo === index ? isApproved : value;
+      });
+      setApproved(newApproved);
     }
   }, [address, totalAmounts, chosenCollection, data]);
 
@@ -416,6 +403,10 @@ const useFulfillment = () => {
       const newAmounts = Array.from(
         new Set(cartItems?.map((obj) => obj.purchaseToken))
       )?.map((purchaseToken) => {
+        const purchaseAddress = ACCEPTED_TOKENS_MUMBAI.find(
+          ([c]) => c === purchaseToken
+        )?.[1] as string;
+
         const totalPrice = cartItems
           .filter((obj) => obj.purchaseToken === purchaseToken)
           .reduce(
@@ -425,7 +416,7 @@ const useFulfillment = () => {
           );
 
         return {
-          purchaseToken,
+          purchaseToken: purchaseAddress,
           totalPrice,
         };
       });
@@ -456,7 +447,19 @@ const useFulfillment = () => {
         {
           ...chosenCollection,
           purchaseToken: currency,
-          purchasePrice,
+          purchasePrice:
+            purchasePrice === "0" || !purchasePrice
+              ? chosenCollection?.basePrices[
+                  chosenCollection?.acceptedTokens
+                    .map((token) => token.toLowerCase())
+                    .indexOf(
+                      ACCEPTED_TOKENS_MUMBAI.find(
+                        (value) =>
+                          value[0].toLowerCase() === currency.toLowerCase()
+                      )?.[1]?.toLowerCase()!
+                    )
+                ]
+              : purchasePrice,
           purchaseAmount,
           size,
           baseColor,

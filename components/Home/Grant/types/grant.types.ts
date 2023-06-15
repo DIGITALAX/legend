@@ -2,7 +2,12 @@ import {
   CollectionGraph,
   PurchaseCollection,
 } from "@/components/StoreFront/types/storefront.types";
-import { Profile, Publication } from "@/components/home.types";
+import {
+  Erc20,
+  Profile,
+  Publication,
+  UploadedMedia,
+} from "@/components/home.types";
 import { ClipboardEvent, FormEvent, KeyboardEvent, RefObject } from "react";
 import { AnyAction, Dispatch } from "redux";
 
@@ -107,6 +112,46 @@ export type CommentBoxProps = {
   handleLensSignIn: () => void;
   handleConnect: () => void;
   collectNotif: string;
+  collectOpen: boolean;
+  enabledCurrencies: Erc20[];
+  audienceTypes: string[];
+  setAudienceType: (e: string) => void;
+  audienceType: string;
+  setEnabledCurrency: (e: string) => void;
+  enabledCurrency: string | undefined;
+  setChargeCollectDropDown: (e: boolean) => void;
+  setAudienceDropDown: (e: boolean) => void;
+  setCurrencyDropDown: (e: boolean) => void;
+  chargeCollectDropDown: boolean;
+  audienceDropDown: boolean;
+  currencyDropDown: boolean;
+  referral: number;
+  setReferral: (e: number) => void;
+  limit: number;
+  setLimit: (e: number) => void;
+  value: number;
+  setValue: (e: number) => void;
+  collectibleDropDown: boolean;
+  setCollectibleDropDown: (e: boolean) => void;
+  collectible: string;
+  setCollectible: (e: string) => void;
+  chargeCollect: string;
+  setChargeCollect: (e: string) => void;
+  limitedDropDown: boolean;
+  setLimitedDropDown: (e: boolean) => void;
+  limitedEdition: string;
+  setLimitedEdition: (e: string) => void;
+  setTimeLimit: (e: string) => void;
+  timeLimit: string;
+  timeLimitDropDown: boolean;
+  setTimeLimitDropDown: (e: boolean) => void;
+  videoLoading: boolean;
+  imageLoading: boolean;
+  uploadImage: (e: FormEvent) => Promise<void>;
+  uploadVideo: (e: FormEvent) => Promise<void>;
+  handleRemoveImage: (e: UploadedMedia) => void;
+  commentImages?: UploadedMedia[];
+  mappedFeaturedFiles: UploadedMedia[];
 };
 
 export type DynamicNFTProps = {

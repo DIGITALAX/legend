@@ -1,6 +1,6 @@
 import useFulfillment from "@/components/StoreFront/hooks/useFulfillment";
 import { PurchaseCollection } from "@/components/StoreFront/types/storefront.types";
-import { INFURA_GATEWAY } from "@/lib/constants";
+import { ACCEPTED_TOKENS_MUMBAI, INFURA_GATEWAY } from "@/lib/constants";
 import { setCartItems } from "@/redux/reducers/cartItemsSlice";
 import { RootState } from "@/redux/store";
 import { NextPage } from "next";
@@ -200,16 +200,22 @@ const Checkout: NextPage = (): JSX.Element => {
                 index: number
               ) => {
                 return (
-                  <div className="relative w-full h-fit gap-2 flex flex-col items-center justify-start">
-                    <div
-                      key={index}
-                      className="relative w-fit h-fit flex flex-row gap-1.5 text-white font-mega"
-                    >
+                  <div
+                    className="relative w-full h-fit gap-2 flex flex-col items-center justify-start"
+                    key={index}
+                  >
+                    <div className="relative w-fit h-fit flex flex-row gap-1.5 text-white font-mega">
                       <div className="relative w-fit h-fit text-sm">
                         {item.totalPrice}
                       </div>
                       <div className="relative w-fit h-fit text-sm">
-                        {item.purchaseToken}
+                        {
+                          ACCEPTED_TOKENS_MUMBAI?.find(
+                            (c) =>
+                              c[1].toLowerCase() ===
+                              item?.purchaseToken?.toLowerCase()
+                          )?.[0]
+                        }
                       </div>
                     </div>
                     {!approved[index] && (
@@ -239,39 +245,39 @@ const Checkout: NextPage = (): JSX.Element => {
             )}
           </div>
         </div>
-        <div className="relative flex flex-col w-fit h-fit">
-          <div
-            className={`relative w-fit h-fit text-white font-earl bg-darker p-2 ${
-              !purchaseLoading &&
-              (approved.length > 0 &&
-                approved?.every((value) => value === true)) &&
-              "cursor-pointer active:scale-95"
-            }`}
-            onClick={
-              purchaseLoading
-                ? () => {}
-                : () =>
-                    (approved.length > 0 &&
-                      approved?.every((value) => value === true)) &&
-                    buyNFT()
-            }
-          >
-            <div
-              className={`relative w-fit h-fit ${
-                purchaseLoading && "animate-spin"
-              }`}
-            >
-              {purchaseLoading ? (
-                <AiOutlineLoading size={15} color="white" />
-              ) : approved.length < 1 ||
-                !approved?.every((value) => value === true) ? (
-                "approve token spend"
-              ) : (
-                "Purchase & Fulfill"
-              )}
+        {approved.length < 1 ||
+          (!approved?.every((value) => value === true) && (
+            <div className="relative flex flex-col w-fit h-fit">
+              <div
+                className={`relative w-fit h-fit text-white font-earl bg-darker p-2 ${
+                  !purchaseLoading &&
+                  approved.length > 0 &&
+                  approved?.every((value) => value === true) &&
+                  "cursor-pointer active:scale-95"
+                }`}
+                onClick={
+                  purchaseLoading
+                    ? () => {}
+                    : () =>
+                        approved.length > 0 &&
+                        approved?.every((value) => value === true) &&
+                        buyNFT()
+                }
+              >
+                <div
+                  className={`relative w-fit h-fit ${
+                    purchaseLoading && "animate-spin"
+                  }`}
+                >
+                  {purchaseLoading ? (
+                    <AiOutlineLoading size={15} color="white" />
+                  ) : (
+                    "Purchase & Fulfill"
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          ))}
       </div>
     </div>
   );

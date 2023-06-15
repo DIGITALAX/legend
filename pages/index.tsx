@@ -112,10 +112,59 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
     preElement,
     handleImagePaste,
   } = useComment();
-  const { collectNotif } = useCollectOptions();
-  const { setImageLoading } = useImageUpload();
+  const {
+    handleCollectValues,
+    collectNotif,
+    referral,
+    setCollectible,
+    collectibleDropDown,
+    setCollectibleDropDown,
+    collectible,
+    setAudienceDropDown,
+    audienceType,
+    audienceTypes,
+    chargeCollect,
+    limit,
+    limitedEdition,
+    audienceDropDown,
+    setAudienceType,
+    setTimeLimit,
+    timeLimit,
+    timeLimitDropDown,
+    setTimeLimitDropDown,
+    setLimitedEdition,
+    limitedDropDown,
+    setLimitedDropDown,
+    setReferral,
+    setLimit,
+    setChargeCollect,
+    setCurrencyDropDown,
+    chargeCollectDropDown,
+    setChargeCollectDropDown,
+    enabledCurrencies,
+    enabledCurrency,
+    currencyDropDown,
+    setEnabledCurrency,
+    value,
+    setValue,
+  } = useCollectOptions();
+  const {
+    videoLoading,
+    imageLoading,
+    uploadImage,
+    uploadVideo,
+    handleRemoveImage,
+    mappedFeaturedFiles,
+    setImageLoading,
+  } = useImageUpload();
   const grantCollection = useSelector(
     (state: RootState) => state.app.grantCollectionReducer.value
+  );
+  const commentImages = useSelector(
+    (state: RootState) => state.app.commentImagesReducer.value
+  );
+  const collectOpen = useSelector(
+    (state: RootState) => state.app.collectOpenReducer.value
   );
   const cartItems = useSelector(
     (state: RootState) => state.app.cartItemsReducer.value
@@ -324,6 +373,46 @@ export default function Home({ firebaseApp }: HomeProps): JSX.Element {
             collectNotif={collectNotif}
             handleConnect={handleConnect}
             handleLensSignIn={handleLensSignIn}
+            collectOpen={collectOpen}
+            collectible={collectible}
+            referral={referral}
+            setReferral={setReferral}
+            setCollectible={setCollectible}
+            setCollectibleDropDown={setCollectibleDropDown}
+            chargeCollect={chargeCollect}
+            setChargeCollectDropDown={setChargeCollectDropDown}
+            chargeCollectDropDown={chargeCollectDropDown}
+            collectibleDropDown={collectibleDropDown}
+            audienceTypes={audienceTypes}
+            setAudienceType={setAudienceType}
+            audienceType={audienceType}
+            audienceDropDown={audienceDropDown}
+            setAudienceDropDown={setAudienceDropDown}
+            limitedEdition={limitedEdition}
+            limit={limit}
+            limitedDropDown={limitedDropDown}
+            setLimitedDropDown={setLimitedDropDown}
+            setTimeLimit={setTimeLimit}
+            setChargeCollect={setChargeCollect}
+            timeLimitDropDown={timeLimitDropDown}
+            setTimeLimitDropDown={setTimeLimitDropDown}
+            enabledCurrency={enabledCurrency}
+            timeLimit={timeLimit}
+            setCurrencyDropDown={setCurrencyDropDown}
+            setLimitedEdition={setLimitedEdition}
+            setLimit={setLimit}
+            enabledCurrencies={enabledCurrencies}
+            setEnabledCurrency={setEnabledCurrency}
+            setValue={setValue}
+            value={value}
+            currencyDropDown={currencyDropDown}
+            handleRemoveImage={handleRemoveImage}
+            mappedFeaturedFiles={mappedFeaturedFiles}
+            commentImages={commentImages}
+            videoLoading={videoLoading}
+            imageLoading={imageLoading}
+            uploadVideo={uploadVideo}
+            uploadImage={uploadImage}
           />
           <StoreFrontBox
             collapseNumber={collapseNumber}

@@ -20,6 +20,10 @@ import { setSecondaryComment } from "@/redux/reducers/secondaryCommentSlice";
 import { setCollectInfo } from "@/redux/reducers/collectInfoSlice";
 import { setFollowerOnly } from "@/redux/reducers/followerOnlySlice";
 import { setError } from "@/redux/reducers/errorSlice";
+import CollectButton from "@/components/Common/modules/CollectButton";
+import CollectInput from "@/components/Common/modules/CollectInput";
+import BoxImages from "@/components/Common/modules/BoxImages";
+import Options from "@/components/Common/modules/Options";
 
 const CommentBox: FunctionComponent<CommentBoxProps> = ({
   collapseNumber,
@@ -61,6 +65,48 @@ const CommentBox: FunctionComponent<CommentBoxProps> = ({
   handleSetGif,
   handleGifSubmit,
   collectNotif,
+  gifOpen,
+  setGifOpen,
+  collectOpen,
+  collectible,
+  referral,
+  setReferral,
+  setCollectible,
+  setCollectibleDropDown,
+  chargeCollect,
+  setChargeCollectDropDown,
+  chargeCollectDropDown,
+  collectibleDropDown,
+  audienceTypes,
+  setAudienceType,
+  audienceType,
+  audienceDropDown,
+  setAudienceDropDown,
+  limitedEdition,
+  limit,
+  limitedDropDown,
+  setLimitedDropDown,
+  setTimeLimit,
+  setChargeCollect,
+  timeLimitDropDown,
+  setTimeLimitDropDown,
+  enabledCurrency,
+  timeLimit,
+  setCurrencyDropDown,
+  setLimitedEdition,
+  setLimit,
+  enabledCurrencies,
+  setEnabledCurrency,
+  setValue,
+  value,
+  currencyDropDown,
+  handleRemoveImage,
+  mappedFeaturedFiles,
+  commentImages,
+  videoLoading,
+  imageLoading,
+  uploadVideo,
+  uploadImage,
 }): JSX.Element => {
   return (
     <Draggable
@@ -100,8 +146,18 @@ const CommentBox: FunctionComponent<CommentBoxProps> = ({
           </div>
         </div>
         <div>
-          <div className="relative w-full h-fit flex flex-col items-center justify-center gap-5">
-            <div className="relative w-full h-60 grid grid-flow-row auto-rows-auto gap-5 top-5 overflow-y-scroll">
+          <div className="relative w-full h-fit flex flex-col items-center justify-center gap-5 top-5">
+            <div className="relative w-full h-fit overflow-y-scroll gap-1 flex">
+              {(mappedFeaturedFiles?.length !== 0 ||
+                commentImages?.length !== 0) && (
+                <BoxImages
+                  handleRemoveImage={handleRemoveImage}
+                  commentLoading={commentLoading}
+                  postImagesDispatched={commentImages}
+                />
+              )}
+            </div>
+            <div className="relative w-full h-60 grid grid-flow-row auto-rows-auto gap-5 overflow-y-scroll">
               <InfiniteScroll
                 className={`relative row-start-1 w-full h-full overflow-y-scroll`}
                 hasMore={hasMoreComments}
@@ -155,7 +211,7 @@ const CommentBox: FunctionComponent<CommentBoxProps> = ({
                                   if (
                                     media?.original?.url?.includes("ipfs://")
                                   ) {
-                                    formattedImageURL = `${INFURA_GATEWAY}/ipfs/${
+                                    formattedImageURL = `${INFURA_GATEWAY}/${
                                       media?.original?.url?.split("://")[1]
                                     }`;
                                   } else {
@@ -220,7 +276,7 @@ const CommentBox: FunctionComponent<CommentBoxProps> = ({
                                 />
                               ) : hasReacted?.[index] ? (
                                 <Image
-                                  src={`${INFURA_GATEWAY}/ipfs/Qmc3KCKWRgN8iKwwAPM5pYkAYNeVwWu3moa5RDMDTBV6ZS`}
+                                  src={`${INFURA_GATEWAY}/Qmc3KCKWRgN8iKwwAPM5pYkAYNeVwWu3moa5RDMDTBV6ZS`}
                                   width={12}
                                   height={12}
                                   alt="mirror"
@@ -228,7 +284,7 @@ const CommentBox: FunctionComponent<CommentBoxProps> = ({
                                 />
                               ) : (
                                 <Image
-                                  src={`${INFURA_GATEWAY}/ipfs/QmSX1Y5cKp8p53jv2CnfQBuhu3dgLANjZMTyAMKtgFtvV6`}
+                                  src={`${INFURA_GATEWAY}/QmSX1Y5cKp8p53jv2CnfQBuhu3dgLANjZMTyAMKtgFtvV6`}
                                   width={12}
                                   height={12}
                                   alt="backward"
@@ -246,7 +302,7 @@ const CommentBox: FunctionComponent<CommentBoxProps> = ({
                               }
                             >
                               <Image
-                                src={`${INFURA_GATEWAY}/ipfs/QmeuR9Fzv8QF9R6ntjGKB78GteQgmEcXhBfVPhsTyWbumA`}
+                                src={`${INFURA_GATEWAY}/QmeuR9Fzv8QF9R6ntjGKB78GteQgmEcXhBfVPhsTyWbumA`}
                                 width={12}
                                 height={12}
                                 alt="backward"
@@ -316,7 +372,7 @@ const CommentBox: FunctionComponent<CommentBoxProps> = ({
                                 />
                               ) : comment?.hasCollectedByMe ? (
                                 <Image
-                                  src={`${INFURA_GATEWAY}/ipfs/QmXG1mnHdBDXMzMZ9t1wE1Tqo8DRXQ1oNLUxpETdUw17HU`}
+                                  src={`${INFURA_GATEWAY}/QmXG1mnHdBDXMzMZ9t1wE1Tqo8DRXQ1oNLUxpETdUw17HU`}
                                   width={12}
                                   height={12}
                                   alt="collect"
@@ -324,7 +380,7 @@ const CommentBox: FunctionComponent<CommentBoxProps> = ({
                                 />
                               ) : (
                                 <Image
-                                  src={`${INFURA_GATEWAY}/ipfs/QmRGf1cz8h9bdw9VKp9zYXZoDfy15nRA1fKc7ARhxnRPwr`}
+                                  src={`${INFURA_GATEWAY}/QmRGf1cz8h9bdw9VKp9zYXZoDfy15nRA1fKc7ARhxnRPwr`}
                                   width={12}
                                   height={12}
                                   alt="collect"
@@ -353,7 +409,7 @@ const CommentBox: FunctionComponent<CommentBoxProps> = ({
                                 />
                               ) : hasMirrored?.[index] ? (
                                 <Image
-                                  src={`${INFURA_GATEWAY}/ipfs/QmcMNSnbKvUfx3B3iHBd9deZCDf7E4J8W6UtyNer3xoMsB`}
+                                  src={`${INFURA_GATEWAY}/QmcMNSnbKvUfx3B3iHBd9deZCDf7E4J8W6UtyNer3xoMsB`}
                                   width={12}
                                   height={12}
                                   alt="mirror"
@@ -361,7 +417,7 @@ const CommentBox: FunctionComponent<CommentBoxProps> = ({
                                 />
                               ) : (
                                 <Image
-                                  src={`${INFURA_GATEWAY}/ipfs/QmXZi8e6UQaXm3BMMdsAUTnxoQSEr97nvuc19v7kBAgFsY`}
+                                  src={`${INFURA_GATEWAY}/QmXZi8e6UQaXm3BMMdsAUTnxoQSEr97nvuc19v7kBAgFsY`}
                                   width={12}
                                   height={12}
                                   alt="mirror"
@@ -381,90 +437,227 @@ const CommentBox: FunctionComponent<CommentBoxProps> = ({
               </InfiniteScroll>
             </div>
             <div className="relative w-full h-40 border border-black p-px rounded-md top-5 flex justify-center items-center bg-white flex-col">
-              <div className="relative w-full h-full border border-black p-px rounded-md grid grid-flow-col auto-cols-auto">
-                <textarea
-                  id="post2"
-                  onScroll={() => syncScroll(textElement, preElement)}
-                  onInput={(e: FormEvent) => {
-                    handleCommentDescription(e);
-                    syncScroll(textElement, preElement);
-                  }}
-                  onKeyDown={(e: KeyboardEvent<Element>) =>
-                    handleKeyDownDelete(e)
-                  }
-                  onPaste={(e: ClipboardEvent<HTMLTextAreaElement>) =>
-                    handleImagePaste(e, setImageLoading)
-                  }
-                  style={{ resize: "none" }}
-                  className="relative w-full h-full font-earl text-black p-2 z-1 rounded-lg overflow-y-auto"
-                  ref={textElement}
-                  value={commentDescription}
-                  disabled={commentLoading || !canComment ? true : false}
-                ></textarea>
-                <pre
-                  id="highlighting2"
-                  className={`absolute w-full h-full font-earl text-black p-2 rounded-lg overflow-y-auto ${
-                    !canComment && "opacity-70"
-                  }`}
-                  ref={preElement}
-                >
-                  <code
-                    id="highlighted-content2"
-                    className={`w-full h-full place-self-center text-left whitespace-pre-wrap overflow-y-auto z-0`}
-                  >
-                    {!canComment
-                      ? "Looks Like Only Select Profiles Can Comment on this Post ATM"
-                      : commentId !== ""
-                      ? "Reply with a Comment?"
-                      : "Have Something to Say?"}
-                  </code>
-                </pre>
-                {mentionProfiles?.length > 0 && profilesOpen && (
-                  <div
-                    className={`absolute w-44 max-h-28 h-fit flex flex-col overflow-y-scroll items-start justify-start z-2 rounded-lg`}
-                    style={{
-                      top: caretCoord.y + 30,
-                      left: caretCoord.x,
+              {collectOpen ? (
+                <div className="relative w-full h-full flex overflow-y-scroll">
+                  <div className="relative w-fit h-full flex auto-rows-auto gap-10">
+                    <div className="relative w-fit h-fit row-start-1 flex flex-col flex-wrap place-self-start gap-3">
+                      <div className="relative flex flex-col galaxy:flex-row">
+                        <CollectButton
+                          col={"1"}
+                          row={"1"}
+                          selectFunction={setCollectible}
+                          openDropdown={collectibleDropDown}
+                          handleOpenDropdown={setCollectibleDropDown}
+                          selectValue={collectible}
+                          label={"Collectible?"}
+                        />
+                        {collectible === "yes" && (
+                          <CollectButton
+                            col={"1"}
+                            row={"1"}
+                            values={audienceTypes}
+                            selectFunction={setAudienceType}
+                            openDropdown={audienceDropDown}
+                            handleOpenDropdown={setAudienceDropDown}
+                            selectValue={audienceType}
+                            label={"Who can collect?"}
+                          />
+                        )}
+                        {collectible === "yes" && (
+                          <CollectButton
+                            col={"1"}
+                            row={"1"}
+                            selectFunction={setChargeCollect}
+                            openDropdown={chargeCollectDropDown}
+                            handleOpenDropdown={setChargeCollectDropDown}
+                            selectValue={chargeCollect}
+                            label={"Creator award?"}
+                          />
+                        )}
+                      </div>
+                      <div className="relative flex flex-col galaxy:flex-row">
+                        {collectible === "yes" && chargeCollect === "yes" && (
+                          <CollectButton
+                            col={"1"}
+                            row={"1"}
+                            selectFunction={setTimeLimit}
+                            openDropdown={timeLimitDropDown}
+                            handleOpenDropdown={setTimeLimitDropDown}
+                            selectValue={timeLimit}
+                            label={"24 Hour Collect"}
+                          />
+                        )}
+                        {collectible === "yes" && (
+                          <CollectButton
+                            col={"1"}
+                            row={"1"}
+                            selectFunction={setLimitedEdition}
+                            openDropdown={limitedDropDown}
+                            handleOpenDropdown={setLimitedDropDown}
+                            selectValue={limitedEdition}
+                            label={"Limited edition?"}
+                          />
+                        )}
+                        {collectible === "yes" && limitedEdition === "yes" && (
+                          <CollectInput
+                            min="1"
+                            step="1"
+                            defaultValue={limit.toString()}
+                            placeholder={limit.toString()}
+                            id="collectLimit"
+                            label="Edition Amount"
+                            name="collectLimit"
+                            col={"1"}
+                            row={"1"}
+                            handleValueChange={setLimit}
+                          />
+                        )}
+                      </div>
+                      <div className="relative flex flex-col galaxy:flex-row w-full">
+                        {collectible === "yes" && chargeCollect === "yes" && (
+                          <CollectButton
+                            col={"1"}
+                            row={"1"}
+                            values={enabledCurrencies}
+                            selectFunction={setEnabledCurrency}
+                            openDropdown={currencyDropDown}
+                            handleOpenDropdown={setCurrencyDropDown}
+                            selectValue={enabledCurrency}
+                            label={"Award currency"}
+                          />
+                        )}
+                        {collectible === "yes" && chargeCollect === "yes" && (
+                          <CollectInput
+                            min="0"
+                            defaultValue={value.toString()}
+                            placeholder={value.toString()}
+                            id="valueAmount"
+                            label="Award amount"
+                            name="valueAmount"
+                            col={"1"}
+                            row={"1"}
+                            step="0.00001"
+                            handleValueChange={setValue}
+                          />
+                        )}
+                        {collectible === "yes" && chargeCollect === "yes" && (
+                          <CollectInput
+                            min="0"
+                            defaultValue={referral.toString()}
+                            placeholder={referral.toString()}
+                            id="referral"
+                            label="Mirrored posts (%)"
+                            name="referral"
+                            col={"1"}
+                            row={"1"}
+                            step="0.1"
+                            handleValueChange={setReferral}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : gifOpen ? (
+                <div></div>
+              ) : (
+                <div className="relative w-full h-full border border-black p-px rounded-md grid grid-flow-col auto-cols-auto">
+                  <textarea
+                    id="post2"
+                    onScroll={() => syncScroll(textElement, preElement)}
+                    onInput={(e: FormEvent) => {
+                      handleCommentDescription(e);
+                      syncScroll(textElement, preElement);
                     }}
+                    onKeyDown={(e: KeyboardEvent<Element>) =>
+                      handleKeyDownDelete(e)
+                    }
+                    onPaste={(e: ClipboardEvent<HTMLTextAreaElement>) =>
+                      handleImagePaste(e, setImageLoading)
+                    }
+                    style={{ resize: "none" }}
+                    className="relative w-full h-full font-earl text-black p-2 z-1 rounded-lg overflow-y-auto"
+                    ref={textElement}
+                    value={commentDescription}
+                    disabled={commentLoading || !canComment ? true : false}
+                  ></textarea>
+                  <pre
+                    id="highlighting2"
+                    className={`absolute w-full h-full font-earl text-black p-2 rounded-lg overflow-y-auto ${
+                      !canComment && "opacity-70"
+                    }`}
+                    ref={preElement}
                   >
-                    {mentionProfiles?.map((user: any, index: number) => {
-                      const profileImage: string = createProfilePicture(user);
-                      return (
-                        <div
-                          key={index}
-                          className={`relative w-full h-fit px-3 py-2 bg-white flex flex-row gap-3 cursor-pointer items-center justify-center border-y border-black hover:bg-rosa/70 z-2`}
-                          onClick={() => {
-                            handleMentionClick(user);
-                          }}
-                        >
-                          <div className="relative flex flex-row w-full h-full text-black font-earl lowercase place-self-center gap-2">
-                            <div
-                              className={`relative rounded-full flex bg-white w-3 h-3 items-center justify-center col-start-1`}
-                              id="crt"
-                            >
-                              {profileImage !== "" && (
-                                <Image
-                                  src={profileImage}
-                                  objectFit="cover"
-                                  alt="pfp"
-                                  layout="fill"
-                                  className="relative w-fit h-fit rounded-full items-center justify-center flex"
-                                  draggable={false}
-                                />
-                              )}
-                            </div>
-                            <div className="relative col-start-2 items-center justify-center w-fit h-fit text-xs flex">
-                              @{user?.handle?.split(".lens")[0]}
+                    <code
+                      id="highlighted-content2"
+                      className={`w-full h-full place-self-center text-left whitespace-pre-wrap overflow-y-auto z-0`}
+                    >
+                      {!canComment
+                        ? "Looks Like Only Select Profiles Can Comment on this Post ATM"
+                        : commentId !== ""
+                        ? "Reply with a Comment?"
+                        : "Have Something to Say?"}
+                    </code>
+                  </pre>
+                  {mentionProfiles?.length > 0 && profilesOpen && (
+                    <div
+                      className={`absolute w-44 max-h-28 h-fit flex flex-col overflow-y-scroll items-start justify-start z-2 rounded-lg`}
+                      style={{
+                        top: caretCoord.y + 30,
+                        left: caretCoord.x,
+                      }}
+                    >
+                      {mentionProfiles?.map((user: any, index: number) => {
+                        const profileImage: string = createProfilePicture(user);
+                        return (
+                          <div
+                            key={index}
+                            className={`relative w-full h-fit px-3 py-2 bg-white flex flex-row gap-3 cursor-pointer items-center justify-center border-y border-black hover:bg-rosa/70 z-2`}
+                            onClick={() => {
+                              handleMentionClick(user);
+                            }}
+                          >
+                            <div className="relative flex flex-row w-full h-full text-black font-earl lowercase place-self-center gap-2">
+                              <div
+                                className={`relative rounded-full flex bg-white w-3 h-3 items-center justify-center col-start-1`}
+                                id="crt"
+                              >
+                                {profileImage !== "" && (
+                                  <Image
+                                    src={profileImage}
+                                    objectFit="cover"
+                                    alt="pfp"
+                                    layout="fill"
+                                    className="relative w-fit h-fit rounded-full items-center justify-center flex"
+                                    draggable={false}
+                                  />
+                                )}
+                              </div>
+                              <div className="relative col-start-2 items-center justify-center w-fit h-fit text-xs flex">
+                                @{user?.handle?.split(".lens")[0]}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
             <div className="relative w-full h-fit justify-end flex flex-row gap-2 items-center">
+              <Options
+                videoLoading={videoLoading}
+                imageLoading={imageLoading}
+                commentLoading={commentLoading}
+                uploadImage={uploadImage}
+                uploadVideo={uploadVideo}
+                setGifOpen={setGifOpen}
+                gifOpen={gifOpen}
+                collectOpen={collectOpen}
+                dispatch={dispatch}
+                commentImages={commentImages}
+              />
               <div className="relative w-24 min-w-fit h-10 border-white border rounded-tr-xl rounded-bl-xl py-2 px-4 flex items-center cursor-pointer active:scale-95 hover:bg-moda justify-center">
                 <div
                   className={`relative w-full h-full flex text-white font-arcade items-center text-center justify-center ${
@@ -499,14 +692,6 @@ const CommentBox: FunctionComponent<CommentBoxProps> = ({
                   )}
                 </div>
               </div>
-              <Image
-                alt="gear"
-                src={`${INFURA_GATEWAY}/ipfs/QmY72fgrYJvDrc8iDSYRiyTpdsxbPMbPk7hxT2jrH9jrXJ`}
-                width={15}
-                height={15}
-                className="relative w-7 h-7 flex justify-end"
-                draggable={false}
-              />
             </div>
           </div>
         </div>
